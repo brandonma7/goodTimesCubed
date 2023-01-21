@@ -30,7 +30,7 @@ export default function HeaderComponent() {
                 </button>
             </div>
             <div className='timer__header-title'>
-                {'(FunTimes)'}
+                {'(GoodTimes)'}
                 <sup>3</sup>
             </div>
         </header>
