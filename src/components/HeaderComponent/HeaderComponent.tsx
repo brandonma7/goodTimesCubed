@@ -12,6 +12,14 @@ export default function HeaderComponent() {
                 <button
                     className='timer__button'
                     onClick={() => {
+                        console.log('insights');
+                    }}
+                >
+                    Insights
+                </button>
+                <button
+                    className='timer__button'
+                    onClick={() => {
                         setDialogData({
                             dialogType: DialogType.SETTINGS,
                             isOpen: true,

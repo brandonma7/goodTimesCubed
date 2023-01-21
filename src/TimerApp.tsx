@@ -42,6 +42,8 @@ export default App;
 /*
     TODO
 
+    add sass variables for spacing and colors
+
     settings dialog:
         color scheme?
     
