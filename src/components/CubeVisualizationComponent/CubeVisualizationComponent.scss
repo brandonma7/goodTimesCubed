@@ -1,0 +1,65 @@
+.timer__cube-pic {
+    margin: 12px auto;
+    width: 40vw;
+    height: 30vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.timer__cube-pic-container {
+    display: flex;
+}
+
+.timer__cube-pic-row {
+    display: flex;
+    flex-direction: row;
+    height: 30%;
+    justify-content: space-around;
+}
+
+.timer__cube-face {
+    width: 9vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 22.5%;
+    height: 100%;
+    justify-content: space-around;
+}
+
+.timer__cube-sticker {
+    width: 30%;
+    height: 30%;
+    border-radius: 6px;
+
+    &--white {
+        background: white;
+    }
+
+    &--orange {
+        background: orange;
+    }
+
+    &--green {
+        background: #5E5;
+    }
+
+    &--red {
+        background: #F44;
+    }
+
+    &--blue {
+        background: #26F;
+    }
+
+    &--yellow {
+        background: yellow;
+    }
+}
+
+@media (max-width: 768px) {
+    .timer__cube-sticker {
+        border-radius: 3px;
+    }
+}

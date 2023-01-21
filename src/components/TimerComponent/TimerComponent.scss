@@ -1,0 +1,74 @@
+.timer__timer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    padding: 16px;
+
+    .timer__counter {
+        font-size: 10vw;
+    
+        &--prepping {
+            color: #DD3;
+        }
+    
+        &--prepped {
+            color: #383;
+        }
+    }
+    
+    .timer__scramble {
+        font-size: 100%;
+        margin-bottom: 1vw;
+    }
+    
+    .timer__time-input {
+        background: black;
+        border: 1px solid #666;
+        border-radius: 8px;
+        height: 12vw;
+        width: 90%;
+        color: #AAA;
+        font-size: 10vw;
+        text-align: center;
+        font-family: monospace;
+        margin-bottom: 1vw;
+        max-width: 90%;
+        max-height: 160px;
+    }
+
+    .timer__input-note {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 1vw;
+    }
+    
+    .timer__input-actions {
+        margin-bottom: 12px;
+
+        .timer__button {
+            margin: 4px 8px;
+        }
+    }
+
+    @media (min-width: 1500px) {
+        .timer__time-input,
+        .timer__counter {
+            font-size: 150px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .timer__scramble {
+            font-size: 24px;
+            margin: 16px;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .timer__timer {
+        padding: 0;
+        width: 100%;
+    }
+}

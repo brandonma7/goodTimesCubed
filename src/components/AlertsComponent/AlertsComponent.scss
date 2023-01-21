@@ -1,0 +1,45 @@
+.timer__alerts-container {
+    position: absolute;
+    width: 30%;
+    left: 35%;
+    top: 10%;
+}
+
+.timer__alert {
+    margin-bottom: 1vh;
+    background: black;
+    border: #666 thin solid;
+    display: flex;
+    justify-content: space-between;
+    padding-left: 1vw;
+    width: 50vw;
+    align-items: center;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.timer__alert .timer__button,
+.timer__alert .timer__button:hover {
+    margin: 8px;
+}
+
+@media (max-width: 768px) {
+    .timer__alerts-container {
+        left: 10%;
+        width: 80%;
+    }
+
+    .timer__alert {
+        width: 100%;
+    }
+
+    .timer__alert-message {
+        text-align: left;
+        width: 100%;
+    }
+
+    .timer__alert .timer__button,
+    .timer__alert .timer__button:hover {
+        width: 20%;
+    }
+}

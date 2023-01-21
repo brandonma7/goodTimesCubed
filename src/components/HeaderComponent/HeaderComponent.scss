@@ -1,0 +1,16 @@
+.timer__header {
+    padding: 4px 0;
+    border-bottom: 1px solid #666;
+    font-size: 24px;
+    width: 100%;
+
+    .timer__header-actions { 
+        position: absolute;
+        right: 1%;
+
+        .timer__button {
+            font-size: 12px;
+            padding: 2px 8px;
+        }
+    }
+}

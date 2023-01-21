@@ -1,0 +1,5 @@
+{
+    "editor.formatOnSave": true,
+    "appService.defaultWebAppToDeploy": "/subscriptions/4743ff24-fb06-4da0-8ea5-22ae20d01a9e/AppServices/subscriptions/4743ff24-fb06-4da0-8ea5-22ae20d01a9e/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/goodTimesCubed",
+    "appService.deploySubpath": "."
+}

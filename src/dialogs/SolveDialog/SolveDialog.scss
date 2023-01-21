@@ -1,0 +1,49 @@
+.timer__solve-dialog  {
+    width: 70%;
+    background: black;
+    position: absolute;
+    border: 2px solid #666;
+    border-radius: 8px;
+    top: 15%;
+    left: 15%;
+    padding: 8px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    max-height: 73vh;
+}
+
+.timer__solve-dialog-inner {
+    overflow-y: auto;
+    max-height: 72vh;
+}
+
+input.timer__solve-dialog-time {
+    background: black;
+    border: 3px solid #666;
+    border-radius: 8px;
+    height: 4vw;
+    width: 90%;
+    color: #AAA;
+    font-size: 4vw;
+    text-align: center;
+    font-family: monospace;
+    margin-bottom: 1vw;
+}
+
+.timer__solve-dialog-actions .timer__button {
+    margin: 4px;
+}
+
+@media (max-width: 768px) {
+    .timer__solve-dialog  {
+        font-size: 24px;
+        width: 80%;
+        background: black;
+        position: absolute;
+        border: 2px solid #666;
+        border-radius: 8px;
+        top: 15%;
+        left: 10%;
+        padding: 1vw;
+    }
+}

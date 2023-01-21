@@ -1,0 +1,97 @@
+.timer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .timer__main {
+        display: flex;
+        flex-direction: row;
+        flex: 1 1 auto;
+        justify-content: space-between;
+        height: 93%;
+    }
+    
+    .timer__left-bar {
+        border-right: 1px solid #666;
+        overflow-y: auto;
+        flex: 1 0 auto;
+        padding: 8px;
+        min-width: 20%;
+    }
+
+    .timer__button, .timer__select, .timer__input {
+        padding: 0.5vw;
+        background: black;
+        color: #ccc;
+        border: 3px solid #666;
+        border-radius: 8px;
+        font-size: 1.2vw;
+        font-family: monospace;
+        font-weight: bold;
+
+        &:hover {
+            background: #333;
+            border: 3px solid #999;
+        }
+
+        &:active {
+            background: #666;
+            border: 3px solid #BBB;
+        }
+
+        &.timer__button--active {
+            background: #666;
+            border: 3px solid #BBB;
+        }
+
+        &.timer__button--active:hover {
+            background: #333;
+            border: 3px solid #999;
+        }
+        
+        &.timer__button--active:active {
+            background: black;
+            border: 3px solid #666;
+        }
+    
+        @media (min-width: 1500px) {
+            & {
+                font-size: 18px;
+            }
+        }
+    }
+    @media (max-width: 768px) {
+        .timer__main {
+            flex-direction: column-reverse;
+        }
+    
+        .timer__left-bar {
+            border-top: 1px solid #666;
+            border-right: none;
+            flex-shrink: 1;
+            width: 100%;
+            padding: 0;
+            
+
+            .timer__session-actions {
+                flex-direction: column;
+
+                .timer__button {
+                    margin: 4px auto;
+                }
+            }
+        }
+    
+        .timer__button,
+        .timer__button:hover,
+        .timer__select,
+        .timer__select:hover,
+        .timer__input,
+        .timer__input:hover {
+            width: 90%;
+            margin: 4px auto;
+            border-width: 1px;
+            font-size: 16px;
+        }
+    }
+}

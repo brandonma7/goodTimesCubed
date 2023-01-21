@@ -1,0 +1,17 @@
+.timer__bests {
+    font-size: 1.5vw;
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 2vh;
+
+    th, td {
+        padding: 0 8px;
+        text-align: right;
+    }
+}
+
+@media (max-width: 768px) {
+    .timer__bests {
+        font-size: 16px;
+    }
+}
