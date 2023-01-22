@@ -1,12 +1,14 @@
+@import '../../styles/global-variables';
+
 .timer__select-session {
-    margin-bottom: 4px;
+    margin-bottom: $size-xxs;
     text-align: center;
 }
 
 .timer__session-actions {
     display: flex;
     flex-direction: row;
-    margin-bottom: 8px;
+    margin-bottom: $size-xs;
     justify-content: space-evenly;
 }
 

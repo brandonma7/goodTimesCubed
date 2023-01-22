@@ -1,3 +1,5 @@
+@import '../../styles/global-variables';
+
 .timer__results {
     font-size: 1.5vw;
     width: 90%;
@@ -6,37 +8,29 @@
 
     th, td {
         text-align: right;
-        padding: 0 8px;
+        padding: 0 $size-xs;
     }
 
     &, th, td {
-        border: 1px solid #666;
+        border: $thin-border-size $table-border-color;
         border-collapse: collapse;
     }
 
     .timer__group-indicator {
-        border-bottom: 3px solid;
+        border-bottom: $primary-border-size;
     }
-
-   /* tr:nth-child(5) {
-        border-bottom: 3px solid #383;
-    }
-
-    tr:nth-child(12) {
-        border-bottom: 3px solid #DD3;
-    }*/
 
     .timer__result--best {
-        color: #383;
+        color: $green-light;
     }
 
     .timer__result--penalty {
-        color: #B66;
+        color: $red-light;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $small-screen-width) {
     .timer__results {
-        font-size: 16px;
+        font-size: $size-m;
     }
 }

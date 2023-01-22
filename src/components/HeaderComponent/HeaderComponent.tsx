@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
 import { DialogContext, DialogType } from '../../dialogs/UseDialogsContext';
 
+import { ReactComponent as GearIcon } from '../../icons/gear.svg';
+import { ReactComponent as GraphIcon } from '../../icons/graph.svg';
+
 import './HeaderComponent.scss';
 
 export default function HeaderComponent() {
@@ -15,7 +18,7 @@ export default function HeaderComponent() {
                         console.log('insights');
                     }}
                 >
-                    Insights
+                    <GraphIcon className='timer__icon' />
                 </button>
                 <button
                     className='timer__button'
@@ -26,7 +29,7 @@ export default function HeaderComponent() {
                         });
                     }}
                 >
-                    Settings
+                    <GearIcon className='timer__icon' />
                 </button>
             </div>
             <div className='timer__header-title'>

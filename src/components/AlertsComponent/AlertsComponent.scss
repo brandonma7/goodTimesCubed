@@ -1,3 +1,5 @@
+@import '../../styles/global-variables';
+
 .timer__alerts-container {
     position: absolute;
     width: 30%;
@@ -7,23 +9,23 @@
 
 .timer__alert {
     margin-bottom: 1vh;
-    background: black;
-    border: #666 thin solid;
+    background: $main-background-color;
+    border: $thin-border-size $main-border-color;
     display: flex;
     justify-content: space-between;
     padding-left: 1vw;
     width: 50vw;
     align-items: center;
-    border-radius: 8px;
+    border-radius: $size-xs;
     overflow: hidden;
 }
 
 .timer__alert .timer__button,
 .timer__alert .timer__button:hover {
-    margin: 8px;
+    margin: $size-xs;
 }
 
-@media (max-width: 768px) {
+@media (max-width: $small-screen-width) {
     .timer__alerts-container {
         left: 10%;
         width: 80%;

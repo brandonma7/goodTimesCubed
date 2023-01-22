@@ -1,5 +1,7 @@
+@import '../../styles/global-variables';
+
 .timer__cube-pic {
-    margin: 12px auto;
+    margin: $size-s auto;
     width: 40vw;
     height: 30vw;
     display: flex;
@@ -34,31 +36,31 @@
     border-radius: 6px;
 
     &--white {
-        background: white;
+        background: $cube-sticker-white;
     }
 
     &--orange {
-        background: orange;
+        background: $cube-sticker-orange;
     }
 
     &--green {
-        background: #5E5;
+        background: $cube-sticker-green;
     }
 
     &--red {
-        background: #F44;
+        background: $cube-sticker-red;
     }
 
     &--blue {
-        background: #26F;
+        background: $cube-sticker-blue;
     }
 
     &--yellow {
-        background: yellow;
+        background: $cube-sticker-yellow;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $small-screen-width) {
     .timer__cube-sticker {
         border-radius: 3px;
     }

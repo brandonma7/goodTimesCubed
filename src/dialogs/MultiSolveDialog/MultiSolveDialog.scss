@@ -1,49 +1,40 @@
+@import '../../styles/global-variables';
+
 .timer__multi-solve-dialog {
+    @include common-dialog-styles;
     width: 70%;
-    background: black;
-    position: absolute;
-    border: 2px solid #666;
-    border-radius: 8px;
-    top: 15%;
     left: 15%;
     padding: 1vw;
     overflow-y: auto;
-    overflow-x: hidden;
-    max-height: 73vh;
 }
 
 .timer__multi-solve-dialog-times {
     font-size: 1.8vw;
-    margin: 8px;
+    margin: $size-xs;
     text-align: left;
     width: 100%;
 }
 
 .timer__multi-solve-dialog-times, .timer__multi-solve-dialog-times th, .timer__multi-solve-dialog-times td {
-    border: 1px solid #666;
+    border: $thin-border-size $table-border-color;
     border-collapse: collapse;
 }
 
 .timer__multi-solve-dialog-times th, .timer__multi-solve-dialog-times td {
-    padding-left: 16px;
+    padding-left: $size-m;
 }
 
-@media (max-width: 768px) {
+@media (max-width: $small-screen-width) {
     .timer__multi-solve-dialog {
-        font-size: 24px;
+        font-size: $size-l;
         width: 80%;
-        background: black;
-        position: absolute;
-        border: 2px solid #666;
-        border-radius: 8px;
-        top: 15%;
         left: 10%;
         padding: 1vw;
     }
 
     .timer__multi-solve-dialog-times {
-        font-size: 16px;
-        margin: 8px 0;
+        font-size: $size-m;
+        margin: $size-xs 0;
         text-align: left;
         width: 100%;
     }

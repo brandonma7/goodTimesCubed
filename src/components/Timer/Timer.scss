@@ -1,3 +1,5 @@
+@import '../../styles/global-variables';
+
 .timer {
     display: flex;
     flex-direction: column;
@@ -12,61 +14,107 @@
     }
     
     .timer__left-bar {
-        border-right: 1px solid #666;
+        border-right: $thin-border-size $main-border-color;
         overflow-y: auto;
         flex: 1 0 auto;
-        padding: 8px;
+        padding: $size-xs;
         min-width: 20%;
     }
 
-    .timer__button, .timer__select, .timer__input {
+    .timer__button {
         padding: 0.5vw;
-        background: black;
-        color: #ccc;
-        border: 3px solid #666;
-        border-radius: 8px;
+        background: $button-background-color;
+        color: $button-font-color;
+        border: $primary-border-size $button-border-color;
+        border-radius: $size-xs;
+        font-size: 1.2vw;
+        font-family: monospace;
+        font-weight: bold;
+
+        &:hover,
+        &.timer__button--active:hover {
+            background: $button-background-color-hover;
+            border: $primary-border-size $button-border-color-hover;
+        }
+
+        &:active,
+        &.timer__button--active {
+            background: $button-background-color-active;
+            border: $primary-border-size $button-border-color-active;
+        }
+
+        &.timer__button--active:active {
+            background: $button-background-color;
+            border: $primary-border-size $button-border-color;
+        }
+
+        @media (min-width: $big-screen-width) {
+            & {
+                font-size: $size-m;
+            }
+        }
+    }
+
+    .timer__select {
+        padding: 0.5vw;
+        background: $select-background-color;
+        color: $select-font-color;
+        border: $primary-border-size $select-border-color;
+        border-radius: $size-xs;
         font-size: 1.2vw;
         font-family: monospace;
         font-weight: bold;
 
         &:hover {
-            background: #333;
-            border: 3px solid #999;
+            background: $select-background-color-hover;
+            border: $primary-border-size $select-border-color-hover;
         }
 
         &:active {
-            background: #666;
-            border: 3px solid #BBB;
+            background: $select-background-color-active;
+            border: $primary-border-size $select-border-color-active;
         }
 
-        &.timer__button--active {
-            background: #666;
-            border: 3px solid #BBB;
-        }
-
-        &.timer__button--active:hover {
-            background: #333;
-            border: 3px solid #999;
-        }
-        
-        &.timer__button--active:active {
-            background: black;
-            border: 3px solid #666;
-        }
-    
-        @media (min-width: 1500px) {
+        @media (min-width: $big-screen-width) {
             & {
-                font-size: 18px;
+                font-size: $size-m;
             }
         }
     }
-    @media (max-width: 768px) {
+
+    .timer__input {
+        padding: 0.5vw;
+        background: $input-background-color;
+        color: $input-font-color;
+        border: $primary-border-size $input-border-color;
+        border-radius: $size-xs;
+        font-size: 1.2vw;
+        font-family: monospace;
+        font-weight: bold;
+
+        &:hover {
+            background: $input-background-color-hover;
+            border: $primary-border-size $input-border-color-hover;
+        }
+
+        &:active {
+            background: $input-background-color-active;
+            border: $primary-border-size $input-border-color-active;
+        }
+
+        @media (min-width: $big-screen-width) {
+            & {
+                font-size: $size-m;
+            }
+        }
+    }
+    @media (max-width: $small-screen-width) {
         .timer__main {
             flex-direction: column-reverse;
         }
     
         .timer__left-bar {
-            border-top: 1px solid #666;
+            border-top: $thin-border-size $main-border-color;
             border-right: none;
             flex-shrink: 1;
             width: 100%;
@@ -77,7 +125,7 @@
                 flex-direction: column;
 
                 .timer__button {
-                    margin: 4px auto;
+                    margin: $size-xxs auto;
                 }
             }
         }
@@ -89,9 +137,9 @@
         .timer__input,
         .timer__input:hover {
             width: 90%;
-            margin: 4px auto;
-            border-width: 1px;
-            font-size: 16px;
+            margin: $size-xxs auto;
+            border-width: $size-xxxxs;
+            font-size: $size-m;
         }
     }
 }

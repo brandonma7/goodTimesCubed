@@ -1,0 +1,76 @@
+// Sizes
+$size-xxxxs: 1px;
+$size-xxxs: 2px;
+$size-xxs: 4px;
+$size-xs: 8px;
+$size-s: 12px;
+$size-m: 16px;
+$size-l: 24px;
+$size-xl: 32px;
+$size-xxl: 40px;
+$size-xxxl: 48px;
+
+$primary-border-size: 3px solid;
+$thin-border-size: 1px solid;
+
+// Screen breakpoints
+$small-screen-width: 768px;
+$big-screen-width: 1500px;
+
+// Colors
+$main-background-color: #000;
+$main-border-color: #666;
+$main-font-color: #AAA;
+$main-font-color-muted: #666;
+
+$green-light: #383;
+$yellow-light: #DD3;
+$red-light: #B66;
+
+$table-border-color: #666;
+
+$button-background-color: #000;
+$button-background-color-hover: #333;
+$button-background-color-active: #666;
+$button-border-color: #666;
+$button-border-color-hover: #999;
+$button-border-color-active: #BBB;
+$button-font-color: #CCC;
+
+$input-background-color: #000;
+$input-background-color-hover: #333;
+$input-background-color-active: #666;
+$input-border-color: #666;
+$input-border-color-hover: #999;
+$input-border-color-active: #BBB;
+$input-font-color: #CCC;
+
+$select-background-color: #000;
+$select-background-color-hover: #333;
+$select-background-color-active: #666;
+$select-border-color: #666;
+$select-border-color-hover: #999;
+$select-border-color-active: #BBB;
+$select-font-color: #CCC;
+
+$cube-sticker-white: #FFF;
+$cube-sticker-orange: #FFA500;
+$cube-sticker-green: #5E5;
+$cube-sticker-red: #F44;
+$cube-sticker-blue: #26F;
+$cube-sticker-yellow: #FFFF00;
+
+// Common
+@mixin common-dialog-styles {
+    background: $main-background-color;
+    position: absolute;
+    border: $thin-border-size $main-border-color;
+    border-radius: $size-xs;
+    top: 15%;
+    left: 30%;
+    padding: $size-xs;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    max-height: 73vh;
+    width: 40%;
+}

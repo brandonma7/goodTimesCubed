@@ -1,19 +1,21 @@
+@import '../../styles/global-variables';
+
 .timer__timer {
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    padding: 16px;
+    padding: $size-m;
 
     .timer__counter {
         font-size: 10vw;
     
         &--prepping {
-            color: #DD3;
+            color: $yellow-light;
         }
     
         &--prepped {
-            color: #383;
+            color: $green-light;
         }
     }
     
@@ -23,12 +25,12 @@
     }
     
     .timer__time-input {
-        background: black;
-        border: 1px solid #666;
-        border-radius: 8px;
+        background: $input-background-color;
+        border: $thin-border-size $input-border-color;
+        border-radius: $size-xs;
         height: 12vw;
         width: 90%;
-        color: #AAA;
+        color: $input-font-color;
         font-size: 10vw;
         text-align: center;
         font-family: monospace;
@@ -38,35 +40,35 @@
     }
 
     .timer__input-note {
-        font-size: 16px;
-        color: #666;
+        font-size: $size-m;
+        color: $main-font-color-muted;
         margin-bottom: 1vw;
     }
     
     .timer__input-actions {
-        margin-bottom: 12px;
+        margin-bottom: $size-s;
 
         .timer__button {
-            margin: 4px 8px;
+            margin: $size-xxs $size-xs;
         }
     }
 
-    @media (min-width: 1500px) {
+    @media (min-width: $big-screen-width) {
         .timer__time-input,
         .timer__counter {
             font-size: 150px;
         }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: $small-screen-width) {
         .timer__scramble {
-            font-size: 24px;
-            margin: 16px;
+            font-size: $size-l;
+            margin: $size-m;
         }
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $small-screen-width) {
     .timer__timer {
         padding: 0;
         width: 100%;

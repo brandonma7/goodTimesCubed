@@ -1,17 +1,31 @@
+@import '../../styles/global-variables';
+
 .timer__header {
-    padding: 4px 0;
-    border-bottom: 1px solid #666;
-    font-size: 24px;
+    padding: $size-xxs 0;
+    border-bottom: $thin-border-size $main-border-color;
+    font-size: $size-l;
     width: 100%;
 
     .timer__header-actions { 
         position: absolute;
         right: 1%;
+        display: flex;
 
         .timer__button {
-            font-size: 12px;
-            padding: 2px 8px;
-            margin: 4px;
+            font-size: $size-s;
+            padding: $size-xxxs $size-xs;
+            margin: $size-xxs;
+            height: $size-l;
+
+            &:hover {
+                margin: $size-xxs;
+            }
+        }
+
+        svg.timer__icon {
+            width: $size-m;
+            height: $size-m;
+            color: $main-font-color;
         }
     }
 }

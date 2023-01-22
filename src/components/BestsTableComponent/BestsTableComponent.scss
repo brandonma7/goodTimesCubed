@@ -1,3 +1,5 @@
+@import '../../styles/global-variables';
+
 .timer__bests {
     font-size: 1.5vw;
     width: 90%;
@@ -5,13 +7,13 @@
     margin-bottom: 2vh;
 
     th, td {
-        padding: 0 8px;
+        padding: 0 $size-xs;
         text-align: right;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $small-screen-width) {
     .timer__bests {
-        font-size: 16px;
+        font-size: $size-m;
     }
 }
