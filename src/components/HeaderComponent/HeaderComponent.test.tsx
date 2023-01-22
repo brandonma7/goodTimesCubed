@@ -5,8 +5,8 @@ import HeaderComponent from './HeaderComponent';
 test('renders learn react link', () => {
     render(<HeaderComponent />);
     const titleElement = screen.getByText(/GoodTimes/i);
-    const settingsButton = screen.getByText(/Settings/i);
-    const insightsButton = screen.getByText(/Insights/i);
+    const settingsButton = screen.getByLabelText(/Settings/i);
+    const insightsButton = screen.getByLabelText(/Insights/i);
     expect(titleElement).toBeInTheDocument();
     expect(settingsButton).toBeInTheDocument();
     expect(insightsButton).toBeInTheDocument();

@@ -18,7 +18,7 @@ export default function HeaderComponent() {
                         console.log('insights');
                     }}
                 >
-                    <GraphIcon className='timer__icon' />
+                    <GraphIcon className='timer__icon' aria-label='Insights' />
                 </button>
                 <button
                     className='timer__button'
@@ -29,7 +29,7 @@ export default function HeaderComponent() {
                         });
                     }}
                 >
-                    <GearIcon className='timer__icon' />
+                    <GearIcon className='timer__icon' aria-label='Settings' />
                 </button>
             </div>
             <div className='timer__header-title'>
