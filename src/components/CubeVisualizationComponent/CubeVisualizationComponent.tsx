@@ -1,11 +1,13 @@
 import React from 'react';
 
 import Cube from '../../classes/Cube';
+import { PuzzleType } from '../../utils/cubingUtils';
 
 import './CubeVisualizationComponent.scss';
 
 type CubeVisualizationComponentProps = {
     scramble: string;
+    puzzleType: PuzzleType;
     width?: number;
     height?: number;
 };
@@ -14,10 +16,12 @@ const numToColor = ['white', 'orange', 'green', 'red', 'blue', 'yellow'];
 
 export default function CubeVisualizationComponent({
     scramble,
+    puzzleType,
     width = 400,
     height,
 }: CubeVisualizationComponentProps): JSX.Element {
     const cube = new Cube(scramble);
+    console.log(puzzleType);
     const cubeState = cube.getState();
 
     const getSticker = (color: number, index: number) => {

@@ -1,6 +1,6 @@
 import { isEmpty, xorWith, isEqual } from 'lodash';
 import { SolveData } from '../components/Timer';
-import { Solve } from './cubingUtils';
+import { PuzzleType, Solve } from './cubingUtils';
 
 // Turn the formatted time (from entry) into an integer in centi-seconds
 export function unFormatTime(time = ''): number {
@@ -77,8 +77,14 @@ export const areSessionsSame = (x: SolveData, y: SolveData) =>
 
 const CACHE_KEY = 'goodTimesSolvesData';
 
+export type SessionData = {
+    id: string;
+    name: string;
+    type: PuzzleType;
+    data: SolveData;
+};
 type CachedSessionData = {
-    [key: string]: SolveData;
+    [key: string]: SessionData;
 };
 
 /*
@@ -86,18 +92,40 @@ type CachedSessionData = {
     {
         sessionOne: [],
         sessionTwo: [],
+        sessionId: {
+            name: 'Session 1',
+            type: '3x3x3',
+            data: []
+        }
     }
 
 */
 
-export function getSessionDataFromLocalStorage(sessionId: string): SolveData {
+export function getSessionDataFromLocalStorage(sessionId: string): SessionData {
     const dataFromLocalStorage = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}') as CachedSessionData;
-    return dataFromLocalStorage[sessionId] ?? [];
+    if (Object.keys(dataFromLocalStorage).length === 0) {
+        return {
+            id: 'session1',
+            name: 'Session 1',
+            type: '3x3x3',
+            data: [],
+        };
+    }
+    return dataFromLocalStorage[sessionId];
 }
 
 export function getSessionListFromLocalStorage(): string[] {
     const dataFromLocalStorage = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}') as CachedSessionData;
-    return Object.keys(dataFromLocalStorage);
+    const sessionList = Object.keys(dataFromLocalStorage);
+    return sessionList.length === 0 ? ['session1'] : sessionList;
+}
+
+export function getSessionNamesFromLocalStorage(): { id: string; name: string }[] {
+    const dataFromLocalStorage = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}') as CachedSessionData;
+    const sessionNameList = Object.keys(dataFromLocalStorage).map((sessionId) => {
+        return { id: sessionId, name: dataFromLocalStorage[sessionId].name };
+    });
+    return sessionNameList.length === 0 ? [{ id: 'sessionId', name: 'Session 1' }] : sessionNameList;
 }
 
 export function clearLocalStorageForSession(sessionId: string) {
@@ -110,8 +138,9 @@ export function clearAllLocalStorage() {
     localStorage.removeItem(CACHE_KEY);
 }
 
-export function saveSessionDataToLocalStorage(solvesData: SolveData, sessionId: string) {
+export function saveSessionDataToLocalStorage(sessionData: SessionData) {
+    const { id } = sessionData;
     const dataFromLocalStorage = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}') as CachedSessionData;
-    dataFromLocalStorage[sessionId] = solvesData;
+    dataFromLocalStorage[id] = sessionData;
     localStorage.setItem(CACHE_KEY, JSON.stringify(dataFromLocalStorage));
 }

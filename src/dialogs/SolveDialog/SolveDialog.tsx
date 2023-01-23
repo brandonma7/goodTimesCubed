@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import CubeVisualizationComponent from '../../components/CubeVisualizationComponent';
 import { SolveData, SolveDataAction } from '../../components/Timer';
 import { AlertsContext } from '../../TimerApp';
+import { PuzzleType } from '../../utils/cubingUtils';
 import { getFormattedTime, unFormatTime } from '../../utils/genericUtils';
 import { DialogContext, DialogType } from '../UseDialogsContext';
 
@@ -16,11 +17,12 @@ export type SolveDialogData = {
 
 type SolveDialogProps = {
     solves: SolveData;
+    puzzleType: PuzzleType;
     solveDispatcher: React.Dispatch<SolveDataAction>;
     onAction: () => void;
 };
 
-export default function SolveDialog({ solves, solveDispatcher, onAction }: SolveDialogProps): JSX.Element {
+export default function SolveDialog({ solves, puzzleType, solveDispatcher, onAction }: SolveDialogProps): JSX.Element {
     const { dialogData: ddata, closeDialog } = useContext(DialogContext);
     // So the component know what specific Dialog Data it's dealing with
     const dialogData = ddata as SolveDialogData;
@@ -153,7 +155,7 @@ export default function SolveDialog({ solves, solveDispatcher, onAction }: Solve
                         Delete
                     </button>
                 </div>
-                <CubeVisualizationComponent scramble={scramble} width={300} />
+                <CubeVisualizationComponent puzzleType={puzzleType} scramble={scramble} width={300} />
             </div>
         </div>
     );

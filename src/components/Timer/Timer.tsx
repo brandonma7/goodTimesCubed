@@ -131,15 +131,13 @@ export default function Timer() {
     const { solveSettings } = useContext(SettingsContext);
 
     const [scramble, setScramble] = useState(generateScramble());
-    const [sessionId, setSessionId] = useStickyState('Session 1', 'currentSession');
-    const [solveData, dispatchSolveData] = useReducer(
-        solveDataReducer,
-        getSessionDataFromLocalStorage(sessionId),
-        undefined,
-    );
-    const [bestsData, setBestsData] = useState(calculateBests(solveSettings, solveData));
 
     const sessionList = getSessionListFromLocalStorage();
+    const [sessionId, setSessionId] = useStickyState(sessionList[0], 'currentSession');
+    const sessionData = getSessionDataFromLocalStorage(sessionId);
+
+    const [solveData, dispatchSolveData] = useReducer(solveDataReducer, sessionData.data, undefined);
+    const [bestsData, setBestsData] = useState(calculateBests(solveSettings, solveData));
 
     const isSuppressingBestAlerts = useRef(false);
     const suppressBestAlerts = () => {
@@ -152,17 +150,22 @@ export default function Timer() {
 
     useEffect(() => {
         const newSolveData = getSessionDataFromLocalStorage(sessionId);
-        if (!areSessionsSame(solveData, newSolveData)) {
+        if (!areSessionsSame(solveData, newSolveData.data)) {
             dispatchSolveData({
                 type: 'CHANGE_SESSION',
-                data: newSolveData,
+                data: newSolveData.data,
             });
             suppressBestAlerts();
         }
     }, [sessionId]);
 
     useEffect(() => {
-        saveSessionDataToLocalStorage(solveData, sessionId);
+        saveSessionDataToLocalStorage({
+            id: sessionId,
+            name: sessionData.name,
+            type: sessionData.type,
+            data: solveData,
+        });
     }, [solveData]);
 
     useEffect(() => {
@@ -203,15 +206,21 @@ export default function Timer() {
                     <section className='timer__left-bar'>
                         <BestsTableComponent solves={solveData} bests={bestsData} />
                         <ResultsTableComponent solves={solveData} bests={bestsData} />
-                        <SessionManagementComponent sessionId={sessionId} setSessionId={setSessionId} />
+                        <SessionManagementComponent sessionData={sessionData} setSessionId={setSessionId} />
                     </section>
                 </DialogContextProvider>
-                <TimerComponent dispatchSolveData={dispatchSolveData} scramble={scramble} newScramble={newScramble} />
+                <TimerComponent
+                    dispatchSolveData={dispatchSolveData}
+                    puzzleType={sessionData.type}
+                    scramble={scramble}
+                    newScramble={newScramble}
+                />
             </div>
             <DialogContextProvider>
                 <>
                     <SolveDialog
                         solves={solveData}
+                        puzzleType={sessionData.type}
                         solveDispatcher={dispatchSolveData}
                         onAction={() => {
                             suppressBestAlerts();
@@ -219,13 +228,35 @@ export default function Timer() {
                     />
                     <MultiSolveDialog solves={solveData} />
                     <SessionDialog
-                        sessionId={sessionId}
+                        sessionData={sessionData}
+                        hideDeleteButton={sessionList.length < 2}
                         onRenameSession={(newName) => {
-                            saveSessionDataToLocalStorage(solveData, newName);
-                            setSessionId(newName);
+                            const { id, type } = sessionData;
+                            sessionData.name = newName;
+                            saveSessionDataToLocalStorage({
+                                id,
+                                type,
+                                name: newName,
+                                data: solveData,
+                            });
+                        }}
+                        onChangeSessionType={(newType) => {
+                            const { id, name } = sessionData;
+                            const newSessionData = {
+                                id,
+                                name,
+                                type: newType,
+                                data: solveData,
+                            };
+                            sessionData.type = newSessionData.type;
+                            saveSessionDataToLocalStorage(newSessionData);
+                        }}
+                        onClearSessionData={() => {
+                            suppressBestAlerts();
                         }}
                         onDeleteSession={() => {
-                            setSessionId(sessionList[0]);
+                            const index = sessionList[0] === sessionData.id ? 1 : 0;
+                            setSessionId(sessionList[index]);
                         }}
                         solveDispatcher={dispatchSolveData}
                     />

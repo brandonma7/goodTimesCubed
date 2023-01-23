@@ -27,6 +27,9 @@ export type Solve = {
 export const TURNS = ['R', 'U', 'F', 'L', 'D', 'B'];
 export const TurnModifiers = ['', '2', "'"];
 
+export const PuzzleTypeValues = ['2x2x2', '3x3x3', '4x4x4', '5x5x5', '6x6x6', '7x7x7'];
+export type PuzzleType = '2x2x2' | '3x3x3' | '4x4x4' | '5x5x5' | '6x6x6' | '7x7x7';
+
 export function generateScramble(size = 20): string {
     let moveString = '';
     const scramble = [];

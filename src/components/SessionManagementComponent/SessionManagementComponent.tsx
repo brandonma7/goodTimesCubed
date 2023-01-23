@@ -1,33 +1,34 @@
 import React, { useContext } from 'react';
 import { DialogContext, DialogType } from '../../dialogs/UseDialogsContext';
-import { getSessionListFromLocalStorage, saveSessionDataToLocalStorage } from '../../utils/genericUtils';
+import { getSessionNamesFromLocalStorage, saveSessionDataToLocalStorage, SessionData } from '../../utils/genericUtils';
 
 import './SessionManagementComponent.scss';
 
 type SessionManagementComponentProps = {
-    sessionId: string;
+    sessionData: SessionData;
     setSessionId: (newValue: string) => void;
 };
 
-export default function SessionManagementComponent({ sessionId, setSessionId }: SessionManagementComponentProps) {
+export default function SessionManagementComponent({ sessionData, setSessionId }: SessionManagementComponentProps) {
     const { setDialogData } = useContext(DialogContext);
-    const sessionList = getSessionListFromLocalStorage();
+    const sessionNames = getSessionNamesFromLocalStorage();
+    const sessionList = sessionNames.map((sesh) => sesh.id);
 
     return (
         <>
             <select
                 className='timer__select timer__select-session'
                 onChange={(event) => {
-                    if (sessionId !== event.target.value) {
+                    if (sessionData.id !== event.target.value) {
                         setSessionId(event.target.value);
                     }
                 }}
-                value={sessionId}
+                value={sessionData.id}
             >
-                {sessionList.map((sessionId, index) => {
+                {sessionNames.map((sesh, index) => {
                     return (
-                        <option key={index} value={sessionId}>
-                            {sessionId}
+                        <option key={index} value={sesh.id}>
+                            {sesh.name}
                         </option>
                     );
                 })}
@@ -48,14 +49,19 @@ export default function SessionManagementComponent({ sessionId, setSessionId }: 
                     className='timer__button'
                     onClick={() => {
                         let newSessionNum = sessionList.length + 1;
-                        let newSessionId = `Session ${newSessionNum}`;
+                        let newSessionId = `session${newSessionNum}`;
 
                         while (sessionList.includes(newSessionId)) {
                             newSessionNum++;
-                            newSessionId = `Session ${newSessionNum}`;
+                            newSessionId = `session${newSessionNum}`;
                         }
 
-                        saveSessionDataToLocalStorage([], newSessionId);
+                        saveSessionDataToLocalStorage({
+                            id: newSessionId,
+                            name: `Session ${newSessionNum}`,
+                            type: '3x3x3',
+                            data: [],
+                        });
                         setSessionId(newSessionId);
                     }}
                 >

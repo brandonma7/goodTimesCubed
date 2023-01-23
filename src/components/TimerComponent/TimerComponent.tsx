@@ -7,15 +7,18 @@ import { classNames, getFormattedTime, unFormatTime } from '../../utils/genericU
 import { SettingsContext } from '../../dialogs/SettingsDialog';
 
 import './TimerComponent.scss';
+import { PuzzleType } from '../../utils/cubingUtils';
 
 type TimerComponentProps = {
     dispatchSolveData: React.Dispatch<SolveDataAction>;
+    puzzleType: PuzzleType;
     scramble: string;
     newScramble: () => void;
 };
 
 const TimerComponent = memo(function TimerComponentInternal({
     dispatchSolveData,
+    puzzleType,
     scramble,
     newScramble,
 }: TimerComponentProps) {
@@ -217,7 +220,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                     New Scramble
                 </button>
             </div>
-            <CubeVisualizationComponent scramble={scramble} />
+            <CubeVisualizationComponent scramble={scramble} puzzleType={puzzleType} />
         </section>
     );
 });

@@ -137,7 +137,8 @@
         .timer__input,
         .timer__input:hover {
             width: 90%;
-            margin: $size-xxs auto;
+            margin-left: auto;
+            margin-right: auto;
             border-width: $size-xxxxs;
             font-size: $size-m;
         }
