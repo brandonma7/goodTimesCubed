@@ -29,6 +29,22 @@ export const TurnModifiers = ['', '2', "'"];
 
 export const PuzzleTypeValues = ['2x2x2', '3x3x3', '4x4x4', '5x5x5', '6x6x6', '7x7x7'];
 export type PuzzleType = '2x2x2' | '3x3x3' | '4x4x4' | '5x5x5' | '6x6x6' | '7x7x7';
+export const PuzzleTypeMoveCount = {
+    '2x2x2': 8,
+    '3x3x3': 20,
+    '4x4x4': 46,
+    '5x5x5': 60,
+    '6x6x6': 80,
+    '7x7x7': 100,
+};
+export const IndexesToSkip = {
+    '2x2x2': [1, 3, 4, 5, 7],
+    '3x3x3': new Array<number>(),
+    '4x4x4': [2, 7, 10, 11, 12, 13, 14, 17, 22],
+    '5x5x5': new Array<number>(),
+    '6x6x6': [3, 10, 17, 21, 22, 23, 24, 25, 26, 27, 31, 38, 45],
+    '7x7x7': new Array<number>(),
+};
 
 export function generateScramble(size = 20): string {
     let moveString = '';

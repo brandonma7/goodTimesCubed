@@ -6,7 +6,7 @@ import BestsTableComponent, { calculateBests } from '../BestsTableComponent';
 
 import './Timer.scss';
 import TimerComponent from '../TimerComponent';
-import { DataType, generateScramble, Solve } from '../../utils/cubingUtils';
+import { DataType, generateScramble, PuzzleTypeMoveCount, Solve } from '../../utils/cubingUtils';
 import SolveDialog from '../../dialogs/SolveDialog';
 import MultiSolveDialog from '../../dialogs/MultiSolveDialog';
 import AlertsComponent from '../AlertsComponent';
@@ -130,8 +130,6 @@ export default function Timer() {
     const { pushAlert } = useContext(AlertsContext);
     const { solveSettings } = useContext(SettingsContext);
 
-    const [scramble, setScramble] = useState(generateScramble());
-
     const sessionList = getSessionListFromLocalStorage();
     const [sessionId, setSessionId] = useStickyState(sessionList[0], 'currentSession');
     const sessionData = getSessionDataFromLocalStorage(sessionId);
@@ -139,13 +137,15 @@ export default function Timer() {
     const [solveData, dispatchSolveData] = useReducer(solveDataReducer, sessionData.data, undefined);
     const [bestsData, setBestsData] = useState(calculateBests(solveSettings, solveData));
 
+    const [scramble, setScramble] = useState(generateScramble(PuzzleTypeMoveCount[sessionData.type]));
+
     const isSuppressingBestAlerts = useRef(false);
     const suppressBestAlerts = () => {
         isSuppressingBestAlerts.current = true;
     };
 
     function newScramble() {
-        setScramble(generateScramble());
+        setScramble(generateScramble(PuzzleTypeMoveCount[sessionData.type]));
     }
 
     useEffect(() => {
@@ -158,6 +158,10 @@ export default function Timer() {
             suppressBestAlerts();
         }
     }, [sessionId]);
+
+    useEffect(() => {
+        newScramble();
+    }, [sessionData.type]);
 
     useEffect(() => {
         saveSessionDataToLocalStorage({

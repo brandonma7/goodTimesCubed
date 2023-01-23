@@ -31,8 +31,6 @@
 }
 
 .timer__cube-sticker {
-    width: 30%;
-    height: 30%;
     border-radius: 6px;
 
     &--white {
@@ -57,6 +55,48 @@
 
     &--yellow {
         background: $cube-sticker-yellow;
+    }
+}
+
+.timer__cube-pic--2x2x2 {
+    .timer__cube-sticker {
+        width: 45%;
+        height: 45%;
+    }
+}
+
+.timer__cube-pic--3x3x3 {
+    .timer__cube-sticker {
+        width: 30%;
+        height: 30%;
+    }
+}
+
+.timer__cube-pic--4x4x4 {
+    .timer__cube-sticker {
+        width: 23%;
+        height: 23%;
+    }
+}
+
+.timer__cube-pic--5x5x5 {
+    .timer__cube-sticker {
+        width: 18%;
+        height: 18%;
+    }
+}
+
+.timer__cube-pic--6x6x6 {
+    .timer__cube-sticker {
+        width: 15%;
+        height: 15%;
+    }
+}
+
+.timer__cube-pic--7x7x7 {
+    .timer__cube-sticker {
+        width: 13%;
+        height: 13%;
     }
 }
 

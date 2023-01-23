@@ -1,3 +1,5 @@
+import { PuzzleType } from '../utils/cubingUtils';
+
 enum Color {
     WHITE,
     ORANGE,
@@ -9,55 +11,6 @@ enum Color {
 
 type Face = Color[];
 type CubeState = Face[];
-
-const nonScrambledCube: CubeState = [
-    [
-        Color.WHITE,
-        Color.WHITE,
-        Color.WHITE,
-        Color.WHITE,
-        Color.WHITE,
-        Color.WHITE,
-        Color.WHITE,
-        Color.WHITE,
-        Color.WHITE,
-    ],
-    [
-        Color.ORANGE,
-        Color.ORANGE,
-        Color.ORANGE,
-        Color.ORANGE,
-        Color.ORANGE,
-        Color.ORANGE,
-        Color.ORANGE,
-        Color.ORANGE,
-        Color.ORANGE,
-    ],
-    [
-        Color.GREEN,
-        Color.GREEN,
-        Color.GREEN,
-        Color.GREEN,
-        Color.GREEN,
-        Color.GREEN,
-        Color.GREEN,
-        Color.GREEN,
-        Color.GREEN,
-    ],
-    [Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED, Color.RED],
-    [Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE],
-    [
-        Color.YELLOW,
-        Color.YELLOW,
-        Color.YELLOW,
-        Color.YELLOW,
-        Color.YELLOW,
-        Color.YELLOW,
-        Color.YELLOW,
-        Color.YELLOW,
-        Color.YELLOW,
-    ],
-];
 
 type Piece = {
     face: number;
@@ -75,9 +28,23 @@ const ColorToFaceIndexMap = {
 
 export default class Cube {
     private cubeState: CubeState;
+    private order: number;
 
-    constructor(scramble: string) {
-        this.cubeState = nonScrambledCube.map((s) => s.map((p) => p));
+    constructor(scramble: string, puzzleType: PuzzleType) {
+        this.order = parseInt(puzzleType[0]);
+        // If the cube is even, increment it to make it odd. That way we can just hide the middle layer but keep it the same under the hood.
+        if (this.order % 2 === 0) {
+            this.order++;
+        }
+        const orderLength = this.order * this.order;
+        this.cubeState = [
+            Array(orderLength).fill(Color.WHITE),
+            Array(orderLength).fill(Color.ORANGE),
+            Array(orderLength).fill(Color.GREEN),
+            Array(orderLength).fill(Color.RED),
+            Array(orderLength).fill(Color.BLUE),
+            Array(orderLength).fill(Color.YELLOW),
+        ];
 
         if (scramble?.length) {
             this.scramble(scramble);
@@ -85,7 +52,15 @@ export default class Cube {
     }
 
     resetCubeState = () => {
-        this.cubeState = nonScrambledCube.map((s) => s.map((p) => p));
+        const orderLength = this.order * this.order;
+        this.cubeState = [
+            Array(orderLength).fill(Color.WHITE),
+            Array(orderLength).fill(Color.ORANGE),
+            Array(orderLength).fill(Color.GREEN),
+            Array(orderLength).fill(Color.RED),
+            Array(orderLength).fill(Color.BLUE),
+            Array(orderLength).fill(Color.YELLOW),
+        ];
     };
 
     getState = () => {
