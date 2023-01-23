@@ -42,8 +42,7 @@ export default App;
 /*
     TODO
 
-    settings dialog:
-        color scheme?
+    color scheme?
     
     CFOP trainer
         four splits
@@ -51,7 +50,8 @@ export default App;
         select case for pll
         display results by oll/pll
 
-    solveData graph
+    OLL Trainer
+    PL Trainer
 
     External timer connection (bluetooth or wired)
 
@@ -64,5 +64,4 @@ export default App;
 
     Big technical shit:
         Store data to a db
-        connect to git
 */

@@ -15,7 +15,10 @@ export default function HeaderComponent() {
                 <button
                     className='timer__button'
                     onClick={() => {
-                        console.log('insights');
+                        setDialogData({
+                            dialogType: DialogType.INSIGHTS,
+                            isOpen: true,
+                        });
                     }}
                 >
                     <GraphIcon className='timer__icon' aria-label='Insights' />

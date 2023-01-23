@@ -3,12 +3,14 @@ import { SolveDialogData } from './SolveDialog';
 import { MultiSolveDialogData } from './MultiSolveDialog';
 import { SessionDialogData } from './SessionDialog';
 import { SettingsDialogData } from './SettingsDialog';
+import { InsightsDialogData } from './InsightsDialog';
 
 export enum DialogType {
     SOLVE,
     MULTISOLVE,
     SETTINGS,
     SESSION,
+    INSIGHTS,
 }
 
 type DialogContextType = {
@@ -17,7 +19,12 @@ type DialogContextType = {
     closeDialog: () => void;
 };
 
-export type DialogData = SolveDialogData | MultiSolveDialogData | SessionDialogData | SettingsDialogData;
+export type DialogData =
+    | SolveDialogData
+    | MultiSolveDialogData
+    | SessionDialogData
+    | SettingsDialogData
+    | InsightsDialogData;
 
 export const DialogContext = createContext<DialogContextType>({
     dialogData: {

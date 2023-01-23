@@ -23,6 +23,7 @@ import SessionDialog from '../../dialogs/SessionDialog';
 import useDialogContext from '../../dialogs/UseDialogsContext';
 import SessionManagementComponent from '../SessionManagementComponent';
 import SettingsDialog, { SettingsContext } from '../../dialogs/SettingsDialog';
+import InsightsDialog from '../../dialogs/InsightsDialog';
 
 export type SolveData = Solve[];
 export type SolveDataAction =
@@ -117,7 +118,7 @@ export interface BestsData {
     [DataType.AVERAGE]: BestRecord[];
 }
 
-export function getBestOfType(bests: BestsData, type: DataType, size: number) {
+export function getBestOfType(bests: BestsData, type: DataType, size: number): BestRecord | undefined {
     if (type === DataType.SINGLE) {
         return bests[type];
     }
@@ -229,6 +230,7 @@ export default function Timer() {
                         solveDispatcher={dispatchSolveData}
                     />
                     <SettingsDialog />
+                    <InsightsDialog solves={solveData} bests={bestsData} />
                 </>
             </DialogContextProvider>
             <AlertsComponent />

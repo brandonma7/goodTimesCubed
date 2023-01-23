@@ -1,0 +1,25 @@
+@import '../../styles/global-variables';
+
+.timer__insights-dialog {
+    @include common-dialog-styles;
+    width: 70%;
+    left: 15%;
+    padding: 1vw;
+    overflow-y: auto;
+
+    .timer__tooltip {
+        background-color: $main-background-color;
+        border: $thin-border-size $main-border-color;
+        border-radius: $size-xs;
+        padding: $size-xs;
+    }
+
+    .timer__tooltip-label {
+        display: flex;
+        justify-content: space-between;
+
+        .timer__tooltip-label-key {
+            margin-right: $size-l;
+        }
+    }
+}
