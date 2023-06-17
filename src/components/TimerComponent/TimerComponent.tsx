@@ -8,6 +8,8 @@ import { SettingsContext } from '../../dialogs/SettingsDialog';
 
 import './TimerComponent.scss';
 import { PuzzleType } from '../../utils/cubingUtils';
+import { useContainerDimensions } from '../../utils/useContainerDimensions';
+import { MetaDataContext } from '../../TimerApp';
 
 type TimerComponentProps = {
     dispatchSolveData: React.Dispatch<SolveDataAction>;
@@ -23,7 +25,7 @@ const TimerComponent = memo(function TimerComponentInternal({
     newScramble,
 }: TimerComponentProps) {
     const { isManualEntryMode } = useContext(SettingsContext);
-    // const isManualEntryMode = true;
+    const { isMobile } = useContext(MetaDataContext);
     const [timerEntry, setTimerEntry] = useState(isManualEntryMode ? '' : '0.00');
     const [isPrepping, setIsPrepping] = useState(false);
     const [isPrepped, setIsPrepped] = useState(false);
@@ -36,6 +38,18 @@ const TimerComponent = memo(function TimerComponentInternal({
 
     const isTimerReadyTimeoutRef = useRef<NodeJS.Timeout>();
     const timerTimeoutRef = useRef<NodeJS.Timeout>();
+
+    const timerRef = useRef<any>();
+    const { width, height } = useContainerDimensions(timerRef);
+
+    const scrambleRef = useRef<any>();
+    const { height: scrambleHeight } = useContainerDimensions(scrambleRef);
+    const inputRef = useRef<any>();
+    const { height: inputHeight } = useContainerDimensions(inputRef);
+    const actionsRef = useRef<any>();
+    const { height: actionsHeight } = useContainerDimensions(actionsRef);
+
+    const remainingHeightForCubePic = height - scrambleHeight - inputHeight - actionsHeight - 64;
 
     useEffect(() => {
         setTimerEntry(isManualEntryMode ? '' : '0.00');
@@ -112,6 +126,7 @@ const TimerComponent = memo(function TimerComponentInternal({
     return (
         <section
             className='timer__timer'
+            ref={timerRef}
             tabIndex={0}
             onKeyDown={(event) => {
                 if (!isManualEntryMode) {
@@ -141,8 +156,10 @@ const TimerComponent = memo(function TimerComponentInternal({
                 }
             }}
         >
-            <div className='timer__scramble'>{scramble}</div>
-            <div className='timer__input-container'>
+            <div className='timer__scramble' ref={scrambleRef}>
+                {scramble}
+            </div>
+            <div className='timer__input-container' ref={inputRef}>
                 {isManualEntryMode ? (
                     <>
                         <input
@@ -210,7 +227,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                     </div>
                 )}
             </div>
-            <div className='timer__input-actions'>
+            <div className='timer__input-actions' ref={actionsRef}>
                 <button
                     className='timer__button'
                     onClick={() => {
@@ -220,7 +237,16 @@ const TimerComponent = memo(function TimerComponentInternal({
                     New Scramble
                 </button>
             </div>
-            <CubeVisualizationComponent scramble={scramble} puzzleType={puzzleType} />
+            {/*scramble.split(' ').map((_, index, scrambleList) => {
+                const subScramble = scrambleList.slice(0, index + 1).join(' ');
+                return <CubeVisualizationComponent key={index} scramble={subScramble} puzzleType={puzzleType} />;
+            })*/}
+            <CubeVisualizationComponent
+                scramble={scramble}
+                puzzleType={puzzleType}
+                width={width / 2}
+                height={remainingHeightForCubePic < 200 && isMobile ? 200 : remainingHeightForCubePic}
+            />
         </section>
     );
 });

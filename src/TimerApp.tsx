@@ -15,11 +15,26 @@ export const AlertsContext = createContext<AlertContextType>({
     deleteAlert: () => null,
 });
 
+type MetaDataContextType = {
+    isMobile: boolean;
+    setIsMobile: (newValue: boolean) => void;
+};
+export const MetaDataContext = createContext<MetaDataContextType>({
+    isMobile: false,
+    setIsMobile: () => null,
+});
+export function MetaDataContextProvider({ children }: { children: JSX.Element }) {
+    const [isMobile, setIsMobile] = useState(false);
+
+    const metaDataContextValue = { isMobile, setIsMobile };
+    return <MetaDataContext.Provider value={metaDataContextValue}>{children}</MetaDataContext.Provider>;
+}
+
 function App() {
     const [alerts, setAlerts] = useState<string[]>([]);
     const pushAlert = (alert: string) => {
         if (alerts.at(-1) !== alert) {
-            setAlerts([...alerts, alert]);
+            setAlerts((alerts) => [...alerts, alert]);
         }
     };
     const deleteAlert = (index: number) => {
@@ -30,9 +45,11 @@ function App() {
     const alertContextValue = { alerts, pushAlert, deleteAlert };
     return (
         <SettingsContextProvider>
-            <AlertsContext.Provider value={alertContextValue}>
-                <Timer />
-            </AlertsContext.Provider>
+            <MetaDataContextProvider>
+                <AlertsContext.Provider value={alertContextValue}>
+                    <Timer />
+                </AlertsContext.Provider>
+            </MetaDataContextProvider>
         </SettingsContextProvider>
     );
 }
@@ -41,6 +58,8 @@ export default App;
 
 /*
     TODO
+
+    bugs:
 
     color scheme?
     
@@ -56,11 +75,11 @@ export default App;
     External timer connection (bluetooth or wired)
 
     More puzzles (at least WCA events)
-        2x2
-        4x4
-        5x5
-        6x6
-        7x7
+        [ ] Pyraminx
+        [ ] Skewb
+        [ ] Square-1
+        [ ] Megaminx
+        [ ] Clock
 
     Big technical shit:
         Store data to a db

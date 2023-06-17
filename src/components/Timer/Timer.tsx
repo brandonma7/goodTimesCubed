@@ -6,11 +6,11 @@ import BestsTableComponent, { calculateBests } from '../BestsTableComponent';
 
 import './Timer.scss';
 import TimerComponent from '../TimerComponent';
-import { DataType, generateScramble, PuzzleTypeMoveCount, Solve } from '../../utils/cubingUtils';
+import { DataType, generateScramble, Solve } from '../../utils/cubingUtils';
 import SolveDialog from '../../dialogs/SolveDialog';
 import MultiSolveDialog from '../../dialogs/MultiSolveDialog';
 import AlertsComponent from '../AlertsComponent';
-import { AlertsContext } from '../../TimerApp';
+import { AlertsContext, MetaDataContext } from '../../TimerApp';
 import {
     areSessionsSame,
     getFormattedTime,
@@ -24,6 +24,9 @@ import useDialogContext from '../../dialogs/UseDialogsContext';
 import SessionManagementComponent from '../SessionManagementComponent';
 import SettingsDialog, { SettingsContext } from '../../dialogs/SettingsDialog';
 import InsightsDialog from '../../dialogs/InsightsDialog';
+import { useContainerDimensions } from '../../utils/useContainerDimensions';
+
+const SMALL_SCREEN_SIZE_WIDTH = 768;
 
 export type SolveData = Solve[];
 export type SolveDataAction =
@@ -129,6 +132,7 @@ export default function Timer() {
     const DialogContextProvider = useDialogContext();
     const { pushAlert } = useContext(AlertsContext);
     const { solveSettings } = useContext(SettingsContext);
+    const { isMobile, setIsMobile } = useContext(MetaDataContext);
 
     const sessionList = getSessionListFromLocalStorage();
     const [sessionId, setSessionId] = useStickyState(sessionList[0], 'currentSession');
@@ -137,7 +141,10 @@ export default function Timer() {
     const [solveData, dispatchSolveData] = useReducer(solveDataReducer, sessionData.data, undefined);
     const [bestsData, setBestsData] = useState(calculateBests(solveSettings, solveData));
 
-    const [scramble, setScramble] = useState(generateScramble(PuzzleTypeMoveCount[sessionData.type]));
+    const [scramble, setScramble] = useState(generateScramble(sessionData.type));
+
+    const timerRef = useRef<any>();
+    const { width } = useContainerDimensions(timerRef);
 
     const isSuppressingBestAlerts = useRef(false);
     const suppressBestAlerts = () => {
@@ -145,8 +152,20 @@ export default function Timer() {
     };
 
     function newScramble() {
-        setScramble(generateScramble(PuzzleTypeMoveCount[sessionData.type]));
+        setScramble(generateScramble(sessionData.type));
     }
+
+    useEffect(() => {
+        if (isMobile) {
+            if (width > SMALL_SCREEN_SIZE_WIDTH) {
+                setIsMobile(false);
+            }
+        } else {
+            if (width <= SMALL_SCREEN_SIZE_WIDTH) {
+                setIsMobile(true);
+            }
+        }
+    }, [width]);
 
     useEffect(() => {
         const newSolveData = getSessionDataFromLocalStorage(sessionId);
@@ -201,7 +220,7 @@ export default function Timer() {
     }, [solveData, solveSettings]);
 
     return (
-        <div className='timer'>
+        <div className='timer' ref={timerRef}>
             <DialogContextProvider>
                 <HeaderComponent />
             </DialogContextProvider>
@@ -219,6 +238,13 @@ export default function Timer() {
                     scramble={scramble}
                     newScramble={newScramble}
                 />
+                {/*<input
+                    type='text'
+                    value={scramble}
+                    onChange={(newValue) => {
+                        setScramble(newValue.target.value);
+                    }}
+                />*/}
             </div>
             <DialogContextProvider>
                 <>
