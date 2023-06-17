@@ -143,7 +143,7 @@ export default function Timer() {
 
     const [scramble, setScramble] = useState(generateScramble(sessionData.type));
 
-    const timerRef = useRef<any>();
+    const timerRef = useRef<HTMLDivElement>(null);
     const { width } = useContainerDimensions(timerRef);
 
     const isSuppressingBestAlerts = useRef(false);

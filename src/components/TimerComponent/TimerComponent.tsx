@@ -39,14 +39,14 @@ const TimerComponent = memo(function TimerComponentInternal({
     const isTimerReadyTimeoutRef = useRef<NodeJS.Timeout>();
     const timerTimeoutRef = useRef<NodeJS.Timeout>();
 
-    const timerRef = useRef<any>();
+    const timerRef = useRef<HTMLElement>(null);
     const { width, height } = useContainerDimensions(timerRef);
 
-    const scrambleRef = useRef<any>();
+    const scrambleRef = useRef<HTMLDivElement>(null);
     const { height: scrambleHeight } = useContainerDimensions(scrambleRef);
-    const inputRef = useRef<any>();
+    const inputRef = useRef<HTMLDivElement>(null);
     const { height: inputHeight } = useContainerDimensions(inputRef);
-    const actionsRef = useRef<any>();
+    const actionsRef = useRef<HTMLDivElement>(null);
     const { height: actionsHeight } = useContainerDimensions(actionsRef);
 
     const remainingHeightForCubePic = height - scrambleHeight - inputHeight - actionsHeight - 64;
