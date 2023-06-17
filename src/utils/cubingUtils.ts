@@ -26,9 +26,12 @@ export type Solve = {
 // The order of these are important for the scramble algorithm!
 export const TURNS = ['R', 'U', 'F', 'L', 'D', 'B'];
 export const TurnModifiers = ['', '2', "'"];
+export const TurnModifiersBigCubes = [...TurnModifiers, 'w', 'w2', "w'"];
 
 export const PuzzleTypeValues = ['2x2x2', '3x3x3', '4x4x4', '5x5x5', '6x6x6', '7x7x7'];
 export type PuzzleType = '2x2x2' | '3x3x3' | '4x4x4' | '5x5x5' | '6x6x6' | '7x7x7';
+const bigCubes: PuzzleType[] = ['4x4x4', '5x5x5', '6x6x6', '7x7x7'];
+
 export const PuzzleTypeMoveCount = {
     '2x2x2': 8,
     '3x3x3': 20,
@@ -46,13 +49,21 @@ export const IndexesToSkip = {
     '7x7x7': new Array<number>(),
 };
 
-export function generateScramble(size = 20): string {
+export function getCubeOrder(type: PuzzleType): number {
+    return parseInt(type[0]);
+}
+
+export function generateScramble(type: PuzzleType = '3x3x3'): string {
     let moveString = '';
     const scramble = [];
+
     // Setting these to arbitrarily high numbers so the math of the algorithm works on the first iterations
     let prev = 100;
     let prever = 100;
-    for (let i = 0; i < size; i++) {
+
+    const turnMods = bigCubes.includes(type) ? TurnModifiersBigCubes : TurnModifiers;
+
+    for (let i = 0; i < PuzzleTypeMoveCount[type]; i++) {
         let turn = getRand(TURNS.length);
         if (
             // If the current turn is the same as the last turn...
@@ -66,8 +77,12 @@ export function generateScramble(size = 20): string {
         prever = prev;
         prev = turn;
 
-        const turnMod = TurnModifiers[getRand(TurnModifiers.length)];
-        moveString = `${TURNS[turn]}${turnMod}`;
+        const turnMod = turnMods[getRand(turnMods.length)];
+
+        const wideMoveLayerCount = getRand(Math.floor(getCubeOrder(type) / 2)) + 1;
+        const wideMoveLayerValue = turnMod.includes('w') && wideMoveLayerCount > 2 ? wideMoveLayerCount : '';
+
+        moveString = `${wideMoveLayerValue}${TURNS[turn]}${turnMod}`;
         scramble.push(moveString);
     }
     return scramble.join(' ');

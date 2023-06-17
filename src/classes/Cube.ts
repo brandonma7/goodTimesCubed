@@ -1,4 +1,4 @@
-import { PuzzleType } from '../utils/cubingUtils';
+import { getCubeOrder, PuzzleType } from '../utils/cubingUtils';
 
 enum Color {
     WHITE,
@@ -31,7 +31,7 @@ export default class Cube {
     private order: number;
 
     constructor(scramble: string, puzzleType: PuzzleType) {
-        this.order = parseInt(puzzleType[0]);
+        this.order = getCubeOrder(puzzleType);
         // If the cube is even, increment it to make it odd. That way we can just hide the middle layer but keep it the same under the hood.
         if (this.order % 2 === 0) {
             this.order++;
@@ -76,83 +76,92 @@ export default class Cube {
     };
 
     doMove = (move: string) => {
+        const isWideMove = move.includes('w');
+        const hasLeadingWidthValue = isWideMove && !isNaN(parseInt(move[0]));
+        const layerWidth = isWideMove ? (hasLeadingWidthValue ? parseInt(move[0]) : 2) : 1;
+        if (isWideMove) {
+            move = move.split('w').join('');
+        }
+        if (hasLeadingWidthValue) {
+            move = move.slice(1);
+        }
         switch (move) {
             case 'R':
-                this.R();
+                this.R(layerWidth);
                 break;
             case "R'":
-                this.R();
-                this.R();
-                this.R();
+                this.R(layerWidth);
+                this.R(layerWidth);
+                this.R(layerWidth);
                 break;
             case 'R2':
-                this.R();
-                this.R();
+                this.R(layerWidth);
+                this.R(layerWidth);
                 break;
 
             case 'L':
-                this.L();
+                this.L(layerWidth);
                 break;
             case "L'":
-                this.L();
-                this.L();
-                this.L();
+                this.L(layerWidth);
+                this.L(layerWidth);
+                this.L(layerWidth);
                 break;
             case 'L2':
-                this.L();
-                this.L();
+                this.L(layerWidth);
+                this.L(layerWidth);
                 break;
 
             case 'U':
-                this.U();
+                this.U(layerWidth);
                 break;
             case "U'":
-                this.U();
-                this.U();
-                this.U();
+                this.U(layerWidth);
+                this.U(layerWidth);
+                this.U(layerWidth);
                 break;
             case 'U2':
-                this.U();
-                this.U();
+                this.U(layerWidth);
+                this.U(layerWidth);
                 break;
 
             case 'D':
-                this.D();
+                this.D(layerWidth);
                 break;
             case "D'":
-                this.D();
-                this.D();
-                this.D();
+                this.D(layerWidth);
+                this.D(layerWidth);
+                this.D(layerWidth);
                 break;
             case 'D2':
-                this.D();
-                this.D();
+                this.D(layerWidth);
+                this.D(layerWidth);
                 break;
 
             case 'F':
-                this.F();
+                this.F(layerWidth);
                 break;
             case "F'":
-                this.F();
-                this.F();
-                this.F();
+                this.F(layerWidth);
+                this.F(layerWidth);
+                this.F(layerWidth);
                 break;
             case 'F2':
-                this.F();
-                this.F();
+                this.F(layerWidth);
+                this.F(layerWidth);
                 break;
 
             case 'B':
-                this.B();
+                this.B(layerWidth);
                 break;
             case "B'":
-                this.B();
-                this.B();
-                this.B();
+                this.B(layerWidth);
+                this.B(layerWidth);
+                this.B(layerWidth);
                 break;
             case 'B2':
-                this.B();
-                this.B();
+                this.B(layerWidth);
+                this.B(layerWidth);
                 break;
         }
     };
@@ -167,11 +176,37 @@ export default class Cube {
 
     private rotateFacePiecesCW = (color: Color) => {
         const face = ColorToFaceIndexMap[color];
-        this.fourCycle({ face, sticker: 0 }, { face, sticker: 6 }, { face, sticker: 8 }, { face, sticker: 2 });
-        this.fourCycle({ face, sticker: 1 }, { face, sticker: 3 }, { face, sticker: 7 }, { face, sticker: 5 });
+
+        const piecesFromCenterToEdge = Math.floor(this.order / 2);
+
+        const maxIndex = this.order * this.order - 1;
+
+        for (let j = 0; j < piecesFromCenterToEdge; j++) {
+            for (let i = 0; i < this.order - 1 - j * 2; i++) {
+                const innerOffsetPlus = j * (this.order + 1);
+                const innerOffsetMinus = j * (this.order - 1);
+                this.fourCycle(
+                    { face, sticker: i + innerOffsetPlus },
+                    { face, sticker: maxIndex + 1 - this.order - this.order * i - innerOffsetMinus },
+                    { face, sticker: maxIndex - i - innerOffsetPlus },
+                    { face, sticker: this.order - 1 + this.order * i + innerOffsetMinus },
+                );
+            }
+        }
+
+        /*this.fourCycle({ face, sticker: 0 }, { face, sticker: 6 }, { face, sticker: 8 }, { face, sticker: 2 });
+        this.fourCycle({ face, sticker: 1 }, { face, sticker: 3 }, { face, sticker: 7 }, { face, sticker: 5 });*/
     };
 
-    private rotateEdgePieces = (faces: number[], stickers: number[]) => {
+    /*private rotateEdgePieces = (faces: number[], stickers: number[]) => {
+        for (let i = 0; i < this.order; i++) {
+            this.fourCycle(
+                { face: faces[0], sticker: stickers[i] },
+                { face: faces[1], sticker: stickers[i] },
+                { face: faces[2], sticker: stickers[i] },
+                { face: faces[3], sticker: stickers[i] },
+            );
+        }
         this.fourCycle(
             { face: faces[0], sticker: stickers[0] },
             { face: faces[1], sticker: stickers[0] },
@@ -190,27 +225,63 @@ export default class Cube {
             { face: faces[2], sticker: stickers[2] },
             { face: faces[3], sticker: stickers[2] },
         );
-    };
+    };*/
 
-    private U = () => {
+    private U = (layerWidth: number) => {
         this.rotateFacePiecesCW(Color.WHITE);
-        this.rotateEdgePieces([2, 3, 4, 1], [0, 1, 2]);
+        //this.rotateEdgePieces([2, 3, 4, 1], [0, 1, 2]);
+        for (let layer = 0; layer < layerWidth; layer++) {
+            const layerOffset = layer * this.order;
+            for (let i = 0; i < this.order; i++) {
+                this.fourCycle(
+                    { face: 2, sticker: i + layerOffset },
+                    { face: 3, sticker: i + layerOffset },
+                    { face: 4, sticker: i + layerOffset },
+                    { face: 1, sticker: i + layerOffset },
+                );
+            }
+        }
     };
 
-    private D = () => {
+    private D = (layerWidth: number) => {
         this.rotateFacePiecesCW(Color.YELLOW);
-        this.rotateEdgePieces([1, 4, 3, 2], [6, 7, 8]);
+        //this.rotateEdgePieces([1, 4, 3, 2], [6, 7, 8]);
+        const startIndex = this.order * this.order - this.order;
+        for (let layer = 0; layer < layerWidth; layer++) {
+            const layerOffset = layer * this.order;
+            for (let i = 0; i < this.order; i++) {
+                this.fourCycle(
+                    { face: 1, sticker: startIndex + i - layerOffset },
+                    { face: 4, sticker: startIndex + i - layerOffset },
+                    { face: 3, sticker: startIndex + i - layerOffset },
+                    { face: 2, sticker: startIndex + i - layerOffset },
+                );
+            }
+        }
     };
 
-    private R = () => {
+    private R = (layerWidth: number) => {
         this.rotateFacePiecesCW(Color.RED);
-        this.fourCycle(
+
+        const orderLength = this.order * this.order;
+
+        for (let layer = 0; layer < layerWidth; layer++) {
+            for (let i = 0; i < this.order; i++) {
+                this.fourCycle(
+                    { face: 0, sticker: this.order - 1 + this.order * i - layer },
+                    { face: 2, sticker: this.order - 1 + this.order * i - layer },
+                    { face: 5, sticker: this.order - 1 + this.order * i - layer },
+                    { face: 4, sticker: orderLength - this.order - this.order * i + layer },
+                );
+            }
+        }
+
+        /*this.fourCycle(
             { face: 0, sticker: 2 },
             { face: 2, sticker: 2 },
             { face: 5, sticker: 2 },
             { face: 4, sticker: 6 },
-        );
-        this.fourCycle(
+        );this.fourCycle(
             { face: 0, sticker: 5 },
             { face: 2, sticker: 5 },
             { face: 5, sticker: 5 },
@@ -221,12 +292,26 @@ export default class Cube {
             { face: 2, sticker: 8 },
             { face: 5, sticker: 8 },
             { face: 4, sticker: 0 },
-        );
+        );*/
     };
 
-    private L = () => {
+    private L = (layerWidth: number) => {
         this.rotateFacePiecesCW(Color.ORANGE);
-        this.fourCycle(
+
+        const maxIndex = this.order * this.order - 1;
+
+        for (let layer = 0; layer < layerWidth; layer++) {
+            for (let i = 0; i < this.order; i++) {
+                this.fourCycle(
+                    { face: 4, sticker: maxIndex - this.order * i - layer },
+                    { face: 5, sticker: this.order * i + layer },
+                    { face: 2, sticker: this.order * i + layer },
+                    { face: 0, sticker: this.order * i + layer },
+                );
+            }
+        }
+
+        /*this.fourCycle(
             { face: 4, sticker: 8 },
             { face: 5, sticker: 0 },
             { face: 2, sticker: 0 },
@@ -243,12 +328,27 @@ export default class Cube {
             { face: 5, sticker: 6 },
             { face: 2, sticker: 6 },
             { face: 0, sticker: 6 },
-        );
+        );*/
     };
 
-    private F = () => {
+    private F = (layerWidth: number) => {
         this.rotateFacePiecesCW(Color.GREEN);
-        this.fourCycle(
+
+        const orderLength = this.order * this.order;
+        const maxIndex = orderLength - 1;
+
+        for (let layer = 0; layer < layerWidth; layer++) {
+            for (let i = 0; i < this.order; i++) {
+                this.fourCycle(
+                    { face: 0, sticker: orderLength - this.order + i - this.order * layer },
+                    { face: 1, sticker: maxIndex - this.order * i - layer },
+                    { face: 5, sticker: this.order - 1 - i + this.order * layer },
+                    { face: 3, sticker: i * this.order + layer },
+                );
+            }
+        }
+
+        /*this.fourCycle(
             { face: 0, sticker: 6 },
             { face: 1, sticker: 8 },
             { face: 5, sticker: 2 },
@@ -265,12 +365,27 @@ export default class Cube {
             { face: 1, sticker: 2 },
             { face: 5, sticker: 0 },
             { face: 3, sticker: 6 },
-        );
+        );*/
     };
 
-    private B = () => {
+    private B = (layerWidth: number) => {
         this.rotateFacePiecesCW(Color.BLUE);
-        this.fourCycle(
+
+        const orderLength = this.order * this.order;
+        const maxIndex = orderLength - 1;
+
+        for (let layer = 0; layer < layerWidth; layer++) {
+            for (let i = 0; i < this.order; i++) {
+                this.fourCycle(
+                    { face: 3, sticker: this.order - 1 + this.order * i - layer },
+                    { face: 5, sticker: maxIndex - i - this.order * layer },
+                    { face: 1, sticker: orderLength - this.order - this.order * i + layer },
+                    { face: 0, sticker: i + this.order * layer },
+                );
+            }
+        }
+
+        /*this.fourCycle(
             { face: 3, sticker: 2 },
             { face: 5, sticker: 8 },
             { face: 1, sticker: 6 },
@@ -287,6 +402,6 @@ export default class Cube {
             { face: 5, sticker: 6 },
             { face: 1, sticker: 0 },
             { face: 0, sticker: 2 },
-        );
+        );*/
     };
 }
