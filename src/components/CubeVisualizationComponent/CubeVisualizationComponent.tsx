@@ -18,7 +18,7 @@ export default function CubeVisualizationComponent({
     scramble,
     puzzleType,
     width = 400,
-    height,
+    height = 300,
 }: CubeVisualizationComponentProps): JSX.Element {
     const cube = new Cube(scramble, puzzleType);
     const cubeState = cube.getState();
@@ -35,10 +35,22 @@ export default function CubeVisualizationComponent({
         return <div key={index} className={`timer__cube-sticker ${colorClass}`} />;
     };
 
+    const widthDerivedFromHeight = (height * 4) / 3;
+    const heightDerivedFromWidth = (width * 3) / 4;
+
+    const areaConstrainedByWidth = width * heightDerivedFromWidth;
+    const areaConstrainedByHeight = height * widthDerivedFromHeight;
+
+    const constrainDimensionsByWidth = areaConstrainedByWidth < areaConstrainedByHeight;
+
     return (
         <div
             className={`timer__cube-pic timer__cube-pic--${puzzleType}`}
-            style={{ maxWidth: width, maxHeight: height ?? (width * 3) / 4 }}
+            style={{
+                width: constrainDimensionsByWidth ? width : widthDerivedFromHeight,
+                height: constrainDimensionsByWidth ? heightDerivedFromWidth : height,
+                minHeight: constrainDimensionsByWidth ? heightDerivedFromWidth : height,
+            }}
         >
             <div className='timer__cube-pic-row'>
                 <div className='timer__cube-face'></div>
