@@ -77,7 +77,7 @@ export default App;
 
     External timer connection (bluetooth or wired)
 
-    More puzzles (at least WCA events)
+    More puzzles visualizations
         [ ] Pyraminx
         [ ] Skewb
         [ ] Square-1

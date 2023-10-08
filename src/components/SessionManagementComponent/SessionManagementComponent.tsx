@@ -28,7 +28,7 @@ export default function SessionManagementComponent({ sessionData, setSessionId }
                 {sessionNames.map((sesh, index) => {
                     return (
                         <option key={index} value={sesh.id}>
-                            {sesh.name}
+                            {sesh.name} ({sesh.type})
                         </option>
                     );
                 })}
@@ -60,6 +60,7 @@ export default function SessionManagementComponent({ sessionData, setSessionId }
                             id: newSessionId,
                             name: `Session ${newSessionNum}`,
                             type: '3x3x3',
+                            sessionType: 'normal',
                             data: [],
                         });
                         setSessionId(newSessionId);

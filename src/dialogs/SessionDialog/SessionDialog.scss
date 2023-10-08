@@ -5,6 +5,15 @@
     display: flex;
     flex-direction: column;
 
+    .timer__splits-input {
+        display: flex;
+        flex-direction: row;
+
+        .timer__input:last-child {
+            margin-bottom: $size-xs;
+        }
+    }
+
     .timer__input, .timer__button, .timer__select {
         margin-bottom: $size-xs;
         text-align: center;

@@ -13,6 +13,9 @@ type ResultsTableComponentProps = {
     bests: BestsData;
 };
 
+//const CFOP_TRAINER_SETTINGS = ['Cross', 'F2L', 'OLL', 'PLL'];
+//const YAU_TRAINER_SETTINGS = ['F2F', 'F3E', 'Faces', 'Edges', 'F2L', 'OLL', 'PLL'];
+
 export default function ResultsTableComponent({ solves, bests }: ResultsTableComponentProps): JSX.Element {
     const { solveSettings: settings } = useContext(SettingsContext);
     const { setDialogData } = useContext(DialogContext);

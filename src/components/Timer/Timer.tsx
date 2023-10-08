@@ -187,6 +187,7 @@ export default function Timer() {
             id: sessionId,
             name: sessionData.name,
             type: sessionData.type,
+            sessionType: sessionData.sessionType,
             data: solveData,
         });
     }, [solveData]);
@@ -266,26 +267,8 @@ export default function Timer() {
                     <SessionDialog
                         sessionData={sessionData}
                         hideDeleteButton={sessionList.length < 2}
-                        onRenameSession={(newName) => {
-                            const { id, type } = sessionData;
-                            sessionData.name = newName;
-                            saveSessionDataToLocalStorage({
-                                id,
-                                type,
-                                name: newName,
-                                data: solveData,
-                            });
-                        }}
-                        onChangeSessionType={(newType) => {
-                            const { id, name } = sessionData;
-                            const newSessionData = {
-                                id,
-                                name,
-                                type: newType,
-                                data: solveData,
-                            };
-                            sessionData.type = newSessionData.type;
-                            saveSessionDataToLocalStorage(newSessionData);
+                        onUpdateSessionData={(newData) => {
+                            saveSessionDataToLocalStorage(newData);
                         }}
                         onClearSessionData={() => {
                             suppressBestAlerts();
@@ -304,3 +287,39 @@ export default function Timer() {
         </div>
     );
 }
+/*
+                        onRenameSession={(newName) => {
+                            const { id, type, sessionType } = sessionData;
+                            sessionData.name = newName;
+                            saveSessionDataToLocalStorage({
+                                id,
+                                type,
+                                name: newName,
+                                data: solveData,
+                                sessionType,
+                            });
+                        }}
+                        onChangeSessionPuzzleType={(newType) => {
+                            const { id, name, sessionType } = sessionData;
+                            const newSessionData = {
+                                id,
+                                name,
+                                type: newType,
+                                sessionType,
+                                data: solveData,
+                            };
+                            sessionData.type = newSessionData.type;
+                            saveSessionDataToLocalStorage(newSessionData);
+                        }}
+                        onChangeSessionType={(newType) => {
+                            const { id, name, type } = sessionData;
+                            const newSessionData = {
+                                id,
+                                name,
+                                type,
+                                sessionType: newType,
+                                data: solveData,
+                            };
+                            sessionData.sessionType = newSessionData.sessionType;
+                            saveSessionDataToLocalStorage(newSessionData);
+                        }}*/

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { SolveDataAction } from '../../components/Timer';
 import { DialogContext, DialogType } from '../UseDialogsContext';
-import { clearLocalStorageForSession, SessionData } from '../../utils/genericUtils';
+import { clearLocalStorageForSession, SessionData, SessionType, SessionTypeMap } from '../../utils/genericUtils';
 import { PuzzleType, PuzzleTypeValues } from '../../utils/cubingUtils';
 
 import './SessionDialog.scss';
@@ -14,8 +14,7 @@ export type SessionDialogData = {
 type SessionDialogProps = {
     sessionData: SessionData;
     hideDeleteButton: boolean;
-    onRenameSession: (name: string) => void;
-    onChangeSessionType: (type: PuzzleType) => void;
+    onUpdateSessionData: (newData: SessionData) => void;
     onClearSessionData: () => void;
     onDeleteSession: () => void;
     solveDispatcher: React.Dispatch<SolveDataAction>;
@@ -24,14 +23,15 @@ type SessionDialogProps = {
 export default function SessionDialog({
     sessionData,
     hideDeleteButton,
-    onRenameSession,
-    onChangeSessionType,
+    onUpdateSessionData,
     onClearSessionData,
     onDeleteSession,
     solveDispatcher,
 }: SessionDialogProps): JSX.Element {
     const [newSessionIdName, setNewSessionIdName] = useState(sessionData.name);
-    const [sessionType, setSessionType] = useState(sessionData.type);
+    const [puzzleType, setPuzzleType] = useState(sessionData.type);
+    const [sessionType, setSessionType] = useState(sessionData.sessionType);
+    const [sessionNumSplits, setSessionNumSplits] = useState(sessionData.numSplits ?? 1);
     const { dialogData, closeDialog } = useContext(DialogContext);
 
     useEffect(() => {
@@ -41,6 +41,26 @@ export default function SessionDialog({
     if (dialogData?.dialogType !== DialogType.SESSION || !dialogData?.isOpen) {
         return <></>;
     }
+
+    const seshSelector = (
+        <select
+            className='timer__select'
+            value={sessionType}
+            onChange={(event) => {
+                if (event.target.value !== sessionData.type) {
+                    setSessionType(event.target.value as SessionType);
+                }
+            }}
+        >
+            {Object.keys(SessionTypeMap).map((seshType, index) => {
+                return (
+                    <option key={index} value={seshType}>
+                        {SessionTypeMap[seshType as SessionType]}
+                    </option>
+                );
+            })}
+        </select>
+    );
 
     return (
         <div
@@ -60,20 +80,13 @@ export default function SessionDialog({
                 onChange={(event) => {
                     setNewSessionIdName(event.target.value);
                 }}
-                onKeyDown={(event) => {
-                    if (event.code === 'Enter') {
-                        event.preventDefault();
-                        onRenameSession(newSessionIdName);
-                    }
-                }}
             />
             <select
                 className='timer__select'
-                value={sessionType}
+                value={puzzleType}
                 onChange={(event) => {
                     if (event.target.value !== sessionData.type) {
-                        setSessionType(event.target.value as PuzzleType);
-                        onChangeSessionType(event.target.value as PuzzleType);
+                        setPuzzleType(event.target.value as PuzzleType);
                     }
                 }}
             >
@@ -85,6 +98,22 @@ export default function SessionDialog({
                     );
                 })}
             </select>
+            {sessionType === 'splits' ? (
+                <div className='timer__splits-input'>
+                    {seshSelector}
+                    <input
+                        className='timer__input'
+                        type='text'
+                        value={sessionNumSplits}
+                        onChange={(event) => {
+                            setSessionNumSplits(parseInt(event.target.value));
+                        }}
+                    />
+                </div>
+            ) : (
+                seshSelector
+            )}
+
             {!hideDeleteButton && (
                 <button
                     className='timer__button'
@@ -97,6 +126,26 @@ export default function SessionDialog({
                     Delete Session
                 </button>
             )}
+
+            <button
+                className='timer__button'
+                onClick={() => {
+                    onUpdateSessionData({
+                        id: sessionData.id,
+                        data: sessionData.data,
+                        name: newSessionIdName,
+                        sessionType,
+                        numSplits: sessionNumSplits,
+                        type: puzzleType,
+                    });
+                    closeDialog();
+                }}
+            >
+                Save
+            </button>
+            <button className='timer__button' onClick={closeDialog}>
+                Cancel
+            </button>
             <button
                 className='timer__button'
                 onClick={() => {
@@ -105,9 +154,6 @@ export default function SessionDialog({
                 }}
             >
                 Clear Session Data
-            </button>
-            <button className='timer__button' onClick={closeDialog}>
-                Close
             </button>
         </div>
     );

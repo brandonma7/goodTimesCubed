@@ -77,11 +77,21 @@ export const areSessionsSame = (x: SolveData, y: SolveData) =>
 
 const CACHE_KEY = 'goodTimesSolvesData';
 
+export type SessionType = 'normal' | 'splits' | 'cfopTrainer' | 'yauTrainer';
+
+export const SessionTypeMap = {
+    normal: 'Normal',
+    splits: 'Splits',
+    cfopTrainer: 'CFOP Trainer',
+    yauTrainer: 'Yau Trainer',
+};
 export type SessionData = {
     id: string;
     name: string;
     type: PuzzleType;
     data: SolveData;
+    sessionType?: SessionType;
+    numSplits?: number;
 };
 type CachedSessionData = {
     [key: string]: SessionData;
@@ -120,12 +130,13 @@ export function getSessionListFromLocalStorage(): string[] {
     return sessionList.length === 0 ? ['session1'] : sessionList;
 }
 
-export function getSessionNamesFromLocalStorage(): { id: string; name: string }[] {
+export function getSessionNamesFromLocalStorage(): { id: string; name: string; type: PuzzleType }[] {
     const dataFromLocalStorage = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}') as CachedSessionData;
     const sessionNameList = Object.keys(dataFromLocalStorage).map((sessionId) => {
-        return { id: sessionId, name: dataFromLocalStorage[sessionId].name };
+        const { name, type } = dataFromLocalStorage[sessionId];
+        return { id: sessionId, name, type };
     });
-    return sessionNameList.length === 0 ? [{ id: 'sessionId', name: 'Session 1' }] : sessionNameList;
+    return sessionNameList.length === 0 ? [{ id: 'sessionId', name: 'Session 1', type: '3x3x3' }] : sessionNameList;
 }
 
 export function clearLocalStorageForSession(sessionId: string) {
@@ -143,4 +154,24 @@ export function saveSessionDataToLocalStorage(sessionData: SessionData) {
     const dataFromLocalStorage = JSON.parse(localStorage.getItem(CACHE_KEY) ?? '{}') as CachedSessionData;
     dataFromLocalStorage[id] = sessionData;
     localStorage.setItem(CACHE_KEY, JSON.stringify(dataFromLocalStorage));
+}
+
+const defaultValuesOfType = {
+    string: '',
+    number: 0,
+    array: [],
+    function: () => null,
+    bigint: 0,
+    boolean: false,
+    symbol: 0,
+    undefined: undefined,
+    object: {},
+};
+
+export function getLast<T>(list: T[]): unknown {
+    return list.length ? list[list.length - 1] : defaultValuesOfType[typeof list];
+}
+
+export function getRandomFromList(list: []) {
+    return list[getRand(list.length)];
 }

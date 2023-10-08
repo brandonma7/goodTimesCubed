@@ -22,12 +22,9 @@ export type Solve = {
     isPlusTwo: boolean;
     scramble: string;
     date: Date;
+    splits?: number[];
 };
 
-export type Scramble = {
-    scramble: string;
-    state: number[];
-};
 // The order of these are important for the scramble algorithm!
 export const TURNS = ['R', 'U', 'F', 'L', 'D', 'B'];
 export const TurnModifiers = ['', '2', "'"];
@@ -146,6 +143,7 @@ export function compareSolveTimes(a: Solve, b: Solve) {
     if (b.isDNF) {
         return -1;
     }
+
     return a.time - b.time;
 }
 
