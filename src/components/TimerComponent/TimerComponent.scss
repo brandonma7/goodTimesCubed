@@ -3,27 +3,28 @@
 .timer__timer {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center;
     text-align: center;
     padding: $size-m;
 
     .timer__counter {
         font-size: 10vw;
-    
+
         &--prepping {
             color: $yellow-light;
         }
-    
+
         &--prepped {
             color: $green-light;
         }
     }
-    
+
     .timer__scramble {
         font-size: 100%;
         margin-bottom: 1vw;
+        width: 60vw;
     }
-    
+
     .timer__time-input {
         background: $input-background-color;
         border: $thin-border-size $input-border-color;
@@ -44,7 +45,7 @@
         color: $main-font-color-muted;
         margin-bottom: 1vw;
     }
-    
+
     .timer__input-actions {
         margin-bottom: $size-s;
 
@@ -54,6 +55,7 @@
     }
 
     @media (min-width: $big-screen-width) {
+
         .timer__time-input,
         .timer__counter {
             font-size: 150px;
@@ -64,6 +66,7 @@
         .timer__scramble {
             font-size: $size-l;
             margin: $size-m;
+            width: 90vw;
         }
     }
 }

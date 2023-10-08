@@ -31,41 +31,41 @@ const SMALL_SCREEN_SIZE_WIDTH = 768;
 export type SolveData = Solve[];
 export type SolveDataAction =
     | {
-          type: 'ADD_SOLVE';
-          data: Solve;
-      }
+        type: 'ADD_SOLVE';
+        data: Solve;
+    }
     | {
-          type: 'DELETE_SOLVE';
-          data: number;
-      }
+        type: 'DELETE_SOLVE';
+        data: number;
+    }
     | {
-          type: 'SET_TIME';
-          data: {
-              index: number;
-              time: number;
-          };
-      }
+        type: 'SET_TIME';
+        data: {
+            index: number;
+            time: number;
+        };
+    }
     | {
-          type: 'SET_DNF';
-          data: {
-              index: number;
-              value: boolean;
-          };
-      }
+        type: 'SET_DNF';
+        data: {
+            index: number;
+            value: boolean;
+        };
+    }
     | {
-          type: 'SET_PLUS_TWO';
-          data: {
-              index: number;
-              value: boolean;
-          };
-      }
+        type: 'SET_PLUS_TWO';
+        data: {
+            index: number;
+            value: boolean;
+        };
+    }
     | {
-          type: 'CHANGE_SESSION';
-          data: SolveData;
-      }
+        type: 'CHANGE_SESSION';
+        data: SolveData;
+    }
     | {
-          type: 'CLEAR_DATA';
-      };
+        type: 'CLEAR_DATA';
+    };
 
 const solveDataReducer = (state: SolveData, action: SolveDataAction): SolveData => {
     switch (action.type) {
@@ -193,18 +193,19 @@ export default function Timer() {
 
     useEffect(() => {
         const newBests = calculateBests(solveSettings, solveData);
+        const alerts = [];
 
         newBests[DataType.AVERAGE].forEach((best) => {
             const currentBest = getBestOfType(bestsData, DataType.AVERAGE, best?.size ?? 0);
             if (best.index !== currentBest?.index && !isSuppressingBestAlerts.current) {
-                pushAlert(`new best AO${best.size}: ${getFormattedTime(best.time)}`);
+                alerts.push(`new best AO${best.size}: ${getFormattedTime(best.time)}`);
             }
         });
 
         newBests[DataType.MEAN].forEach((best) => {
             const currentBest = getBestOfType(bestsData, DataType.MEAN, best?.size ?? 0);
             if (best.index !== currentBest?.index && !isSuppressingBestAlerts.current) {
-                pushAlert(`new best MO${best.size}: ${getFormattedTime(best.time)}`);
+                alerts.push(`new best MO${best.size}: ${getFormattedTime(best.time)}`);
             }
         });
 
@@ -212,7 +213,11 @@ export default function Timer() {
             bestsData[DataType.SINGLE]?.index !== newBests[DataType.SINGLE]?.index &&
             !isSuppressingBestAlerts.current
         ) {
-            pushAlert(`New best single: ${getFormattedTime(newBests[DataType.SINGLE]?.time)}!`);
+            alerts.push(`New best single: ${getFormattedTime(newBests[DataType.SINGLE]?.time)}!`);
+        }
+
+        if (alerts.length) {
+            pushAlert(alerts);
         }
 
         setBestsData(newBests);
@@ -238,7 +243,8 @@ export default function Timer() {
                     scramble={scramble}
                     newScramble={newScramble}
                 />
-                {/*<input
+                {/* TODO: custom scrambles
+                <input
                     type='text'
                     value={scramble}
                     onChange={(newValue) => {

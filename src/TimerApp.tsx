@@ -6,7 +6,7 @@ import { SettingsContextProvider } from './dialogs/SettingsDialog';
 
 type AlertContextType = {
     alerts: string[];
-    pushAlert: (alert: string) => void;
+    pushAlert: (alert: string | string[]) => void;
     deleteAlert: (index: number) => void;
 };
 export const AlertsContext = createContext<AlertContextType>({
@@ -32,9 +32,11 @@ export function MetaDataContextProvider({ children }: { children: JSX.Element })
 
 function App() {
     const [alerts, setAlerts] = useState<string[]>([]);
-    const pushAlert = (alert: string) => {
-        if (alerts.at(-1) !== alert) {
-            setAlerts((alerts) => [...alerts, alert]);
+    const pushAlert = (alert: string | string[]) => {
+        if (Array.isArray(alert)) {
+            setAlerts(alert);
+        } else {
+            setAlerts([alert]);
         }
     };
     const deleteAlert = (index: number) => {
@@ -70,7 +72,8 @@ export default App;
         display results by oll/pll
 
     OLL Trainer
-    PL Trainer
+    PLL Trainer
+    PLL two side recognition trainer
 
     External timer connection (bluetooth or wired)
 

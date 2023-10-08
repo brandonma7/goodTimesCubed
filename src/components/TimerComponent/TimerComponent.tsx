@@ -7,7 +7,7 @@ import { classNames, getFormattedTime, unFormatTime } from '../../utils/genericU
 import { SettingsContext } from '../../dialogs/SettingsDialog';
 
 import './TimerComponent.scss';
-import { PuzzleType } from '../../utils/cubingUtils';
+import { PuzzleType, PuzzleTypeMoveCount } from '../../utils/cubingUtils';
 import { useContainerDimensions } from '../../utils/useContainerDimensions';
 import { MetaDataContext } from '../../TimerApp';
 
@@ -59,9 +59,10 @@ const TimerComponent = memo(function TimerComponentInternal({
         if (timerIsRunning.current) {
             timerIsRunning.current = false;
             clearTimeout(timerTimeoutRef.current);
-            setTimerEntry(`${elapsed.current / 1000}`);
 
             const baseTime = elapsed.current / 10;
+            const formattedBaseTime = getFormattedTime(baseTime);
+            setTimerEntry(`${formattedBaseTime}`);
 
             const timeEntry = {
                 isDNF,
@@ -123,6 +124,16 @@ const TimerComponent = memo(function TimerComponentInternal({
         }
     }
 
+    // Arbitrary font sizes for shortest move count and longest that I thought looked good
+    const fontSizeFor2x2 = 1.5;
+    const fontSizeFor7x7 = 0.8;
+    // Over-engineered way to figure out what everything in bewteen should be lol
+    const slope =
+        (fontSizeFor2x2 - fontSizeFor7x7) /
+        (PuzzleTypeMoveCount['2x2x2'] - PuzzleTypeMoveCount['7x7x7']);
+    const yIntercept = fontSizeFor2x2 - slope * PuzzleTypeMoveCount['2x2x2'];
+    const scrambleFontSize = slope * PuzzleTypeMoveCount[puzzleType] + yIntercept;
+
     return (
         <section
             className='timer__timer'
@@ -156,7 +167,9 @@ const TimerComponent = memo(function TimerComponentInternal({
                 }
             }}
         >
-            <div className='timer__scramble' ref={scrambleRef}>
+            <div className='timer__scramble' ref={scrambleRef} style={{
+                fontSize: `${scrambleFontSize}em`
+            }}>
                 {scramble}
             </div>
             <div className='timer__input-container' ref={inputRef}>
@@ -187,8 +200,8 @@ const TimerComponent = memo(function TimerComponentInternal({
                                     const baseTime = isDNF
                                         ? 0
                                         : isPlusTwo
-                                        ? unFormatTime(time.split('+')[0]) + 200
-                                        : unFormatTime(time);
+                                            ? unFormatTime(time.split('+')[0]) + 200
+                                            : unFormatTime(time);
 
                                     if (isNaN(baseTime)) {
                                         setTimerEntry('');

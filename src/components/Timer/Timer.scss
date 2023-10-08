@@ -11,8 +11,9 @@
         flex: 1 1 auto;
         justify-content: space-between;
         height: 93%;
+        min-height: 500px;
     }
-    
+
     .timer__left-bar {
         border-right: $thin-border-size $main-border-color;
         overflow-y: auto;
@@ -108,18 +109,19 @@
             }
         }
     }
+
     @media (max-width: $small-screen-width) {
         .timer__main {
             flex-direction: column-reverse;
         }
-    
+
         .timer__left-bar {
             border-top: $thin-border-size $main-border-color;
             border-right: none;
             flex-shrink: 1;
             width: 100%;
             padding: 0;
-            
+
 
             .timer__session-actions {
                 flex-direction: column;
@@ -129,7 +131,7 @@
                 }
             }
         }
-    
+
         .timer__button,
         .timer__button:hover,
         .timer__select,
