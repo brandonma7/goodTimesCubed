@@ -62,6 +62,7 @@ export default function SessionManagementComponent({ sessionData, setSessionId }
                             type: '3x3x3',
                             sessionType: 'normal',
                             data: [],
+                            numSplits: 1,
                         });
                         setSessionId(newSessionId);
                     }}

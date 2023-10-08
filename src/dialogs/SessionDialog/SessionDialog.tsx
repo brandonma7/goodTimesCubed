@@ -103,7 +103,9 @@ export default function SessionDialog({
                     {seshSelector}
                     <input
                         className='timer__input'
-                        type='text'
+                        type='number'
+                        min='1'
+                        max='5'
                         value={sessionNumSplits}
                         onChange={(event) => {
                             setSessionNumSplits(parseInt(event.target.value));

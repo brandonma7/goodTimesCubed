@@ -13,9 +13,11 @@ export enum DialogType {
     INSIGHTS,
 }
 
+export type SetDialogDataType = React.Dispatch<React.SetStateAction<DialogData>>;
+
 type DialogContextType = {
     dialogData: DialogData;
-    setDialogData: React.Dispatch<React.SetStateAction<DialogData>>;
+    setDialogData: SetDialogDataType;
     closeDialog: () => void;
 };
 

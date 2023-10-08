@@ -90,8 +90,8 @@ export type SessionData = {
     name: string;
     type: PuzzleType;
     data: SolveData;
-    sessionType?: SessionType;
-    numSplits?: number;
+    sessionType: SessionType;
+    numSplits: number;
 };
 type CachedSessionData = {
     [key: string]: SessionData;
@@ -119,6 +119,8 @@ export function getSessionDataFromLocalStorage(sessionId: string): SessionData {
             name: 'Session 1',
             type: '3x3x3',
             data: [],
+            sessionType: 'normal',
+            numSplits: 1,
         };
     }
     return dataFromLocalStorage[sessionId];

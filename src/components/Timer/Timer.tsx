@@ -31,41 +31,41 @@ const SMALL_SCREEN_SIZE_WIDTH = 768;
 export type SolveData = Solve[];
 export type SolveDataAction =
     | {
-        type: 'ADD_SOLVE';
-        data: Solve;
-    }
+          type: 'ADD_SOLVE';
+          data: Solve;
+      }
     | {
-        type: 'DELETE_SOLVE';
-        data: number;
-    }
+          type: 'DELETE_SOLVE';
+          data: number;
+      }
     | {
-        type: 'SET_TIME';
-        data: {
-            index: number;
-            time: number;
-        };
-    }
+          type: 'SET_TIME';
+          data: {
+              index: number;
+              time: number;
+          };
+      }
     | {
-        type: 'SET_DNF';
-        data: {
-            index: number;
-            value: boolean;
-        };
-    }
+          type: 'SET_DNF';
+          data: {
+              index: number;
+              value: boolean;
+          };
+      }
     | {
-        type: 'SET_PLUS_TWO';
-        data: {
-            index: number;
-            value: boolean;
-        };
-    }
+          type: 'SET_PLUS_TWO';
+          data: {
+              index: number;
+              value: boolean;
+          };
+      }
     | {
-        type: 'CHANGE_SESSION';
-        data: SolveData;
-    }
+          type: 'CHANGE_SESSION';
+          data: SolveData;
+      }
     | {
-        type: 'CLEAR_DATA';
-    };
+          type: 'CLEAR_DATA';
+      };
 
 const solveDataReducer = (state: SolveData, action: SolveDataAction): SolveData => {
     switch (action.type) {
@@ -189,6 +189,7 @@ export default function Timer() {
             type: sessionData.type,
             sessionType: sessionData.sessionType,
             data: solveData,
+            numSplits: sessionData.numSplits,
         });
     }, [solveData]);
 
@@ -234,7 +235,12 @@ export default function Timer() {
                 <DialogContextProvider>
                     <section className='timer__left-bar'>
                         <BestsTableComponent solves={solveData} bests={bestsData} />
-                        <ResultsTableComponent solves={solveData} bests={bestsData} />
+                        <ResultsTableComponent
+                            solves={solveData}
+                            bests={bestsData}
+                            sessionType={sessionData.sessionType}
+                            numSplits={sessionData.numSplits}
+                        />
                         <SessionManagementComponent sessionData={sessionData} setSessionId={setSessionId} />
                     </section>
                 </DialogContextProvider>
