@@ -20,6 +20,16 @@ export default function CubeVisualizationComponent({
     width = 400,
     height = 300,
 }: CubeVisualizationComponentProps): JSX.Element {
+    // Annoyingly verbose way of checking this to satisfy TS IndexesToSkip check below
+    if (
+        puzzleType === 'skewb' ||
+        puzzleType === 'pyraminx' ||
+        puzzleType === 'megaminx' ||
+        puzzleType === 'square1' ||
+        puzzleType === 'clock'
+    ) {
+        return <></>;
+    }
     const cube = new Cube(scramble, puzzleType);
     const cubeState = cube.getState();
 

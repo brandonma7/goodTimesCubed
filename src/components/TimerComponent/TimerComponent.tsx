@@ -7,7 +7,7 @@ import { classNames, getFormattedTime, unFormatTime } from '../../utils/genericU
 import { SettingsContext } from '../../dialogs/SettingsDialog';
 
 import './TimerComponent.scss';
-import { PuzzleType, PuzzleTypeMoveCount } from '../../utils/cubingUtils';
+import { PuzzleType, PuzzleTypeMoveCount, nonStandardPuzzles } from '../../utils/cubingUtils';
 import { useContainerDimensions } from '../../utils/useContainerDimensions';
 import { MetaDataContext } from '../../TimerApp';
 
@@ -254,12 +254,14 @@ const TimerComponent = memo(function TimerComponentInternal({
                 const subScramble = scrambleList.slice(0, index + 1).join(' ');
                 return <CubeVisualizationComponent key={index} scramble={subScramble} puzzleType={puzzleType} />;
             })*/}
-            <CubeVisualizationComponent
-                scramble={scramble}
-                puzzleType={puzzleType}
-                width={width / 2}
-                height={remainingHeightForCubePic < 200 && isMobile ? 200 : remainingHeightForCubePic}
-            />
+            {!nonStandardPuzzles.includes(puzzleType) && (
+                <CubeVisualizationComponent
+                    scramble={scramble}
+                    puzzleType={puzzleType}
+                    width={width / 2}
+                    height={remainingHeightForCubePic < 200 && isMobile ? 200 : remainingHeightForCubePic}
+                />
+            )}
         </section>
     );
 });

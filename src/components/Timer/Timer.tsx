@@ -141,7 +141,7 @@ export default function Timer() {
     const [solveData, dispatchSolveData] = useReducer(solveDataReducer, sessionData.data, undefined);
     const [bestsData, setBestsData] = useState(calculateBests(solveSettings, solveData));
 
-    const [scramble, setScramble] = useState(generateScramble(sessionData.type));
+    const [scramble, setScramble] = useState<string>(generateScramble(sessionData.type));
 
     const timerRef = useRef<HTMLDivElement>(null);
     const { width } = useContainerDimensions(timerRef);
