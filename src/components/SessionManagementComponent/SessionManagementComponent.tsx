@@ -1,8 +1,11 @@
 import React, { useContext } from 'react';
 import { DialogContext, DialogType } from '../../dialogs/UseDialogsContext';
-import { getSessionNamesFromLocalStorage, saveSessionDataToLocalStorage, SessionData } from '../../utils/genericUtils';
+import { getSessionNamesFromLocalStorage, saveSessionDataToLocalStorage } from '../../utils/genericUtils';
 
 import './SessionManagementComponent.scss';
+import { SolveData } from '../Timer';
+import { isEmpty, isEqual, xorWith } from 'lodash';
+import { PuzzleType } from '../../utils/cubingUtils';
 
 type SessionManagementComponentProps = {
     sessionData: SessionData;
@@ -73,3 +76,38 @@ export default function SessionManagementComponent({ sessionData, setSessionId }
         </>
     );
 }
+
+export const areSessionsSame = (x: SolveData, y: SolveData) =>
+    isEmpty(xorWith(x, y, isEqual)) && !(y.length === 0 && x.length === 0);
+
+export type SessionType = 'normal' | 'splits' | 'cfopTrainer' | 'yauTrainer';
+export type SessionData = {
+    id: string;
+    name: string;
+    type: PuzzleType;
+    data: SolveData;
+    sessionType: SessionType;
+    numSplits: number;
+};
+export type CachedSessionData = {
+    [key: string]: SessionData;
+};
+
+export const SessionTypeMap = {
+    normal: {
+        name: 'Normal',
+        splitNames: null,
+    },
+    splits: {
+        name: 'Splits',
+        splitNames: null,
+    },
+    cfopTrainer: {
+        name: 'CFOP Trainer',
+        splitNames: ['Cross', 'F2L', 'OLL', 'PLL'],
+    },
+    yauTrainer: {
+        name: 'Yau Trainer',
+        splitNames: ['F2F', 'F3E', 'Faces', 'Edges', 'F2L', 'OLL', 'PLL'],
+    },
+};

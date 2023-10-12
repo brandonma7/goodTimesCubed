@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { SolveDataAction } from '../../components/Timer';
+import { SessionData, SessionType, SessionTypeMap } from '../../components/SessionManagementComponent';
 import { DialogContext, DialogType } from '../UseDialogsContext';
-import { clearLocalStorageForSession, SessionData, SessionType, SessionTypeMap } from '../../utils/genericUtils';
-import { PuzzleType, PuzzleTypeValues } from '../../utils/cubingUtils';
+import { clearLocalStorageForSession } from '../../utils/genericUtils';
+import { PuzzleType, PuzzleTypeValues, NonStandardPuzzles } from '../../utils/cubingUtils';
 
 import './SessionDialog.scss';
 
@@ -48,14 +49,16 @@ export default function SessionDialog({
             value={sessionType}
             onChange={(event) => {
                 if (event.target.value !== sessionData.type) {
-                    setSessionType(event.target.value as SessionType);
+                    const seshType = event.target.value as SessionType;
+                    setSessionType(seshType);
+                    setSessionNumSplits(SessionTypeMap[seshType].splitNames?.length ?? 1);
                 }
             }}
         >
             {Object.keys(SessionTypeMap).map((seshType, index) => {
                 return (
                     <option key={index} value={seshType}>
-                        {SessionTypeMap[seshType as SessionType]}
+                        {SessionTypeMap[seshType as SessionType].name}
                     </option>
                 );
             })}
@@ -98,24 +101,24 @@ export default function SessionDialog({
                     );
                 })}
             </select>
-            {sessionType === 'splits' ? (
-                <div className='timer__splits-input'>
-                    {seshSelector}
-                    <input
-                        className='timer__input'
-                        type='number'
-                        min='1'
-                        max='5'
-                        value={sessionNumSplits}
-                        onChange={(event) => {
-                            setSessionNumSplits(parseInt(event.target.value));
-                        }}
-                    />
-                </div>
-            ) : (
-                seshSelector
-            )}
-
+            {!NonStandardPuzzles.includes(puzzleType) &&
+                (sessionType === 'splits' ? (
+                    <div className='timer__splits-input'>
+                        {seshSelector}
+                        <input
+                            className='timer__input'
+                            type='number'
+                            min='1'
+                            max='5'
+                            value={sessionNumSplits}
+                            onChange={(event) => {
+                                setSessionNumSplits(parseInt(event.target.value));
+                            }}
+                        />
+                    </div>
+                ) : (
+                    seshSelector
+                ))}
             {!hideDeleteButton && (
                 <button
                     className='timer__button'

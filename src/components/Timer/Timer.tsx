@@ -12,7 +12,6 @@ import MultiSolveDialog from '../../dialogs/MultiSolveDialog';
 import AlertsComponent from '../AlertsComponent';
 import { AlertsContext, MetaDataContext } from '../../TimerApp';
 import {
-    areSessionsSame,
     getFormattedTime,
     getSessionDataFromLocalStorage,
     getSessionListFromLocalStorage,
@@ -21,7 +20,7 @@ import {
 import useStickyState from '../../utils/useStickyState';
 import SessionDialog from '../../dialogs/SessionDialog';
 import useDialogContext from '../../dialogs/UseDialogsContext';
-import SessionManagementComponent from '../SessionManagementComponent';
+import SessionManagementComponent, { areSessionsSame } from '../SessionManagementComponent';
 import SettingsDialog, { SettingsContext } from '../../dialogs/SettingsDialog';
 import InsightsDialog from '../../dialogs/InsightsDialog';
 import { useContainerDimensions } from '../../utils/useContainerDimensions';
@@ -249,6 +248,7 @@ export default function Timer() {
                     puzzleType={sessionData.type}
                     scramble={scramble}
                     newScramble={newScramble}
+                    numSplits={sessionData.numSplits}
                 />
                 {/* TODO: custom scrambles
                 <input
@@ -264,6 +264,7 @@ export default function Timer() {
                     <SolveDialog
                         solves={solveData}
                         puzzleType={sessionData.type}
+                        sessionType={sessionData.sessionType}
                         solveDispatcher={dispatchSolveData}
                         onAction={() => {
                             suppressBestAlerts();

@@ -56,7 +56,7 @@ export type PuzzleType =
     | 'megaminx'
     | 'clock';
 const bigCubes: PuzzleType[] = ['4x4x4', '5x5x5', '6x6x6', '7x7x7'];
-export const nonStandardPuzzles = ['skewb', 'pyraminx', 'square1', 'megaminx', 'clock'];
+export const NonStandardPuzzles = ['skewb', 'pyraminx', 'square1', 'megaminx', 'clock'];
 
 export const PuzzleTypeMoveCount = {
     '2x2x2': 8,
@@ -86,7 +86,7 @@ export function getCubeOrder(type: PuzzleType): number {
 }
 
 export function generateScramble(type: PuzzleType = '3x3x3'): string {
-    if (nonStandardPuzzles.includes(type)) {
+    if (NonStandardPuzzles.includes(type)) {
         switch (type) {
             case 'pyraminx':
                 return generateSkewbPyraScramble(true);

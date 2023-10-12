@@ -7,7 +7,7 @@ import { classNames, getFormattedTime, unFormatTime } from '../../utils/genericU
 import { SettingsContext } from '../../dialogs/SettingsDialog';
 
 import './TimerComponent.scss';
-import { PuzzleType, PuzzleTypeMoveCount, nonStandardPuzzles } from '../../utils/cubingUtils';
+import { PuzzleType, PuzzleTypeMoveCount, Solve, NonStandardPuzzles } from '../../utils/cubingUtils';
 import { useContainerDimensions } from '../../utils/useContainerDimensions';
 import { MetaDataContext } from '../../TimerApp';
 
@@ -16,6 +16,7 @@ type TimerComponentProps = {
     puzzleType: PuzzleType;
     scramble: string;
     newScramble: () => void;
+    numSplits: number;
 };
 
 const TimerComponent = memo(function TimerComponentInternal({
@@ -23,12 +24,14 @@ const TimerComponent = memo(function TimerComponentInternal({
     puzzleType,
     scramble,
     newScramble,
+    numSplits,
 }: TimerComponentProps) {
     const { isManualEntryMode } = useContext(SettingsContext);
     const { isMobile } = useContext(MetaDataContext);
     const [timerEntry, setTimerEntry] = useState(isManualEntryMode ? '' : '0.00');
     const [isPrepping, setIsPrepping] = useState(false);
     const [isPrepped, setIsPrepped] = useState(false);
+    const [splitTimes, setSplitTimes] = useState<number[]>([]);
 
     const isTimerReady = useRef(false);
     const spaceKeyIsDown = useRef(false);
@@ -57,28 +60,48 @@ const TimerComponent = memo(function TimerComponentInternal({
 
     function startPreppingTimer(isDNF = false) {
         if (timerIsRunning.current) {
-            timerIsRunning.current = false;
-            clearTimeout(timerTimeoutRef.current);
+            // Timer is running, so either need to stop or record a split
+            if (splitTimes.length < numSplits - 1) {
+                // Record split
+                const baseTime = elapsed.current / 10;
+                setSplitTimes([...splitTimes, baseTime]);
+            } else {
+                timerIsRunning.current = false;
+                clearTimeout(timerTimeoutRef.current);
 
-            const baseTime = elapsed.current / 10;
-            const formattedBaseTime = getFormattedTime(baseTime);
-            setTimerEntry(`${formattedBaseTime}`);
+                const baseTime = elapsed.current / 10;
+                const formattedBaseTime = getFormattedTime(baseTime);
+                setTimerEntry(`${formattedBaseTime}`);
 
-            const timeEntry = {
-                isDNF,
-                isPlusTwo: false,
-                scramble,
-                date: new Date(),
-                time: baseTime,
-            };
+                const splits = [...splitTimes, baseTime]
+                    .reverse()
+                    .map((split, index, list) => {
+                        if (index === list.length - 1) {
+                            return split;
+                        }
+                        return split - list[index + 1];
+                    })
+                    .reverse();
 
-            dispatchSolveData({
-                type: 'ADD_SOLVE',
-                data: timeEntry,
-            });
+                const timeEntry: Solve = {
+                    isDNF,
+                    isPlusTwo: false,
+                    scramble,
+                    date: new Date(),
+                    time: baseTime,
+                    splits,
+                };
 
-            newScramble();
+                dispatchSolveData({
+                    type: 'ADD_SOLVE',
+                    data: timeEntry,
+                });
+
+                newScramble();
+                setSplitTimes([]);
+            }
         } else {
+            // Timer is not running, so start the prepping period
             if (!spaceKeyIsDown.current) {
                 spaceKeyIsDown.current = true;
                 elapsed.current = 0.0;
@@ -96,6 +119,7 @@ const TimerComponent = memo(function TimerComponentInternal({
 
     function startTimer() {
         spaceKeyIsDown.current = false;
+        // The prepping time has fully passed, so start the timer!
         if (isTimerReady.current) {
             setIsPrepping(false);
             setIsPrepped(false);
@@ -118,6 +142,7 @@ const TimerComponent = memo(function TimerComponentInternal({
             };
             timerTimeoutRef.current = setTimeout(step, interval);
         } else {
+            // The prepping time hasn't passed when the user lifted off the keyboard/screen, so abort
             clearTimeout(isTimerReadyTimeoutRef.current);
             setIsPrepping(false);
             setIsPrepped(false);
@@ -128,9 +153,7 @@ const TimerComponent = memo(function TimerComponentInternal({
     const fontSizeFor2x2 = 1.5;
     const fontSizeFor7x7 = 0.8;
     // Over-engineered way to figure out what everything in bewteen should be lol
-    const slope =
-        (fontSizeFor2x2 - fontSizeFor7x7) /
-        (PuzzleTypeMoveCount['2x2x2'] - PuzzleTypeMoveCount['7x7x7']);
+    const slope = (fontSizeFor2x2 - fontSizeFor7x7) / (PuzzleTypeMoveCount['2x2x2'] - PuzzleTypeMoveCount['7x7x7']);
     const yIntercept = fontSizeFor2x2 - slope * PuzzleTypeMoveCount['2x2x2'];
     const scrambleFontSize = slope * PuzzleTypeMoveCount[puzzleType] + yIntercept;
 
@@ -167,9 +190,13 @@ const TimerComponent = memo(function TimerComponentInternal({
                 }
             }}
         >
-            <div className='timer__scramble' ref={scrambleRef} style={{
-                fontSize: `${scrambleFontSize}em`
-            }}>
+            <div
+                className='timer__scramble'
+                ref={scrambleRef}
+                style={{
+                    fontSize: `${scrambleFontSize}em`,
+                }}
+            >
                 {scramble}
             </div>
             <div className='timer__input-container' ref={inputRef}>
@@ -200,8 +227,8 @@ const TimerComponent = memo(function TimerComponentInternal({
                                     const baseTime = isDNF
                                         ? 0
                                         : isPlusTwo
-                                            ? unFormatTime(time.split('+')[0]) + 200
-                                            : unFormatTime(time);
+                                        ? unFormatTime(time.split('+')[0]) + 200
+                                        : unFormatTime(time);
 
                                     if (isNaN(baseTime)) {
                                         setTimerEntry('');
@@ -254,7 +281,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                 const subScramble = scrambleList.slice(0, index + 1).join(' ');
                 return <CubeVisualizationComponent key={index} scramble={subScramble} puzzleType={puzzleType} />;
             })*/}
-            {!nonStandardPuzzles.includes(puzzleType) && (
+            {!NonStandardPuzzles.includes(puzzleType) && (
                 <CubeVisualizationComponent
                     scramble={scramble}
                     puzzleType={puzzleType}

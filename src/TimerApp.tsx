@@ -66,7 +66,6 @@ export default App;
     color scheme?
     
     CFOP trainer
-        four splits
         select case for oll
         select case for pll
         display results by oll/pll

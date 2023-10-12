@@ -4,6 +4,10 @@
     @include common-dialog-styles;
     width: 70%;
     left: 15%;
+
+    .timer__results {
+        width: auto;
+    }
 }
 
 .timer__solve-dialog-inner {

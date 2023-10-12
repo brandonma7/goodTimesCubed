@@ -1,6 +1,7 @@
-import { isEmpty, xorWith, isEqual } from 'lodash';
-import { SolveData } from '../components/Timer';
 import { PuzzleType, Solve } from './cubingUtils';
+import { CachedSessionData, SessionData } from '../components/SessionManagementComponent';
+
+const CACHE_KEY = 'goodTimesSolvesData';
 
 // Turn the formatted time (from entry) into an integer in centi-seconds
 export function unFormatTime(time = ''): number {
@@ -72,29 +73,16 @@ export function classNames(...classes: string[]) {
         .join(' ');
 }
 
-export const areSessionsSame = (x: SolveData, y: SolveData) =>
-    isEmpty(xorWith(x, y, isEqual)) && !(y.length === 0 && x.length === 0);
-
-const CACHE_KEY = 'goodTimesSolvesData';
-
-export type SessionType = 'normal' | 'splits' | 'cfopTrainer' | 'yauTrainer';
-
-export const SessionTypeMap = {
-    normal: 'Normal',
-    splits: 'Splits',
-    cfopTrainer: 'CFOP Trainer',
-    yauTrainer: 'Yau Trainer',
-};
-export type SessionData = {
-    id: string;
-    name: string;
-    type: PuzzleType;
-    data: SolveData;
-    sessionType: SessionType;
-    numSplits: number;
-};
-type CachedSessionData = {
-    [key: string]: SessionData;
+const defaultValuesOfType = {
+    string: '',
+    number: 0,
+    array: [],
+    function: () => null,
+    bigint: 0,
+    boolean: false,
+    symbol: 0,
+    undefined: undefined,
+    object: {},
 };
 
 /*
@@ -157,18 +145,6 @@ export function saveSessionDataToLocalStorage(sessionData: SessionData) {
     dataFromLocalStorage[id] = sessionData;
     localStorage.setItem(CACHE_KEY, JSON.stringify(dataFromLocalStorage));
 }
-
-const defaultValuesOfType = {
-    string: '',
-    number: 0,
-    array: [],
-    function: () => null,
-    bigint: 0,
-    boolean: false,
-    symbol: 0,
-    undefined: undefined,
-    object: {},
-};
 
 export function getLast<T>(list: T[]): unknown {
     return list.length ? list[list.length - 1] : defaultValuesOfType[typeof list];

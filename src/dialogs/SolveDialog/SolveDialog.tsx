@@ -8,6 +8,7 @@ import { getFormattedTime, unFormatTime } from '../../utils/genericUtils';
 import { DialogContext, DialogType } from '../UseDialogsContext';
 
 import './SolveDialog.scss';
+import { SessionType, SessionTypeMap } from '../../components/SessionManagementComponent';
 
 export type SolveDialogData = {
     dialogType: DialogType.SOLVE;
@@ -18,11 +19,18 @@ export type SolveDialogData = {
 type SolveDialogProps = {
     solves: SolveData;
     puzzleType: PuzzleType;
+    sessionType: SessionType;
     solveDispatcher: React.Dispatch<SolveDataAction>;
     onAction: () => void;
 };
 
-export default function SolveDialog({ solves, puzzleType, solveDispatcher, onAction }: SolveDialogProps): JSX.Element {
+export default function SolveDialog({
+    solves,
+    puzzleType,
+    sessionType,
+    solveDispatcher,
+    onAction,
+}: SolveDialogProps): JSX.Element {
     const { dialogData: ddata, closeDialog } = useContext(DialogContext);
     // So the component know what specific Dialog Data it's dealing with
     const dialogData = ddata as SolveDialogData;
@@ -90,6 +98,18 @@ export default function SolveDialog({ solves, puzzleType, solveDispatcher, onAct
                         }
                     }}
                 />
+                {(solve.splits?.length ?? 1) > 1 && (
+                    <table className='timer__results'>
+                        {SessionTypeMap[sessionType].splitNames?.map((name) => {
+                            return <th key={name}>{name}</th>;
+                        })}
+                        <tr>
+                            {solve.splits?.map((split, index) => {
+                                return <td key={index}>{getFormattedTime(split)}</td>;
+                            })}
+                        </tr>
+                    </table>
+                )}
                 <div>{scramble}</div>
                 <div className='timer__solve-dialog-date'>{formattedDate}</div>
 
