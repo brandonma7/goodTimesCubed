@@ -218,15 +218,13 @@ const TimerComponent = memo(function TimerComponentInternal({
                                 return (
                                     <td
                                         key={index}
+                                        className={classNames(
+                                            'timer__current-splits',
+                                            active && index < currentSplit ? 'timer__current-splits--current' : '',
+                                            active && index === currentSplit ? 'timer__current-splits--previous' : '',
+                                        )}
                                         style={{
-                                            width: '25%',
-                                            backgroundColor: !active
-                                                ? ''
-                                                : index < currentSplit
-                                                ? 'green'
-                                                : index === currentSplit
-                                                ? 'yellow'
-                                                : '',
+                                            width: `${100 / numSplits}%`,
                                         }}
                                     >
                                         {isNaN(time) ? '--' : getFormattedTime(time)}

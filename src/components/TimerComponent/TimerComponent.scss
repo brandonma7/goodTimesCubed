@@ -25,6 +25,15 @@
         width: 60vw;
     }
 
+    .timer__current-splits {
+        &.timer__current-splits--current {
+            background-color: $green-light;
+        }
+        &.timer__current-splits--previous {
+            background-color: $yellow-light;
+        }
+    }
+
     .timer__time-input {
         background: $input-background-color;
         border: $thin-border-size $input-border-color;

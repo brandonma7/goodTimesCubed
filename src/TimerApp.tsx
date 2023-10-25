@@ -95,6 +95,7 @@ export default App;
             [ ] Clock
 
     P4
+        custom scrambles
         color scheme?
 
     Big technical shit:
