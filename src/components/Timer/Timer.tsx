@@ -59,6 +59,20 @@ export type SolveDataAction =
           };
       }
     | {
+          type: 'SET_OLL_SKIP';
+          data: {
+              index: number;
+              value: boolean;
+          };
+      }
+    | {
+          type: 'SET_PLL_SKIP';
+          data: {
+              index: number;
+              value: boolean;
+          };
+      }
+    | {
           type: 'CHANGE_SESSION';
           data: SolveData;
       }
@@ -99,6 +113,26 @@ const solveDataReducer = (state: SolveData, action: SolveDataAction): SolveData 
                 }
                 return solve;
             });
+        case 'SET_OLL_SKIP':
+            return state.map((solve, index) => {
+                if (index === action.data.index) {
+                    if (!solve.analysisData) {
+                        solve.analysisData = {};
+                    }
+                    solve.analysisData.isOllSkip = action.data.value;
+                }
+                return solve;
+            });
+        case 'SET_PLL_SKIP':
+            return state.map((solve, index) => {
+                if (index === action.data.index) {
+                    if (!solve.analysisData) {
+                        solve.analysisData = {};
+                    }
+                    solve.analysisData.isPllSkip = action.data.value;
+                }
+                return solve;
+            });
         case 'CLEAR_DATA':
             return [];
         case 'CHANGE_SESSION':
@@ -128,7 +162,11 @@ export function getBestOfType(bests: BestsData, type: DataType, size: number): B
 }
 
 export default function Timer() {
-    const DialogContextProvider = useDialogContext();
+    const timerRef = useRef<HTMLDivElement>(null);
+    const { width } = useContainerDimensions(timerRef);
+    const timerComponentRef = useRef<HTMLDivElement>(null);
+
+    const DialogContextProvider = useDialogContext(timerComponentRef);
     const { pushAlert } = useContext(AlertsContext);
     const { solveSettings } = useContext(SettingsContext);
     const { isMobile, setIsMobile } = useContext(MetaDataContext);
@@ -141,9 +179,6 @@ export default function Timer() {
     const [bestsData, setBestsData] = useState(calculateBests(solveSettings, solveData));
 
     const [scramble, setScramble] = useState<string>(generateScramble(sessionData.type));
-
-    const timerRef = useRef<HTMLDivElement>(null);
-    const { width } = useContainerDimensions(timerRef);
 
     const isSuppressingBestAlerts = useRef(false);
     const suppressBestAlerts = () => {
@@ -226,7 +261,18 @@ export default function Timer() {
     }, [solveData, solveSettings]);
 
     return (
-        <div className='timer' ref={timerRef}>
+        <div
+            className='timer'
+            ref={timerRef}
+            onClick={(e) => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const target = e.target as any;
+                if (target.className.includes('input') || target.className.includes('select')) {
+                    return;
+                }
+                timerComponentRef.current && timerComponentRef.current.focus();
+            }}
+        >
             <DialogContextProvider>
                 <HeaderComponent />
             </DialogContextProvider>
@@ -234,7 +280,11 @@ export default function Timer() {
                 <DialogContextProvider>
                     <section className='timer__left-bar'>
                         <BestsTableComponent solves={solveData} bests={bestsData} />
-                        <SessionManagementComponent sessionData={sessionData} setSessionId={setSessionId} />
+                        <SessionManagementComponent
+                            sessionData={sessionData}
+                            setSessionId={setSessionId}
+                            timerComponentRef={timerComponentRef}
+                        />
                         <ResultsTableComponent
                             solves={solveData}
                             bests={bestsData}
@@ -249,6 +299,7 @@ export default function Timer() {
                     scramble={scramble}
                     newScramble={newScramble}
                     numSplits={sessionData.numSplits}
+                    timerComponentRef={timerComponentRef}
                 />
                 {/* TODO: custom scrambles
                 <input

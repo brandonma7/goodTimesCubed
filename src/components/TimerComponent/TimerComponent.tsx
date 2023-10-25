@@ -17,6 +17,7 @@ type TimerComponentProps = {
     scramble: string;
     newScramble: () => void;
     numSplits: number;
+    timerComponentRef: React.RefObject<HTMLDivElement>;
 };
 
 const TimerComponent = memo(function TimerComponentInternal({
@@ -25,6 +26,7 @@ const TimerComponent = memo(function TimerComponentInternal({
     scramble,
     newScramble,
     numSplits,
+    timerComponentRef,
 }: TimerComponentProps) {
     const { isManualEntryMode } = useContext(SettingsContext);
     const { isMobile } = useContext(MetaDataContext);
@@ -43,8 +45,7 @@ const TimerComponent = memo(function TimerComponentInternal({
     const isTimerReadyTimeoutRef = useRef<NodeJS.Timeout>();
     const timerTimeoutRef = useRef<NodeJS.Timeout>();
 
-    const timerRef = useRef<HTMLElement>(null);
-    const { width, height } = useContainerDimensions(timerRef);
+    const { width, height } = useContainerDimensions(timerComponentRef);
 
     const scrambleRef = useRef<HTMLDivElement>(null);
     const { height: scrambleHeight } = useContainerDimensions(scrambleRef);
@@ -62,7 +63,7 @@ const TimerComponent = memo(function TimerComponentInternal({
     function startPreppingTimer(isDNF = false) {
         if (timerIsRunning.current) {
             // Timer is running, so either need to stop or record a split
-            if (splitTimes.length < numSplits - 1) {
+            if (splitTimes.length < numSplits - 1 && !isDNF) {
                 // Record split
                 const baseTime = elapsed.current / 10;
                 setSplitTimes([...splitTimes, baseTime]);
@@ -74,15 +75,18 @@ const TimerComponent = memo(function TimerComponentInternal({
                 const formattedBaseTime = getFormattedTime(baseTime);
                 setTimerEntry(`${formattedBaseTime}`);
 
-                const splits = [...splitTimes, baseTime]
-                    .reverse()
-                    .map((split, index, list) => {
-                        if (index === list.length - 1) {
-                            return split;
-                        }
-                        return split - list[index + 1];
-                    })
-                    .reverse();
+                const splits = isDNF
+                    ? new Array(numSplits).fill(-1)
+                    : [...splitTimes, baseTime]
+                          .reverse()
+                          // Right now the times are timestamps, we want the elapsed time for a specific step
+                          .map((split, index, list) => {
+                              if (index === list.length - 1) {
+                                  return split;
+                              }
+                              return split - list[index + 1];
+                          })
+                          .reverse();
 
                 const timeEntry: Solve = {
                     isDNF,
@@ -91,6 +95,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                     date: new Date(),
                     time: baseTime,
                     splits,
+                    analysisData: {},
                 };
                 setCurrentEntry(timeEntry);
 
@@ -114,7 +119,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                     setIsPrepping(false);
                     setIsPrepped(true);
                     isTimerReady.current = true;
-                }, 1000);
+                }, 800);
             }
         }
     }
@@ -162,7 +167,7 @@ const TimerComponent = memo(function TimerComponentInternal({
     return (
         <section
             className='timer__timer'
-            ref={timerRef}
+            ref={timerComponentRef}
             tabIndex={0}
             onKeyDown={(event) => {
                 if (!isManualEntryMode) {
@@ -204,29 +209,31 @@ const TimerComponent = memo(function TimerComponentInternal({
             <div style={{ width: '100%' }}>
                 <table style={{ width: '100%' }}>
                     <tbody>
-                        {Array.from({ length: numSplits }).map((_, index) => {
-                            const currentSplit = splitTimes.length;
-                            const active = timerIsRunning.current;
-                            const timeSource = active ? splitTimes : currentEntry?.splits ?? [];
-                            const time = timeSource[index] ?? '--';
-                            return (
-                                <td
-                                    key={index}
-                                    style={{
-                                        width: '25%',
-                                        backgroundColor: !active
-                                            ? ''
-                                            : index < currentSplit
-                                            ? 'green'
-                                            : index === currentSplit
-                                            ? 'yellow'
-                                            : '',
-                                    }}
-                                >
-                                    {isNaN(time) ? '--' : getFormattedTime(time)}
-                                </td>
-                            );
-                        })}
+                        <tr>
+                            {Array.from({ length: numSplits }).map((_, index) => {
+                                const currentSplit = splitTimes.length;
+                                const active = timerIsRunning.current;
+                                const timeSource = active ? splitTimes : currentEntry?.splits ?? [];
+                                const time = timeSource[index] ?? '--';
+                                return (
+                                    <td
+                                        key={index}
+                                        style={{
+                                            width: '25%',
+                                            backgroundColor: !active
+                                                ? ''
+                                                : index < currentSplit
+                                                ? 'green'
+                                                : index === currentSplit
+                                                ? 'yellow'
+                                                : '',
+                                        }}
+                                    >
+                                        {isNaN(time) ? '--' : getFormattedTime(time)}
+                                    </td>
+                                );
+                            })}
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -272,6 +279,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                                         scramble,
                                         date: new Date(),
                                         time: baseTime,
+                                        analysisData: {},
                                     };
 
                                     dispatchSolveData({

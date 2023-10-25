@@ -37,11 +37,11 @@ export default function SolveDialog({
     const solve = solves[dialogData.index];
 
     const { pushAlert } = useContext(AlertsContext);
-    const [solveTimeEntry, setSolveTimeEntry] = useState(getFormattedTime(solve?.time ?? 0, false, false, true));
+    const [solveTimeEntry, setSolveTimeEntry] = useState(getFormattedTime(solve?.time ?? 0, false, true));
 
     useEffect(() => {
         if (solve?.time != null) {
-            setSolveTimeEntry(getFormattedTime(solve.time, false, false, true));
+            setSolveTimeEntry(getFormattedTime(solve.time, false, true));
         }
     }, [solve?.time]);
 
@@ -50,7 +50,9 @@ export default function SolveDialog({
     }
 
     const { index } = dialogData;
-    const { time, scramble, date, isDNF, isPlusTwo } = solve;
+    const { time, scramble, date, isDNF, isPlusTwo, analysisData } = solve;
+
+    const { isOllSkip, isPllSkip, ollCase, pllCase } = analysisData ?? {};
 
     const dateObject = new Date(date);
     const formattedTime = `${dateObject.getHours()}:${dateObject.getMinutes()}.${dateObject.getSeconds()}`;
@@ -100,14 +102,20 @@ export default function SolveDialog({
                 />
                 {(solve.splits?.length ?? 1) > 1 && (
                     <table className='timer__results'>
-                        {SessionTypeMap[sessionType].splitNames?.map((name) => {
-                            return <th key={name}>{name}</th>;
-                        })}
-                        <tr>
-                            {solve.splits?.map((split, index) => {
-                                return <td key={index}>{getFormattedTime(split)}</td>;
-                            })}
-                        </tr>
+                        <thead>
+                            <tr>
+                                {SessionTypeMap[sessionType].splitNames?.map((name) => {
+                                    return <th key={name}>{name}</th>;
+                                })}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {solve.splits?.map((split, index) => {
+                                    return <td key={index}>{getFormattedTime(split)}</td>;
+                                })}
+                            </tr>
+                        </tbody>
                     </table>
                 )}
                 <div>{scramble}</div>
@@ -152,6 +160,74 @@ export default function SolveDialog({
                     >
                         +2
                     </button>
+                </div>
+
+                <div className='timer__solve-dialog-actions'>
+                    <button
+                        className={isOllSkip ? 'timer__button timer__button--active' : 'timer__button'}
+                        onClick={() => {
+                            if (time > 0) {
+                                onAction();
+                                solveDispatcher({
+                                    type: 'SET_OLL_SKIP',
+                                    data: {
+                                        index,
+                                        value: !isOllSkip,
+                                    },
+                                });
+                            } else {
+                                pushAlert('To edit this solve, the time must first be valid!');
+                            }
+                        }}
+                    >
+                        OLL Skip?
+                    </button>
+                    <button
+                        className={isPllSkip ? 'timer__button timer__button--active' : 'timer__button'}
+                        onClick={() => {
+                            if (time > 0) {
+                                onAction();
+                                solveDispatcher({
+                                    type: 'SET_PLL_SKIP',
+                                    data: {
+                                        index,
+                                        value: !isPllSkip,
+                                    },
+                                });
+                            } else {
+                                pushAlert('To edit this solve, the time must first be valid!');
+                            }
+                        }}
+                    >
+                        PLL Skip?
+                    </button>
+                    <button
+                        className={ollCase ? 'timer__button timer__button--active' : 'timer__button'}
+                        onClick={() => {
+                            if (time > 0) {
+                                console.log('open oll picker');
+                            } else {
+                                pushAlert('To edit this solve, the time must first be valid!');
+                            }
+                        }}
+                    >
+                        {ollCase ?? 'OLL'}
+                    </button>
+                    <button
+                        className={pllCase ? 'timer__button timer__button--active' : 'timer__button'}
+                        onClick={() => {
+                            if (time > 0) {
+                                console.log('open pll picker');
+                            } else {
+                                pushAlert('To edit this solve, the time must first be valid!');
+                            }
+                        }}
+                    >
+                        {pllCase ?? 'PLL'}
+                    </button>
+                </div>
+
+                <div className='timer__solve-dialog-actions'>
                     <button
                         className='timer__button'
                         onClick={() => {

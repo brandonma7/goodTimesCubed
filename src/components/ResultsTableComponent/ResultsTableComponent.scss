@@ -27,6 +27,10 @@
     .timer__result--penalty {
         color: $red-light;
     }
+
+    .timer__result--skip {
+        color: $soft-blue;
+    }
 }
 
 @media (max-width: $small-screen-width) {

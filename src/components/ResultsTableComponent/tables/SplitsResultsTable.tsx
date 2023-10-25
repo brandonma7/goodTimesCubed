@@ -51,13 +51,25 @@ export function SplitsResultsTable({ results, setDialogData, splitNames = [] }: 
         const invertedBest: number[] =
             (solves.length
                 ? solves[0].splits
+                      // Put all times for all solves for a particular split, return an array of each step
                       ?.map((_, splitIndex) => {
                           return solves.map((solve) => {
-                              return solve.splits ? solve.splits[splitIndex] : 0;
+                              if (!solve.splits) {
+                                  return -1;
+                              }
+                              // Making the assumption that pll is the last step and oll is the second to last step
+                              if (solve.analysisData?.isOllSkip && splitIndex === solve.splits.length - 2) {
+                                  return -1;
+                              }
+                              if (solve.analysisData?.isPllSkip && splitIndex === solve.splits.length - 1) {
+                                  return -1;
+                              }
+                              return solve.splits[splitIndex];
                           });
                       })
+                      // Reduce that array of arrays to just a single array that has the best indexes
                       .map((splitTimes) => {
-                          const fastestTime = [...splitTimes].sort((a, b) => a - b)[0];
+                          const fastestTime = [...splitTimes].sort((a, b) => a - b).find((time) => time > 0) ?? 0;
                           return splitTimes.indexOf(fastestTime);
                       })
                 : []) ?? [];
@@ -120,14 +132,21 @@ export function SplitsResultsTable({ results, setDialogData, splitNames = [] }: 
                                     }}
                                 >
                                     <td>{tableIndex + 1}</td>
-                                    {solve.splits.map((time, cellIndex) => {
+                                    {solve.splits.map((time, cellIndex, list) => {
                                         const cellText = getFormattedTime(time);
                                         const isSplitBest = bestSplitIndexes[cellIndex] === index;
+                                        const isSkip =
+                                            // Making the assumption that pll is the last step and oll is the second to last step
+                                            (solve.analysisData?.isOllSkip && cellIndex === list.length - 2) ||
+                                            (solve.analysisData?.isPllSkip && cellIndex === list.length - 1);
 
                                         return (
                                             <td
                                                 key={cellIndex}
-                                                className={classNames(isSplitBest ? 'timer__result--best' : '')}
+                                                className={classNames(
+                                                    isSplitBest ? 'timer__result--best' : '',
+                                                    isSkip ? 'timer__result--skip' : '',
+                                                )}
                                                 onClick={() => {
                                                     setDialogData({
                                                         dialogType: DialogType.SOLVE,

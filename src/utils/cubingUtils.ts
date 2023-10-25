@@ -23,6 +23,12 @@ export type Solve = {
     scramble: string;
     date: Date;
     splits?: number[];
+    analysisData: {
+        isOllSkip?: boolean;
+        isPllSkip?: boolean;
+        ollCase?: number;
+        pllCase?: string;
+    };
 };
 
 // The order of these are important for the scramble algorithm!

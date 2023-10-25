@@ -66,29 +66,36 @@ export default App;
 /*
     TODO
 
-    bugs:
+    P0
 
-    color scheme?
-    
-    CFOP trainer
-        select case for oll
-        select case for pll
-        display results by oll/pll
+    P1
+        Close dialog with ESC
+        Restrict session settings based on puzzle type and if there are solves
+        Warning confirmation when clearing/deleting sessions
 
-    OLL Trainer
-    PLL Trainer
-    PLL two side recognition trainer
+    P2
+        CFOP trainer
+            select case for oll
+            select case for pll
+            display results by oll/pll
 
-    Hide alerts after a few seconds
+        OLL Trainer
+        PLL Trainer
+        PLL two side recognition trainer
 
-    External timer connection (bluetooth or wired)
+    P3
+        Make skip logic more generic instead of hard-coding oll/pll
+        External timer connection (bluetooth or wired)
 
-    More puzzles visualizations
-        [ ] Pyraminx
-        [ ] Skewb
-        [ ] Square-1
-        [ ] Megaminx
-        [ ] Clock
+        More puzzles visualizations
+            [ ] Pyraminx
+            [ ] Skewb
+            [ ] Square-1
+            [ ] Megaminx
+            [ ] Clock
+
+    P4
+        color scheme?
 
     Big technical shit:
         Store data to a db

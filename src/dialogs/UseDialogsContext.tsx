@@ -37,16 +37,18 @@ export const DialogContext = createContext<DialogContextType>({
     closeDialog: () => null,
 });
 
-export default function useDialogContext() {
+export default function useDialogContext(timerComponentRef: React.RefObject<HTMLDivElement>) {
     const [dialogData, setDialogData] = useState<DialogData>({
         dialogType: DialogType.SETTINGS,
         isOpen: false,
     });
-    const closeDialog = () =>
+    const closeDialog = () => {
         setDialogData({
             dialogType: DialogType.SETTINGS,
             isOpen: false,
         });
+        timerComponentRef.current && timerComponentRef.current.focus();
+    };
     const dialogContextValue = { dialogData, setDialogData, closeDialog };
 
     function DialogContextProvider({ children }: { children: JSX.Element }) {

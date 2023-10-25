@@ -22,15 +22,11 @@ export function getFormattedTimeBySolve(solve?: Solve, showHours = false): strin
     if (!solve) {
         return '-';
     }
-    const { time, isPlusTwo, isDNF } = solve;
-    return getFormattedTime(time, isPlusTwo, isDNF, showHours);
+    const { time, isPlusTwo } = solve;
+    return getFormattedTime(time, isPlusTwo, showHours);
 }
 
-export function getFormattedTime(time = 0, isPlusTwo = false, isDNF = false, showHours = false): string {
-    // If solve is flagged as DNF, call it that instead of providing time
-    if (isDNF) {
-        return 'DNF';
-    }
+export function getFormattedTime(time = 0, isPlusTwo = false, showHours = false): string {
     // If time is negative, could be an error or an intentional request for a 'dash'
     if (time < 0) {
         return '-';

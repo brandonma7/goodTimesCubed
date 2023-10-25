@@ -10,6 +10,7 @@ import { PuzzleType } from '../../utils/cubingUtils';
 type SessionManagementComponentProps = {
     sessionData: SessionData;
     setSessionId: (newValue: string) => void;
+    timerComponentRef: React.RefObject<HTMLDivElement>;
 };
 
 export type SessionType = 'normal' | 'splits' | 'cfopTrainer' | 'yauTrainer' | 'ollTrainer' | 'pllTrainer';
@@ -56,7 +57,11 @@ export const SessionTypeMap: { [K in SessionType]: SessionTypeMapType } = {
 export const areSessionsSame = (x: SolveData, y: SolveData) =>
     isEmpty(xorWith(x, y, isEqual)) && !(y.length === 0 && x.length === 0);
 
-export default function SessionManagementComponent({ sessionData, setSessionId }: SessionManagementComponentProps) {
+export default function SessionManagementComponent({
+    sessionData,
+    setSessionId,
+    timerComponentRef,
+}: SessionManagementComponentProps) {
     const { setDialogData } = useContext(DialogContext);
     const sessionNames = getSessionNamesFromLocalStorage();
     const sessionList = sessionNames.map((sesh) => sesh.id);
@@ -68,6 +73,7 @@ export default function SessionManagementComponent({ sessionData, setSessionId }
                 onChange={(event) => {
                     if (sessionData.id !== event.target.value) {
                         setSessionId(event.target.value);
+                        timerComponentRef.current && timerComponentRef.current.focus();
                     }
                 }}
                 value={sessionData.id}
