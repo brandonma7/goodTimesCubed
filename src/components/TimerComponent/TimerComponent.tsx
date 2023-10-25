@@ -206,35 +206,39 @@ const TimerComponent = memo(function TimerComponentInternal({
             >
                 {scramble}
             </div>
-            <div style={{ width: '100%' }}>
-                <table style={{ width: '100%' }}>
-                    <tbody>
-                        <tr>
-                            {Array.from({ length: numSplits }).map((_, index) => {
-                                const currentSplit = splitTimes.length;
-                                const active = timerIsRunning.current;
-                                const timeSource = active ? splitTimes : currentEntry?.splits ?? [];
-                                const time = timeSource[index] ?? '--';
-                                return (
-                                    <td
-                                        key={index}
-                                        className={classNames(
-                                            'timer__current-splits',
-                                            active && index < currentSplit ? 'timer__current-splits--current' : '',
-                                            active && index === currentSplit ? 'timer__current-splits--previous' : '',
-                                        )}
-                                        style={{
-                                            width: `${100 / numSplits}%`,
-                                        }}
-                                    >
-                                        {isNaN(time) ? '--' : getFormattedTime(time)}
-                                    </td>
-                                );
-                            })}
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            {numSplits > 1 && (
+                <div style={{ width: '100%' }}>
+                    <table style={{ width: '100%' }}>
+                        <tbody>
+                            <tr>
+                                {Array.from({ length: numSplits }).map((_, index) => {
+                                    const currentSplit = splitTimes.length;
+                                    const active = timerIsRunning.current;
+                                    const timeSource = active ? splitTimes : currentEntry?.splits ?? [];
+                                    const time = timeSource[index] ?? '--';
+                                    return (
+                                        <td
+                                            key={index}
+                                            className={classNames(
+                                                'timer__current-splits',
+                                                active && index < currentSplit ? 'timer__current-splits--current' : '',
+                                                active && index === currentSplit
+                                                    ? 'timer__current-splits--previous'
+                                                    : '',
+                                            )}
+                                            style={{
+                                                width: `${100 / numSplits}%`,
+                                            }}
+                                        >
+                                            {isNaN(time) ? '--' : getFormattedTime(time)}
+                                        </td>
+                                    );
+                                })}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            )}
             <div className='timer__input-container' ref={inputRef}>
                 {isManualEntryMode ? (
                     <>
