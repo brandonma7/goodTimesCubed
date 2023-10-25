@@ -12,6 +12,50 @@ type SessionManagementComponentProps = {
     setSessionId: (newValue: string) => void;
 };
 
+export type SessionType = 'normal' | 'splits' | 'cfopTrainer' | 'yauTrainer' | 'ollTrainer' | 'pllTrainer';
+export type SessionData = {
+    id: string;
+    name: string;
+    type: PuzzleType;
+    data: SolveData;
+    sessionType: SessionType;
+    numSplits: number;
+};
+export type CachedSessionData = {
+    [key: string]: SessionData;
+};
+
+type SessionTypeMapType = {
+    name: string;
+    splitNames?: string[];
+};
+
+export const SessionTypeMap: { [K in SessionType]: SessionTypeMapType } = {
+    normal: {
+        name: 'Normal',
+    },
+    splits: {
+        name: 'Splits',
+    },
+    cfopTrainer: {
+        name: 'CFOP Trainer',
+        splitNames: ['Cross', 'F2L', 'OLL', 'PLL'],
+    },
+    yauTrainer: {
+        name: 'Yau Trainer',
+        splitNames: ['F2F', 'F3E', 'Faces', 'Edges', 'F2L', 'OLL', 'PLL'],
+    },
+    ollTrainer: {
+        name: 'OLL Trainer',
+    },
+    pllTrainer: {
+        name: 'PLL Trainer',
+    },
+};
+
+export const areSessionsSame = (x: SolveData, y: SolveData) =>
+    isEmpty(xorWith(x, y, isEqual)) && !(y.length === 0 && x.length === 0);
+
 export default function SessionManagementComponent({ sessionData, setSessionId }: SessionManagementComponentProps) {
     const { setDialogData } = useContext(DialogContext);
     const sessionNames = getSessionNamesFromLocalStorage();
@@ -76,38 +120,3 @@ export default function SessionManagementComponent({ sessionData, setSessionId }
         </>
     );
 }
-
-export const areSessionsSame = (x: SolveData, y: SolveData) =>
-    isEmpty(xorWith(x, y, isEqual)) && !(y.length === 0 && x.length === 0);
-
-export type SessionType = 'normal' | 'splits' | 'cfopTrainer' | 'yauTrainer';
-export type SessionData = {
-    id: string;
-    name: string;
-    type: PuzzleType;
-    data: SolveData;
-    sessionType: SessionType;
-    numSplits: number;
-};
-export type CachedSessionData = {
-    [key: string]: SessionData;
-};
-
-export const SessionTypeMap = {
-    normal: {
-        name: 'Normal',
-        splitNames: null,
-    },
-    splits: {
-        name: 'Splits',
-        splitNames: null,
-    },
-    cfopTrainer: {
-        name: 'CFOP Trainer',
-        splitNames: ['Cross', 'F2L', 'OLL', 'PLL'],
-    },
-    yauTrainer: {
-        name: 'Yau Trainer',
-        splitNames: ['F2F', 'F3E', 'Faces', 'Edges', 'F2L', 'OLL', 'PLL'],
-    },
-};
