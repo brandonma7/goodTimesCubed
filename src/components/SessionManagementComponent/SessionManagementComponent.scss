@@ -1,8 +1,9 @@
 @import '../../styles/global-variables';
 
-.timer__select-session {
+.timer__select.timer__select-session {
     margin-bottom: $size-xxs;
     text-align: center;
+    width: 90%;
 }
 
 .timer__session-actions {

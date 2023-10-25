@@ -2,19 +2,17 @@
 
 .timer__alerts-container {
     position: absolute;
-    width: 30%;
-    left: 35%;
-    top: 10%;
+    width: 15%;
+    right: 2%;
+    bottom: 3%;
 }
 
 .timer__alert {
-    margin-bottom: 1vh;
     background: $main-background-color;
     border: $thin-border-size $main-border-color;
+    margin-bottom: 1vh;
     display: flex;
     justify-content: space-between;
-    padding-left: 1vw;
-    width: 50vw;
     align-items: center;
     border-radius: $size-xs;
     overflow: hidden;

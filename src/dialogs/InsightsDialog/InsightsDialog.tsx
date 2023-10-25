@@ -100,7 +100,12 @@ export default function InsightsDialog({ solves = [], bests }: InsightsDialogPro
                 <LineChart data={chartData}>
                     <CartesianGrid stroke='0' />
                     <XAxis dataKey='name' tickLine={false} />
-                    <YAxis min={0} max={yAxisMax + 100} tickFormatter={(value) => getFormattedTime(value)} />
+                    <YAxis
+                        min={0}
+                        max={yAxisMax + 100}
+                        width={100}
+                        tickFormatter={(value) => getFormattedTime(value)}
+                    />
                     <Tooltip content={CustomTooltip} />
                     <Legend />
                     {solveSettings.map((setting, index) => {

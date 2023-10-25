@@ -234,13 +234,13 @@ export default function Timer() {
                 <DialogContextProvider>
                     <section className='timer__left-bar'>
                         <BestsTableComponent solves={solveData} bests={bestsData} />
+                        <SessionManagementComponent sessionData={sessionData} setSessionId={setSessionId} />
                         <ResultsTableComponent
                             solves={solveData}
                             bests={bestsData}
                             sessionType={sessionData.sessionType}
                             numSplits={sessionData.numSplits}
                         />
-                        <SessionManagementComponent sessionData={sessionData} setSessionId={setSessionId} />
                     </section>
                 </DialogContextProvider>
                 <TimerComponent

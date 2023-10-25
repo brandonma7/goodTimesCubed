@@ -32,12 +32,17 @@ export function MetaDataContextProvider({ children }: { children: JSX.Element })
 
 function App() {
     const [alerts, setAlerts] = useState<string[]>([]);
+    let alertTimeout: NodeJS.Timeout;
     const pushAlert = (alert: string | string[]) => {
         if (Array.isArray(alert)) {
             setAlerts(alert);
         } else {
             setAlerts([alert]);
         }
+        clearTimeout(alertTimeout);
+        alertTimeout = setTimeout(() => {
+            setAlerts([]);
+        }, 5000);
     };
     const deleteAlert = (index: number) => {
         const newAlerts = alerts.slice(0);
@@ -73,6 +78,8 @@ export default App;
     OLL Trainer
     PLL Trainer
     PLL two side recognition trainer
+
+    Hide alerts after a few seconds
 
     External timer connection (bluetooth or wired)
 

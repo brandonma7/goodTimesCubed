@@ -32,6 +32,7 @@ const TimerComponent = memo(function TimerComponentInternal({
     const [isPrepping, setIsPrepping] = useState(false);
     const [isPrepped, setIsPrepped] = useState(false);
     const [splitTimes, setSplitTimes] = useState<number[]>([]);
+    const [currentEntry, setCurrentEntry] = useState<Solve>();
 
     const isTimerReady = useRef(false);
     const spaceKeyIsDown = useRef(false);
@@ -52,7 +53,7 @@ const TimerComponent = memo(function TimerComponentInternal({
     const actionsRef = useRef<HTMLDivElement>(null);
     const { height: actionsHeight } = useContainerDimensions(actionsRef);
 
-    const remainingHeightForCubePic = height - scrambleHeight - inputHeight - actionsHeight - 64;
+    const remainingHeightForCubePic = height - scrambleHeight - inputHeight - actionsHeight - 200;
 
     useEffect(() => {
         setTimerEntry(isManualEntryMode ? '' : '0.00');
@@ -91,6 +92,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                     time: baseTime,
                     splits,
                 };
+                setCurrentEntry(timeEntry);
 
                 dispatchSolveData({
                     type: 'ADD_SOLVE',
@@ -198,6 +200,35 @@ const TimerComponent = memo(function TimerComponentInternal({
                 }}
             >
                 {scramble}
+            </div>
+            <div style={{ width: '100%' }}>
+                <table style={{ width: '100%' }}>
+                    <tbody>
+                        {Array.from({ length: numSplits }).map((_, index) => {
+                            const currentSplit = splitTimes.length;
+                            const active = timerIsRunning.current;
+                            const timeSource = active ? splitTimes : currentEntry?.splits ?? [];
+                            const time = timeSource[index] ?? '--';
+                            return (
+                                <td
+                                    key={index}
+                                    style={{
+                                        width: '25%',
+                                        backgroundColor: !active
+                                            ? ''
+                                            : index < currentSplit
+                                            ? 'green'
+                                            : index === currentSplit
+                                            ? 'yellow'
+                                            : '',
+                                    }}
+                                >
+                                    {isNaN(time) ? '--' : getFormattedTime(time)}
+                                </td>
+                            );
+                        })}
+                    </tbody>
+                </table>
             </div>
             <div className='timer__input-container' ref={inputRef}>
                 {isManualEntryMode ? (
