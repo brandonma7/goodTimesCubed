@@ -31,8 +31,10 @@ export type Solve = {
     };
 };
 
+export type Turn = 'R' | 'U' | 'F' | 'L' | 'D' | 'B';
+
 // The order of these are important for the scramble algorithm!
-export const TURNS = ['R', 'U', 'F', 'L', 'D', 'B'];
+export const TURNS: Turn[] = ['R', 'U', 'F', 'L', 'D', 'B'];
 export const TurnModifiers = ['', '2', "'"];
 export const TurnModifiersBigCubes = [...TurnModifiers, 'w', 'w2', "w'"];
 

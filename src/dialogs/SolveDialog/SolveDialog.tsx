@@ -9,6 +9,7 @@ import { DialogContext, DialogType } from '../UseDialogsContext';
 
 import './SolveDialog.scss';
 import { SessionType, SessionTypeMap } from '../../components/SessionManagementComponent';
+import CasePickerComponent from '../../components/CasePickerComponent';
 
 export type SolveDialogData = {
     dialogType: DialogType.SOLVE;
@@ -35,6 +36,9 @@ export default function SolveDialog({
     // So the component know what specific Dialog Data it's dealing with
     const dialogData = ddata as SolveDialogData;
     const solve = solves[dialogData.index];
+
+    const [isOllSelectionMode, setIsOllSelectionMode] = useState(false);
+    const [isPllSelectionMode, setIsPllSelectionMode] = useState(false);
 
     const { pushAlert } = useContext(AlertsContext);
     const [solveTimeEntry, setSolveTimeEntry] = useState(getFormattedTime(solve?.time ?? 0, false, true));
@@ -205,7 +209,8 @@ export default function SolveDialog({
                         className={ollCase ? 'timer__button timer__button--active' : 'timer__button'}
                         onClick={() => {
                             if (time > 0) {
-                                console.log('open oll picker');
+                                setIsPllSelectionMode(false);
+                                setIsOllSelectionMode(!isOllSelectionMode);
                             } else {
                                 pushAlert('To edit this solve, the time must first be valid!');
                             }
@@ -217,7 +222,8 @@ export default function SolveDialog({
                         className={pllCase ? 'timer__button timer__button--active' : 'timer__button'}
                         onClick={() => {
                             if (time > 0) {
-                                console.log('open pll picker');
+                                setIsOllSelectionMode(false);
+                                setIsPllSelectionMode(!isPllSelectionMode);
                             } else {
                                 pushAlert('To edit this solve, the time must first be valid!');
                             }
@@ -226,6 +232,9 @@ export default function SolveDialog({
                         {pllCase ?? 'PLL'}
                     </button>
                 </div>
+
+                {isOllSelectionMode && <CasePickerComponent type='oll' solve={solve} />}
+                {isPllSelectionMode && <CasePickerComponent type='pll' solve={solve} />}
 
                 <div className='timer__solve-dialog-actions'>
                     <button
