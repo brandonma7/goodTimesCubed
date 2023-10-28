@@ -74,6 +74,7 @@ export default App;
         Warning confirmation when clearing/deleting sessions
 
     P2
+        Goal mode for CFOP splits
         CFOP trainer
             select case for oll
             select case for pll

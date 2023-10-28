@@ -214,7 +214,15 @@ const TimerComponent = memo(function TimerComponentInternal({
                                 {Array.from({ length: numSplits }).map((_, index) => {
                                     const currentSplit = splitTimes.length;
                                     const active = timerIsRunning.current;
-                                    const timeSource = active ? splitTimes : currentEntry?.splits ?? [];
+                                    const timeSource = active
+                                        ? splitTimes
+                                        : // Show the timestamp of each split, instead of the length of the split
+                                          currentEntry?.splits?.map((split, index, list) => {
+                                              if (!index) {
+                                                  return split;
+                                              }
+                                              return list.slice(0, index + 1).reduce((prev, curr) => prev + curr, 0);
+                                          }) ?? [];
                                     const time = timeSource[index] ?? '--';
                                     return (
                                         <td
