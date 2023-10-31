@@ -44,9 +44,17 @@ jobs:
 
             - name: npm, install, build, and test
               run: |
+                  echo "---------------------"
+                  pwd
+                  ls -la
+                  echo "---------------------"
                   npm install
                   npm run build --if-present
                   npm run test --if-present
+                  echo "---------------------"
+                  pwd
+                  ls -la
+                  echo "---------------------"
 
             - name: 'Deploy to Azure WebApp'
               id: deploy-to-webapp
