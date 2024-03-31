@@ -45,21 +45,13 @@ export default function CubeVisualizationComponent({
         return <div key={index} className={`timer__cube-sticker ${colorClass}`} />;
     };
 
-    const widthDerivedFromHeight = (height * 4) / 3;
-    const heightDerivedFromWidth = (width * 3) / 4;
-
-    const areaConstrainedByWidth = width * heightDerivedFromWidth;
-    const areaConstrainedByHeight = height * widthDerivedFromHeight;
-
-    const constrainDimensionsByWidth = areaConstrainedByWidth < areaConstrainedByHeight;
-
     return (
         <div
             className={`timer__cube-pic timer__cube-pic--${puzzleType}`}
             style={{
-                width: constrainDimensionsByWidth ? width : widthDerivedFromHeight,
-                height: constrainDimensionsByWidth ? heightDerivedFromWidth : height,
-                minHeight: constrainDimensionsByWidth ? heightDerivedFromWidth : height,
+                width,
+                height,
+                minHeight: height,
             }}
         >
             <div className='timer__cube-pic-row'>
