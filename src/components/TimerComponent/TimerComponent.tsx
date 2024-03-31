@@ -1,7 +1,7 @@
 import React, { useContext, memo, useRef, useState, useEffect } from 'react';
 
 import { SolveDataAction } from '../Timer';
-import CubeVisualizationComponent from '../CubeVisualizationComponent';
+import CubeVisualizationComponent, { SingleFaceVisualizationComponent } from '../CubeVisualizationComponent';
 
 import { classNames, getFormattedTime, unFormatTime } from '../../utils/genericUtils';
 import { SettingsContext } from '../../dialogs/SettingsDialog';
@@ -10,6 +10,9 @@ import './TimerComponent.scss';
 import { PuzzleType, PuzzleTypeMoveCount, Solve, NonStandardPuzzles } from '../../utils/cubingUtils';
 import { useContainerDimensions } from '../../utils/useContainerDimensions';
 import { MetaDataContext } from '../../TimerApp';
+import CasePickerComponent from '../CasePickerComponent';
+import { getPllById } from '../CasePickerComponent/PllCases';
+import { getOllById } from '../CasePickerComponent/OllCases';
 
 type TimerComponentProps = {
     dispatchSolveData: React.Dispatch<SolveDataAction>;
@@ -18,6 +21,8 @@ type TimerComponentProps = {
     newScramble: () => void;
     numSplits: number;
     timerComponentRef: React.RefObject<HTMLDivElement>;
+    mostRecentSolve: Solve | null;
+    mostRecentSolveIndex: number;
 };
 
 const TimerComponent = memo(function TimerComponentInternal({
@@ -27,14 +32,18 @@ const TimerComponent = memo(function TimerComponentInternal({
     newScramble,
     numSplits,
     timerComponentRef,
+    mostRecentSolve,
+    mostRecentSolveIndex,
 }: TimerComponentProps) {
     const { isManualEntryMode, setIsManualEntryMode } = useContext(SettingsContext);
-    const { isMobile } = useContext(MetaDataContext);
+    const { isMobile, setTimerIsRunning } = useContext(MetaDataContext);
     const [timerEntry, setTimerEntry] = useState(isManualEntryMode ? '' : '0.00');
     const [isPrepping, setIsPrepping] = useState(false);
     const [isPrepped, setIsPrepped] = useState(false);
     const [splitTimes, setSplitTimes] = useState<number[]>([]);
     const [currentEntry, setCurrentEntry] = useState<Solve>();
+    const [isOllSelectionMode, setIsOllSelectionMode] = useState(false);
+    const [isPllSelectionMode, setIsPllSelectionMode] = useState(false);
 
     const isTimerReady = useRef(false);
     const spaceKeyIsDown = useRef(false);
@@ -62,13 +71,19 @@ const TimerComponent = memo(function TimerComponentInternal({
 
     function startPreppingTimer(isDNF = false) {
         if (timerIsRunning.current) {
+            const baseTime = elapsed.current / 10;
+            const timeSinceLast = baseTime - (splitTimes.at(-1) ?? 0);
+            // Quit out if buffer time hasn't elapsed to avoid double key presses
+            if (timeSinceLast < 20) {
+                return;
+            }
             // Timer is running, so either need to stop or record a split
             if (splitTimes.length < numSplits - 1 && !isDNF) {
                 // Record split
-                const baseTime = elapsed.current / 10;
                 setSplitTimes([...splitTimes, baseTime]);
             } else {
                 timerIsRunning.current = false;
+                setTimerIsRunning(false);
                 clearTimeout(timerTimeoutRef.current);
 
                 const baseTime = elapsed.current / 10;
@@ -131,6 +146,7 @@ const TimerComponent = memo(function TimerComponentInternal({
             setIsPrepping(false);
             setIsPrepped(false);
             timerIsRunning.current = true;
+            setTimerIsRunning(true);
             isTimerReady.current = false;
 
             const interval = 10; // ms
@@ -174,9 +190,9 @@ const TimerComponent = memo(function TimerComponentInternal({
                     if (event.code === 'Space') {
                         event.preventDefault();
                         startPreppingTimer();
-                    } else if (event.code === 'Escape' && timerIsRunning.current) {
+                    } else if (timerIsRunning.current) {
                         event.preventDefault();
-                        startPreppingTimer(true);
+                        startPreppingTimer(event.code === 'Escape');
                     }
                 }
             }}
@@ -208,7 +224,7 @@ const TimerComponent = memo(function TimerComponentInternal({
             </div>
             {numSplits > 1 && (
                 <div style={{ width: '100%' }}>
-                    <table style={{ width: '100%' }}>
+                    <table className='timer__splits-table'>
                         <tbody>
                             <tr>
                                 {Array.from({ length: numSplits }).map((_, index) => {
@@ -323,7 +339,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                         newScramble();
                     }}
                 >
-                    New Scramble
+                    New
                 </button>
                 <button
                     className='timer__button'
@@ -331,7 +347,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                         dispatchSolveData({
                             type: 'SET_DNF',
                             data: {
-                                index: -1,
+                                index: mostRecentSolveIndex,
                                 value: true,
                             },
                         });
@@ -345,7 +361,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                         dispatchSolveData({
                             type: 'SET_PLUS_TWO',
                             data: {
-                                index: -1,
+                                index: mostRecentSolveIndex,
                                 value: true,
                             },
                         });
@@ -359,14 +375,14 @@ const TimerComponent = memo(function TimerComponentInternal({
                         dispatchSolveData({
                             type: 'SET_DNF',
                             data: {
-                                index: -1,
+                                index: mostRecentSolveIndex,
                                 value: false,
                             },
                         });
                         dispatchSolveData({
                             type: 'SET_PLUS_TWO',
                             data: {
-                                index: -1,
+                                index: mostRecentSolveIndex,
                                 value: false,
                             },
                         });
@@ -382,7 +398,53 @@ const TimerComponent = memo(function TimerComponentInternal({
                 >
                     Mode
                 </button>
+                <button
+                    className={`timer__button${mostRecentSolve?.analysisData?.ollCase ? ' timer__button--big' : ''}`}
+                    onClick={() => {
+                        setIsOllSelectionMode(!isOllSelectionMode);
+                    }}
+                >
+                    {mostRecentSolve?.analysisData?.ollCase ? (
+                        <SingleFaceVisualizationComponent
+                            faceState={getOllById(mostRecentSolve.analysisData.ollCase)?.state}
+                            puzzleType='3x3x3'
+                        />
+                    ) : (
+                        'OLL'
+                    )}
+                </button>
+                <button
+                    className={`timer__button${mostRecentSolve?.analysisData?.pllCase ? ' timer__button--big' : ''}`}
+                    onClick={() => {
+                        setIsPllSelectionMode(!isPllSelectionMode);
+                    }}
+                >
+                    {mostRecentSolve?.analysisData?.pllCase ? (
+                        <SingleFaceVisualizationComponent
+                            faceState={getPllById(mostRecentSolve.analysisData.pllCase)?.state}
+                            puzzleType='3x3x3'
+                        />
+                    ) : (
+                        'PLL'
+                    )}
+                </button>
             </div>
+            {isOllSelectionMode && mostRecentSolve != null && (
+                <CasePickerComponent
+                    algSet='oll'
+                    solve={mostRecentSolve}
+                    dispatchSolveData={dispatchSolveData}
+                    solveIndex={mostRecentSolveIndex}
+                />
+            )}
+            {isPllSelectionMode && mostRecentSolve != null && (
+                <CasePickerComponent
+                    algSet='pll'
+                    solve={mostRecentSolve}
+                    dispatchSolveData={dispatchSolveData}
+                    solveIndex={mostRecentSolveIndex}
+                />
+            )}
             {/*scramble.split(' ').map((_, index, scrambleList) => {
                 const subScramble = scrambleList.slice(0, index + 1).join(' ');
                 return <CubeVisualizationComponent key={index} scramble={subScramble} puzzleType={puzzleType} />;
