@@ -18,15 +18,20 @@ export const AlertsContext = createContext<AlertContextType>({
 type MetaDataContextType = {
     isMobile: boolean;
     setIsMobile: (newValue: boolean) => void;
+    timerIsRunning: boolean;
+    setTimerIsRunning: (newValue: boolean) => void;
 };
 export const MetaDataContext = createContext<MetaDataContextType>({
     isMobile: false,
     setIsMobile: () => null,
+    timerIsRunning: false,
+    setTimerIsRunning: () => null,
 });
 export function MetaDataContextProvider({ children }: { children: JSX.Element }) {
     const [isMobile, setIsMobile] = useState(false);
+    const [timerIsRunning, setTimerIsRunning] = useState(false);
 
-    const metaDataContextValue = { isMobile, setIsMobile };
+    const metaDataContextValue = { isMobile, setIsMobile, timerIsRunning, setTimerIsRunning };
     return <MetaDataContext.Provider value={metaDataContextValue}>{children}</MetaDataContext.Provider>;
 }
 
@@ -69,6 +74,7 @@ export default App;
     P0
 
     P1
+        Comp mode (ao5 groups)
         Close dialog with ESC
         Restrict session settings based on puzzle type and if there are solves
         Warning confirmation when clearing/deleting sessions
@@ -76,8 +82,6 @@ export default App;
     P2
         Goal mode for CFOP splits
         CFOP trainer
-            select case for oll
-            select case for pll
             display results by oll/pll
 
         OLL Trainer
