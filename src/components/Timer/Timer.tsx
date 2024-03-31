@@ -207,7 +207,7 @@ export default function Timer() {
     const DialogContextProvider = useDialogContext(timerComponentRef);
     const { pushAlert } = useContext(AlertsContext);
     const { solveSettings } = useContext(SettingsContext);
-    const { isMobile, setIsMobile } = useContext(MetaDataContext);
+    const { isMobile, setIsMobile, timerIsRunning } = useContext(MetaDataContext);
 
     const sessionList = getSessionListFromLocalStorage();
     const [sessionId, setSessionId] = useStickyState(sessionList[0], 'currentSession');
@@ -305,7 +305,10 @@ export default function Timer() {
             onClick={(e) => {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const target = e.target as any;
-                if (target.className.includes('input') || target.className.includes('select')) {
+                if (
+                    target?.className?.includes &&
+                    (target?.className?.includes('input') || target?.className?.includes('select'))
+                ) {
                     return;
                 }
                 timerComponentRef.current && timerComponentRef.current.focus();
@@ -316,20 +319,24 @@ export default function Timer() {
             </DialogContextProvider>
             <div className='timer__main'>
                 <DialogContextProvider>
-                    <section className='timer__left-bar'>
-                        <BestsTableComponent solves={solveData} bests={bestsData} />
-                        <SessionManagementComponent
-                            sessionData={sessionData}
-                            setSessionId={setSessionId}
-                            timerComponentRef={timerComponentRef}
-                        />
-                        <ResultsTableComponent
-                            solves={solveData}
-                            bests={bestsData}
-                            sessionType={sessionData.sessionType}
-                            numSplits={sessionData.numSplits}
-                        />
-                    </section>
+                    {!timerIsRunning ? (
+                        <section className='timer__left-bar'>
+                            <BestsTableComponent solves={solveData} bests={bestsData} />
+                            <SessionManagementComponent
+                                sessionData={sessionData}
+                                setSessionId={setSessionId}
+                                timerComponentRef={timerComponentRef}
+                            />
+                            <ResultsTableComponent
+                                solves={solveData}
+                                bests={bestsData}
+                                sessionType={sessionData.sessionType}
+                                numSplits={sessionData.numSplits}
+                            />
+                        </section>
+                    ) : (
+                        <></>
+                    )}
                 </DialogContextProvider>
                 <TimerComponent
                     dispatchSolveData={dispatchSolveData}
@@ -338,6 +345,8 @@ export default function Timer() {
                     newScramble={newScramble}
                     numSplits={sessionData.numSplits}
                     timerComponentRef={timerComponentRef}
+                    mostRecentSolve={solveData.at(-1) ?? null}
+                    mostRecentSolveIndex={solveData.length - 1}
                 />
                 {/* TODO: custom scrambles
                 <input
