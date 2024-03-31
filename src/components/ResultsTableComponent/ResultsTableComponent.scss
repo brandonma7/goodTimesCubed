@@ -1,7 +1,7 @@
 @import '../../styles/global-variables';
 
 .timer__results {
-    font-size: 1.5vw;
+    font-size: 1.2vw;
     width: 90%;
     margin: 0 auto;
     margin-bottom: 2vh;
@@ -34,6 +34,9 @@
 }
 
 @media (max-width: $small-screen-width) {
+    .timer__results td {
+        padding: $size-s $size-xs;
+    }
     .timer__results {
         font-size: $size-m;
     }

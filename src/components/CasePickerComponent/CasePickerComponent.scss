@@ -1,11 +1,14 @@
 @import '../../styles/global-variables';
 
 .case-picker__group-tabs {
-    margin: 10px 0;
+    font-size: $size-m;
+    margin: $size-s 0;
+    display: flex;
+    flex-wrap: wrap;
+
     .group-tab  {
         border-bottom: solid white thin;
-        display: inline;
-        padding: 4px 8px;
+        padding: $size-xxs $size-xs;
 
         &:hover {
             background-color: $button-background-color-hover;
@@ -26,6 +29,7 @@
 
     .case {
         border-bottom: thin white solid;
+        margin: $size-m 0;
         padding: 0 20px;
         width: 110px;
 
@@ -37,5 +41,20 @@
             cursor: pointer;
             background-color: $button-background-color-hover;
         }
+
+        .case__name {
+            font-size: $size-s;
+            height: $size-l;
+        }
+    }
+}
+
+@media (max-width: $small-screen-width) {
+    .case-picker__case-list {
+        align-items: center;
+        flex-direction: column;
+    }
+    .case-picker__group-tabs .group-tab {
+        padding: $size-s $size-m;
     }
 }

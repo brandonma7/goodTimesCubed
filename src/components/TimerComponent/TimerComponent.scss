@@ -7,9 +7,9 @@
     text-align: center;
     padding: $size-m;
 
-    .timer__counter {
-        font-size: 10vw;
-
+    .timer__counter,
+    .timer__time-input {
+        font-size: $size-xxl;
         &--prepping {
             color: $yellow-light;
         }
@@ -25,6 +25,11 @@
         width: 60vw;
     }
 
+    .timer__splits-table {
+        margin: 0 auto;
+        width: 60%;
+    }
+
     .timer__current-splits {
         &.timer__current-splits--current {
             background-color: $green-light;
@@ -38,10 +43,9 @@
         background: $input-background-color;
         border: $thin-border-size $input-border-color;
         border-radius: $size-xs;
-        height: 12vw;
-        width: 90%;
+        height: 3vw;
+        width: 70%;
         color: $input-font-color;
-        font-size: 10vw;
         text-align: center;
         font-family: monospace;
         margin-bottom: 1vw;
@@ -57,9 +61,20 @@
 
     .timer__input-actions {
         margin-bottom: $size-s;
+        display: flex;
+        flex-wrap: wrap;
+        width: 430px;
+        justify-content: center;
 
         .timer__button {
             margin: $size-xxs $size-xs;
+            height: 69px;
+            width: 69px;
+
+            &.timer__button--big {
+                height: 115px;
+                width: 115px;
+            }
         }
     }
 
@@ -67,7 +82,7 @@
 
         .timer__time-input,
         .timer__counter {
-            font-size: 150px;
+            font-size: 69px;
         }
     }
 
