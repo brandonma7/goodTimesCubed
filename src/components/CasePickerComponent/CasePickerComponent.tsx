@@ -111,7 +111,7 @@ export default function CasePickerComponent({
                                 });
                             }}
                         >
-                            <div>{c.name}</div>
+                            <div className='case__name'>{c.name}</div>
                             <SingleFaceVisualizationComponent faceState={c.state} puzzleType='3x3x3' />
                         </div>
                     );

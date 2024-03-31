@@ -1,7 +1,16 @@
 import { Color } from '../../classes/Cube';
-import { CaseGroup } from './CasePickerComponent';
+import { Case, CaseGroup } from './CasePickerComponent';
 
 const solidYellowFace = new Array(9).fill(Color.YELLOW);
+
+export function getPllById(id?: string): Case | undefined {
+    if (!id) {
+        return;
+    }
+    const cases = pllCases.map((cg) => cg.cases).flat();
+    const c = cases.find((c) => c.id === id);
+    return c;
+}
 
 export const pllCases: CaseGroup = [
     {
