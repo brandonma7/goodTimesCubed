@@ -14,6 +14,7 @@ type CasePickerComponentProps = {
     algSet: AlgSets;
     dispatchSolveData: React.Dispatch<SolveDataAction>;
     solveIndex: number;
+    onSelect?: () => void;
 };
 
 /** A group of cases, like Opposite Swap or T-shapes */
@@ -53,6 +54,7 @@ export default function CasePickerComponent({
     algSet,
     dispatchSolveData,
     solveIndex,
+    onSelect = () => null,
 }: CasePickerComponentProps): JSX.Element {
     // Alg set data contains case definitions and other metadata
     const algSetData = algSetDataMap[algSet];
@@ -109,6 +111,7 @@ export default function CasePickerComponent({
                                         value: c.id,
                                     },
                                 });
+                                onSelect();
                             }}
                         >
                             <div className='case__name'>{c.name}</div>
