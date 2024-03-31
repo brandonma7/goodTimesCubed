@@ -7,6 +7,11 @@
     text-align: center;
     padding: $size-m;
 
+    &.timer_timer--running {
+        height: 95%;
+        width: 100%;
+    }
+
     .timer__counter,
     .timer__time-input {
         font-size: $size-xxl;

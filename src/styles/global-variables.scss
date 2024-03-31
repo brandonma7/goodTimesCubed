@@ -78,3 +78,18 @@ $cube-sticker-gray: #999;
     max-height: 73vh;
     width: 40%;
 }
+
+@mixin common-table-styles {
+    background: $main-background-color;
+    border: $thin-border-size $table-border-color;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.basic-table {
+    @include common-table-styles;
+    &, th, td {
+        border: $thin-border-size $table-border-color;
+        border-collapse: collapse;
+    }
+}
