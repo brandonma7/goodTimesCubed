@@ -8,7 +8,6 @@ import { SettingsContext } from '../../dialogs/SettingsDialog';
 
 import './TimerComponent.scss';
 import { PuzzleType, PuzzleTypeMoveCount, Solve, NonStandardPuzzles } from '../../utils/cubingUtils';
-import { useContainerDimensions } from '../../utils/useContainerDimensions';
 import { MetaDataContext } from '../../TimerApp';
 import CasePickerComponent from '../CasePickerComponent';
 import { getPllById } from '../CasePickerComponent/PllCases';
@@ -54,16 +53,9 @@ const TimerComponent = memo(function TimerComponentInternal({
     const isTimerReadyTimeoutRef = useRef<NodeJS.Timeout>();
     const timerTimeoutRef = useRef<NodeJS.Timeout>();
 
-    const { width, height } = useContainerDimensions(timerComponentRef);
-
     const scrambleRef = useRef<HTMLDivElement>(null);
-    const { height: scrambleHeight } = useContainerDimensions(scrambleRef);
     const inputRef = useRef<HTMLDivElement>(null);
-    const { height: inputHeight } = useContainerDimensions(inputRef);
     const actionsRef = useRef<HTMLDivElement>(null);
-    const { height: actionsHeight } = useContainerDimensions(actionsRef);
-
-    const remainingHeightForCubePic = height - scrambleHeight - inputHeight - actionsHeight - 200;
 
     useEffect(() => {
         setTimerEntry(isManualEntryMode ? '' : '0.00');
@@ -182,7 +174,7 @@ const TimerComponent = memo(function TimerComponentInternal({
 
     return (
         <section
-            className='timer__timer'
+            className={`timer__timer${timerIsRunning ? ' timer_timer--running' : ''}`}
             ref={timerComponentRef}
             tabIndex={0}
             onKeyDown={(event) => {
@@ -332,119 +324,136 @@ const TimerComponent = memo(function TimerComponentInternal({
                     </div>
                 )}
             </div>
-            <div className='timer__input-actions' ref={actionsRef}>
-                <button
-                    className='timer__button'
-                    onClick={() => {
-                        newScramble();
-                    }}
-                >
-                    New
-                </button>
-                <button
-                    className='timer__button'
-                    onClick={() => {
-                        dispatchSolveData({
-                            type: 'SET_DNF',
-                            data: {
-                                index: mostRecentSolveIndex,
-                                value: true,
-                            },
-                        });
-                    }}
-                >
-                    DNF
-                </button>
-                <button
-                    className='timer__button'
-                    onClick={() => {
-                        dispatchSolveData({
-                            type: 'SET_PLUS_TWO',
-                            data: {
-                                index: mostRecentSolveIndex,
-                                value: true,
-                            },
-                        });
-                    }}
-                >
-                    +2
-                </button>
-                <button
-                    className='timer__button'
-                    onClick={() => {
-                        dispatchSolveData({
-                            type: 'SET_DNF',
-                            data: {
-                                index: mostRecentSolveIndex,
-                                value: false,
-                            },
-                        });
-                        dispatchSolveData({
-                            type: 'SET_PLUS_TWO',
-                            data: {
-                                index: mostRecentSolveIndex,
-                                value: false,
-                            },
-                        });
-                    }}
-                >
-                    OK
-                </button>
-                <button
-                    className='timer__button'
-                    onClick={() => {
-                        setIsManualEntryMode(!isManualEntryMode);
-                    }}
-                >
-                    Mode
-                </button>
-                <button
-                    className={`timer__button${mostRecentSolve?.analysisData?.ollCase ? ' timer__button--big' : ''}`}
-                    onClick={() => {
-                        setIsOllSelectionMode(!isOllSelectionMode);
-                    }}
-                >
-                    {mostRecentSolve?.analysisData?.ollCase ? (
-                        <SingleFaceVisualizationComponent
-                            faceState={getOllById(mostRecentSolve.analysisData.ollCase)?.state}
-                            puzzleType='3x3x3'
-                        />
-                    ) : (
-                        'OLL'
-                    )}
-                </button>
-                <button
-                    className={`timer__button${mostRecentSolve?.analysisData?.pllCase ? ' timer__button--big' : ''}`}
-                    onClick={() => {
-                        setIsPllSelectionMode(!isPllSelectionMode);
-                    }}
-                >
-                    {mostRecentSolve?.analysisData?.pllCase ? (
-                        <SingleFaceVisualizationComponent
-                            faceState={getPllById(mostRecentSolve.analysisData.pllCase)?.state}
-                            puzzleType='3x3x3'
-                        />
-                    ) : (
-                        'PLL'
-                    )}
-                </button>
-            </div>
-            {isOllSelectionMode && mostRecentSolve != null && (
-                <CasePickerComponent
-                    algSet='oll'
-                    solve={mostRecentSolve}
-                    dispatchSolveData={dispatchSolveData}
-                    solveIndex={mostRecentSolveIndex}
-                />
+            {!timerIsRunning.current && (
+                <>
+                    <div className='timer__input-actions' ref={actionsRef}>
+                        <button
+                            className='timer__button'
+                            onClick={() => {
+                                newScramble();
+                            }}
+                        >
+                            New
+                        </button>
+                        <button
+                            className='timer__button'
+                            onClick={() => {
+                                dispatchSolveData({
+                                    type: 'SET_DNF',
+                                    data: {
+                                        index: mostRecentSolveIndex,
+                                        value: true,
+                                    },
+                                });
+                            }}
+                        >
+                            DNF
+                        </button>
+                        <button
+                            className='timer__button'
+                            onClick={() => {
+                                dispatchSolveData({
+                                    type: 'SET_PLUS_TWO',
+                                    data: {
+                                        index: mostRecentSolveIndex,
+                                        value: true,
+                                    },
+                                });
+                            }}
+                        >
+                            +2
+                        </button>
+                        <button
+                            className='timer__button'
+                            onClick={() => {
+                                dispatchSolveData({
+                                    type: 'SET_DNF',
+                                    data: {
+                                        index: mostRecentSolveIndex,
+                                        value: false,
+                                    },
+                                });
+                                dispatchSolveData({
+                                    type: 'SET_PLUS_TWO',
+                                    data: {
+                                        index: mostRecentSolveIndex,
+                                        value: false,
+                                    },
+                                });
+                            }}
+                        >
+                            OK
+                        </button>
+                        <button
+                            className='timer__button'
+                            onClick={() => {
+                                setIsManualEntryMode(!isManualEntryMode);
+                            }}
+                        >
+                            Mode
+                        </button>
+                        <button
+                            className={`timer__button${
+                                mostRecentSolve?.analysisData?.ollCase ? ' timer__button--big' : ''
+                            }`}
+                            onClick={() => {
+                                setIsOllSelectionMode(!isOllSelectionMode);
+                            }}
+                        >
+                            {mostRecentSolve?.analysisData?.ollCase ? (
+                                <SingleFaceVisualizationComponent
+                                    faceState={getOllById(mostRecentSolve.analysisData.ollCase)?.state}
+                                    puzzleType='3x3x3'
+                                />
+                            ) : (
+                                'OLL'
+                            )}
+                        </button>
+                        <button
+                            className={`timer__button${
+                                mostRecentSolve?.analysisData?.pllCase ? ' timer__button--big' : ''
+                            }`}
+                            onClick={() => {
+                                setIsPllSelectionMode(!isPllSelectionMode);
+                            }}
+                        >
+                            {mostRecentSolve?.analysisData?.pllCase ? (
+                                <SingleFaceVisualizationComponent
+                                    faceState={getPllById(mostRecentSolve.analysisData.pllCase)?.state}
+                                    puzzleType='3x3x3'
+                                />
+                            ) : (
+                                'PLL'
+                            )}
+                        </button>
+                    </div>
+                    <div>
+                        {isOllSelectionMode && mostRecentSolve != null && (
+                            <CasePickerComponent
+                                algSet='oll'
+                                solve={mostRecentSolve}
+                                dispatchSolveData={dispatchSolveData}
+                                solveIndex={mostRecentSolveIndex}
+                                onSelect={() => {
+                                    setIsOllSelectionMode(false);
+                                }}
+                            />
+                        )}
+                        {isPllSelectionMode && mostRecentSolve != null && (
+                            <CasePickerComponent
+                                algSet='pll'
+                                solve={mostRecentSolve}
+                                dispatchSolveData={dispatchSolveData}
+                                solveIndex={mostRecentSolveIndex}
+                                onSelect={() => {
+                                    setIsPllSelectionMode(false);
+                                }}
+                            />
+                        )}
+                    </div>
+                </>
             )}
-            {isPllSelectionMode && mostRecentSolve != null && (
-                <CasePickerComponent
-                    algSet='pll'
-                    solve={mostRecentSolve}
-                    dispatchSolveData={dispatchSolveData}
-                    solveIndex={mostRecentSolveIndex}
-                />
-            )}
+
             {/*scramble.split(' ').map((_, index, scrambleList) => {
                 const subScramble = scrambleList.slice(0, index + 1).join(' ');
                 return <CubeVisualizationComponent key={index} scramble={subScramble} puzzleType={puzzleType} />;
@@ -453,8 +462,8 @@ const TimerComponent = memo(function TimerComponentInternal({
                 <CubeVisualizationComponent
                     scramble={scramble}
                     puzzleType={puzzleType}
-                    width={width / 2}
-                    height={remainingHeightForCubePic < 200 && isMobile ? 200 : remainingHeightForCubePic}
+                    width={isMobile ? 200 : 400}
+                    height={isMobile ? 150 : 300}
                 />
             )}
         </section>
