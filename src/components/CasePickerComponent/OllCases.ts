@@ -29,18 +29,18 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '21',
-                name: 'H',
+                name: '21. H',
                 state: [
-                    getEdgeColors('101'),
                     getEdgeColors('000'),
+                    getEdgeColors('101'),
                     getFaceColors('010', '111', '010'),
-                    getEdgeColors('000'),
                     getEdgeColors('101'),
+                    getEdgeColors('000'),
                 ],
             },
             {
                 id: '22',
-                name: 'Pi',
+                name: '22. Pi',
                 state: [
                     getEdgeColors('001'),
                     getEdgeColors('101'),
@@ -51,7 +51,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '23',
-                name: 'Headlights',
+                name: '23. Headlights',
                 state: [
                     getEdgeColors('000'),
                     getEdgeColors('000'),
@@ -62,7 +62,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '24',
-                name: 'T',
+                name: '24. T',
                 state: [
                     getEdgeColors('100'),
                     getEdgeColors('000'),
@@ -73,29 +73,29 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '25',
-                name: 'Bowtie',
+                name: '25. Bowtie',
                 state: [
                     getEdgeColors('000'),
                     getEdgeColors('100'),
-                    getFaceColors('011', '111', '110'),
+                    getFaceColors('110', '111', '011'),
+                    getEdgeColors('100'),
                     getEdgeColors('000'),
-                    getEdgeColors('001'),
                 ],
             },
             {
                 id: '26',
-                name: 'Anti Sune',
+                name: '26. Anti Sune',
                 state: [
-                    getEdgeColors('001'),
-                    getEdgeColors('100'),
-                    getFaceColors('010', '111', '011'),
                     getEdgeColors('000'),
+                    getEdgeColors('100'),
+                    getFaceColors('011', '111', '010'),
+                    getEdgeColors('001'),
                     getEdgeColors('100'),
                 ],
             },
             {
                 id: '27',
-                name: 'Sune',
+                name: '27. Sune',
                 state: [
                     getEdgeColors('100'),
                     getEdgeColors('000'),
@@ -111,7 +111,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '33',
-                name: 'TPS',
+                name: '33. TPS',
                 state: [
                     getEdgeColors('110'),
                     getEdgeColors('000'),
@@ -122,7 +122,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '45',
-                name: "F' Sexy",
+                name: "45. F' Sexy",
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('101'),
@@ -138,7 +138,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '5',
-                name: 'Fat Antisune (L)',
+                name: '05. Fat Antisune (L)',
                 state: [
                     getEdgeColors('000'),
                     getEdgeColors('001'),
@@ -149,7 +149,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '6',
-                name: 'Fat Antisune',
+                name: '06. Fat Antisune',
                 state: [
                     getEdgeColors('000'),
                     getEdgeColors('110'),
@@ -165,7 +165,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '34',
-                name: 'TPSB',
+                name: '34. TPSB',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('100'),
@@ -176,7 +176,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '46',
-                name: 'C Bar',
+                name: '46. C Bar',
                 state: [
                     getEdgeColors('111'),
                     getEdgeColors('000'),
@@ -192,7 +192,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '36',
-                name: 'Sune Sledge (L)',
+                name: '36. Sune Sledge (L)',
                 state: [
                     getEdgeColors('001'),
                     getEdgeColors('011'),
@@ -203,7 +203,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '38',
-                name: 'Sune Sledge',
+                name: '38. Sune Sledge',
                 state: [
                     getEdgeColors('100'),
                     getEdgeColors('000'),
@@ -219,7 +219,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '28',
-                name: 'Bird',
+                name: '28. Bird',
                 state: [
                     getEdgeColors('000'),
                     getEdgeColors('000'),
@@ -230,7 +230,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '57',
-                name: 'H',
+                name: '57. H',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('000'),
@@ -246,7 +246,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '31',
-                name: 'Bad P',
+                name: '31. Bad P',
                 state: [
                     getEdgeColors('100'),
                     getEdgeColors('010'),
@@ -257,7 +257,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '32',
-                name: 'Bad P (L)',
+                name: '32. Bad P (L)',
                 state: [
                     getEdgeColors('001'),
                     getEdgeColors('000'),
@@ -268,7 +268,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '43',
-                name: 'Good P (L)',
+                name: '43. Good P (L)',
                 state: [
                     getEdgeColors('000'),
                     getEdgeColors('111'),
@@ -279,7 +279,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '44',
-                name: 'Good P',
+                name: '44. Good P',
                 state: [
                     getEdgeColors('000'),
                     getEdgeColors('000'),
@@ -295,7 +295,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '51',
-                name: 'Dbl Sexy',
+                name: '51. Dbl Sexy',
                 state: [
                     getEdgeColors('110'),
                     getEdgeColors('000'),
@@ -306,7 +306,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '52',
-                name: 'Fat Bottom Sune',
+                name: '52. Fat Bottom Sune',
                 state: [
                     getEdgeColors('100'),
                     getEdgeColors('010'),
@@ -317,7 +317,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '55',
-                name: 'Highway',
+                name: '55. Highway',
                 state: [
                     getEdgeColors('000'),
                     getEdgeColors('111'),
@@ -328,7 +328,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '56',
-                name: 'Fat Dbl Sexy',
+                name: '56. Fat Dbl Sexy',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('101'),
@@ -344,7 +344,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '9',
-                name: 'TPish',
+                name: '09. TPish',
                 state: [
                     getEdgeColors('001'),
                     getEdgeColors('100'),
@@ -355,7 +355,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '10',
-                name: 'Su-Sledge-ne',
+                name: '10. Su-Sledge-ne',
                 state: [
                     getEdgeColors('110'),
                     getEdgeColors('001'),
@@ -366,7 +366,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '35',
-                name: 'U2-Sledge-U2',
+                name: '35. U2-Sledge-U2',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('010'),
@@ -377,7 +377,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '37',
-                name: 'YPS',
+                name: '37. YPS',
                 state: [
                     getEdgeColors('000'),
                     getEdgeColors('000'),
@@ -393,7 +393,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '13',
-                name: 'Backward TPish',
+                name: '13. Backward TPish',
                 state: [
                     getEdgeColors('110'),
                     getEdgeColors('000'),
@@ -404,7 +404,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '14',
-                name: 'Sledge Knight',
+                name: '14. Sledge Knight',
                 state: [
                     getEdgeColors('011'),
                     getEdgeColors('100'),
@@ -415,7 +415,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '15',
-                name: 'Fat Inv Sexy (L)',
+                name: '15. Fat Inv Sexy (L)',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('001'),
@@ -426,7 +426,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '16',
-                name: 'Fat Inv Sexy',
+                name: '16. Fat Inv Sexy',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('100'),
@@ -442,7 +442,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '47',
-                name: 'Dbl Inv Sexy (L)',
+                name: '47. Dbl Inv Sexy (L)',
                 state: [
                     getEdgeColors('100'),
                     getEdgeColors('010'),
@@ -453,7 +453,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '48',
-                name: 'Dbl Inv Sexy',
+                name: '48. Dbl Inv Sexy',
                 state: [
                     getEdgeColors('001'),
                     getEdgeColors('101'),
@@ -464,7 +464,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '49',
-                name: 'r2 Away',
+                name: '49. r2 Away',
                 state: [
                     getEdgeColors('001'),
                     getEdgeColors('111'),
@@ -475,7 +475,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '50',
-                name: 'r2 toward',
+                name: '50. r2 toward',
                 state: [
                     getEdgeColors('011'),
                     getEdgeColors('111'),
@@ -486,7 +486,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '53',
-                name: 'Fat Dbl Sexy (L)',
+                name: '53. Fat Dbl Sexy (L)',
                 state: [
                     getEdgeColors('101'),
                     getEdgeColors('010'),
@@ -497,7 +497,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '54',
-                name: 'Fat Dbl Sexy',
+                name: '54. Fat Dbl Sexy',
                 state: [
                     getEdgeColors('101'),
                     getEdgeColors('000'),
@@ -513,7 +513,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '29',
-                name: 'Cactus (L)',
+                name: '29. Cactus (L)',
                 state: [
                     getEdgeColors('000'),
                     getEdgeColors('110'),
@@ -524,7 +524,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '30',
-                name: 'Cactus',
+                name: '30. Cactus',
                 state: [
                     getEdgeColors('000'),
                     getEdgeColors('100'),
@@ -535,7 +535,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '41',
-                name: 'Sune Inv Sexy',
+                name: '41. Sune Inv Sexy',
                 state: [
                     getEdgeColors('101'),
                     getEdgeColors('000'),
@@ -546,7 +546,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '42',
-                name: 'Sune Inv Sexy (L)',
+                name: '42. Sune Inv Sexy (L)',
                 state: [
                     getEdgeColors('101'),
                     getEdgeColors('010'),
@@ -562,7 +562,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '7',
-                name: 'Fat Sune',
+                name: '07. Fat Sune',
                 state: [
                     getEdgeColors('100'),
                     getEdgeColors('000'),
@@ -573,7 +573,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '8',
-                name: 'Fat Sune (L)',
+                name: '08. Fat Sune (L)',
                 state: [
                     getEdgeColors('001'),
                     getEdgeColors('110'),
@@ -584,7 +584,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '11',
-                name: 'Lil Lightning',
+                name: '11. Lil Lightning',
                 state: [
                     getEdgeColors('100'),
                     getEdgeColors('001'),
@@ -595,7 +595,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '12',
-                name: 'Lil Lightning (L)',
+                name: '12. Lil Lightning (L)',
                 state: [
                     getEdgeColors('001'),
                     getEdgeColors('010'),
@@ -606,7 +606,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '39',
-                name: 'Big Lightning',
+                name: '39. Big Lightning',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('000'),
@@ -617,7 +617,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '40',
-                name: 'Big Lightning (L)',
+                name: '40. Big Lightning (L)',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('100'),
@@ -633,7 +633,7 @@ export const ollCases: CaseGroup = [
         cases: [
             {
                 id: '1',
-                name: 'U2 Sl U2 Sl',
+                name: '01. U2 Sl U2 Sl',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('111'),
@@ -644,7 +644,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '2',
-                name: 'Inv Sexy U2 Sexy',
+                name: '02. Inv Sexy U2 Sexy',
                 state: [
                     getEdgeColors('011'),
                     getEdgeColors('111'),
@@ -655,7 +655,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '3',
-                name: '10:30',
+                name: '03. 10:30',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('011'),
@@ -666,7 +666,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '4',
-                name: '7:30',
+                name: '04. 7:30',
                 state: [
                     getEdgeColors('011'),
                     getEdgeColors('110'),
@@ -677,7 +677,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '17',
-                name: 'Arrow',
+                name: '17. Arrow',
                 state: [
                     getEdgeColors('011'),
                     getEdgeColors('011'),
@@ -688,7 +688,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '18',
-                name: 'Fat Sune U2 Fat Sune',
+                name: '18. Fat Sune U2 Fat Sune',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('010'),
@@ -699,7 +699,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '19',
-                name: 'V dot',
+                name: '19. V dot',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('011'),
@@ -710,7 +710,7 @@ export const ollCases: CaseGroup = [
             },
             {
                 id: '20',
-                name: 'X dot',
+                name: '20. X dot',
                 state: [
                     getEdgeColors('010'),
                     getEdgeColors('010'),
