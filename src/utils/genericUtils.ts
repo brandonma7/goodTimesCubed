@@ -149,3 +149,12 @@ export function getLast<T>(list: T[]): unknown {
 export function getRandomFromList(list: []) {
     return list[getRand(list.length)];
 }
+
+// Math
+export function mean(list: number[]) {
+    return list.length === 0 ? 0 : sum(list) / list.length;
+}
+
+export function sum(list: number[]) {
+    return list.length === 0 ? 0 : list.reduce((prev, curr) => prev + curr, 0);
+}
