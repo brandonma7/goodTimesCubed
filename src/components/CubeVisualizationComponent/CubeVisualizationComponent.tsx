@@ -87,7 +87,7 @@ export default function CubeVisualizationComponent({
 export type FaceState = Color[][];
 
 type SingleFaceVisualizationComponentProps = {
-    faceState: FaceState;
+    faceState?: FaceState;
     puzzleType: PuzzleType;
 };
 
@@ -98,7 +98,8 @@ export function SingleFaceVisualizationComponent({ faceState, puzzleType }: Sing
         puzzleType === 'pyraminx' ||
         puzzleType === 'megaminx' ||
         puzzleType === 'square1' ||
-        puzzleType === 'clock'
+        puzzleType === 'clock' ||
+        !faceState
     ) {
         return <></>;
     }
