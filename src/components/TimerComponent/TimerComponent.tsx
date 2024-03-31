@@ -173,8 +173,8 @@ const TimerComponent = memo(function TimerComponentInternal({
     }
 
     // Arbitrary font sizes for shortest move count and longest that I thought looked good
-    const fontSizeFor2x2 = 1.5;
-    const fontSizeFor7x7 = 0.8;
+    const fontSizeFor2x2 = 32;
+    const fontSizeFor7x7 = 16;
     // Over-engineered way to figure out what everything in bewteen should be lol
     const slope = (fontSizeFor2x2 - fontSizeFor7x7) / (PuzzleTypeMoveCount['2x2x2'] - PuzzleTypeMoveCount['7x7x7']);
     const yIntercept = fontSizeFor2x2 - slope * PuzzleTypeMoveCount['2x2x2'];
@@ -217,7 +217,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                 className='timer__scramble'
                 ref={scrambleRef}
                 style={{
-                    fontSize: `${scrambleFontSize}em`,
+                    fontSize: `${scrambleFontSize}px`,
                 }}
             >
                 {scramble}
