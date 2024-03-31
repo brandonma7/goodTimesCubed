@@ -191,10 +191,6 @@ export function calculateMean(solvesData: Solve[], index: number, size: number):
     return mean;
 }
 
-export function mean(list: number[]) {
-    return list.length === 0 ? 0 : list.reduce((prev, curr) => prev + curr, 0) / list.length;
-}
-
 const SKEWB_PYRA_TURNS = ['U', 'L', 'B', 'R'];
 const SkewbPyraTurnModifiers = ['', "'"];
 function generateSkewbPyraScramble(isPyraminx = false): string {

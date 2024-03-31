@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import {
     CartesianGrid,
     Legend,
@@ -15,8 +15,8 @@ import { ValueType, NameType } from 'recharts/types/component/DefaultTooltipCont
 import { getOllById } from '../../components/CasePickerComponent/OllCases';
 import { getPllById } from '../../components/CasePickerComponent/PllCases';
 import { BestsData, getBestOfType, SolveData } from '../../components/Timer';
-import { calculateAverage, calculateMean, DataType, mean, Solve } from '../../utils/cubingUtils';
-import { getFormattedTime } from '../../utils/genericUtils';
+import { calculateAverage, calculateMean, DataType, Solve } from '../../utils/cubingUtils';
+import { mean, sum, getFormattedTime } from '../../utils/genericUtils';
 import { SettingsContext } from '../SettingsDialog';
 import { DialogContext, DialogType } from '../UseDialogsContext';
 
@@ -68,28 +68,64 @@ export default function InsightsDialog({ solves = [], bests }: InsightsDialogPro
                 </button>
             </div>
             <SolveDataChart solves={solves} bests={bests} />
+            <RandomDataTable solves={solves} />
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexGrow: 1 }}>
                 <div>
-                    <div>OLL Data</div>
-                    <InsightsTable solves={solves} getName={getOllById} caseKey={'ollCase'} />
+                    <div style={{ margin: 16 }}>OLL Data</div>
+                    <InsightsTable solves={solves} getName={getOllById} caseKey={'ollCase'} totalCases={57} />
                 </div>
                 <div>
-                    <div>PLL Data</div>
-                    <InsightsTable solves={solves} getName={getPllById} caseKey={'pllCase'} />
+                    <div style={{ margin: 16 }}>PLL Data</div>
+                    <InsightsTable solves={solves} getName={getPllById} caseKey={'pllCase'} totalCases={21} />
                 </div>
             </div>
-            <RandomDataTable solves={solves} />
         </div>
     );
 }
 
 function RandomDataTable({ solves }: { solves: Solve[] }): JSX.Element {
     const timesList = solves.filter((solve) => !solve.isDNF).map((solve) => solve.time);
-    const medianIndex = Math.round(timesList.length / 2);
+    const sortedTimesList = timesList.sort();
+
+    const indexForPercentile = (percentile: number): number => {
+        return Math.round(timesList.length * percentile);
+    };
+
+    const valueAtPercentile = (percentile: number): number | string => {
+        const index = indexForPercentile(percentile);
+        if (index < 0 || index >= timesList.length) {
+            return '--';
+        }
+        return sortedTimesList[index] / 100;
+    };
+
     return (
         <div>
-            <div>Total mean: {Math.trunc(mean(timesList)) / 100}</div>
-            <div>Total median: {timesList.sort()[medianIndex] / 100}</div>
+            <div>Overall mean: {Math.trunc(mean(timesList)) / 100}</div>
+            <table className='basic-table'>
+                <thead>
+                    <tr>
+                        <th>Fastest</th>
+                        <th>20th Percentile</th>
+                        <th>40th Percentile</th>
+                        <th>Median</th>
+                        <th>60th Percentile</th>
+                        <th>80th Percentile</th>
+                        <th>Slowest</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{sortedTimesList[0] / 100}</td>
+                        <td>{valueAtPercentile(0.2)}</td>
+                        <td>{valueAtPercentile(0.4)}</td>
+                        <td>{valueAtPercentile(0.5)}</td>
+                        <td>{valueAtPercentile(0.6)}</td>
+                        <td>{valueAtPercentile(0.8)}</td>
+                        <td>{(sortedTimesList.at(-1) ?? 0) / 100}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     );
 }
@@ -98,14 +134,18 @@ function InsightsTable({
     solves,
     getName,
     caseKey,
+    totalCases,
 }: {
     solves: Solve[];
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getName: (id: string) => any;
     caseKey: 'ollCase' | 'pllCase';
+    totalCases: number;
 }): JSX.Element {
     const applicableSolves = solves.filter((solve) => solve?.analysisData?.[caseKey] != null);
     const data: InsightsDataPoint = {};
+    const [sortBy, setSortBy] = useState(1);
+
     applicableSolves.forEach((solve) => {
         const id = solve?.analysisData?.[caseKey] ?? 'unknown';
         if (data[id] == null) {
@@ -121,31 +161,68 @@ function InsightsTable({
             data[id].splitTimes.push(solve.splits[2] / 100);
         }
     });
+
+    const formatData = (value: number) => Math.trunc(value * 100) / 100;
+
+    const tableData: [string, ...number[]][] = Object.keys(data).map((id) => {
+        const c = data[id];
+        return [
+            getName(id)?.name ?? 'unknown',
+            c.timesSeen,
+            formatData(mean(c.splitTimes)),
+            formatData(Math.min(...c.splitTimes)),
+            formatData(mean(c.solveTimes)),
+            formatData(Math.min(...c.solveTimes)),
+        ];
+    });
+    const sortBySetter = (index: number) => () => sortBy === index ? setSortBy(-index) : setSortBy(index);
     return (
-        <table style={{ width: 400 }}>
+        <table className='basic-table' style={{ width: 400 }}>
             <thead>
                 <tr>
-                    <th style={{ minWidth: 150, textAlign: 'right' }}>Case</th>
-                    <th>No. Seen</th>
-                    <th>Avg Solve</th>
-                    <th>Best Solve</th>
-                    <th>Avg Split</th>
-                    <th>Best Split</th>
+                    <th onClick={sortBySetter(1)} style={{ minWidth: 180 }}>
+                        Case
+                    </th>
+                    <th onClick={sortBySetter(2)}>No. Seen</th>
+                    <th onClick={sortBySetter(3)}>Avg Split</th>
+                    <th onClick={sortBySetter(4)}>Best Split</th>
+                    <th onClick={sortBySetter(5)}>Avg Solve</th>
+                    <th onClick={sortBySetter(6)}>Best Solve</th>
                 </tr>
             </thead>
-            {Object.keys(data).map((id, index) => {
-                const c = data[id];
-                return (
-                    <tr key={index}>
-                        <td style={{ minWidth: 150, textAlign: 'right' }}>{getName(id)?.name ?? 'unknown'}</td>
-                        <td>{c.timesSeen}</td>
-                        <td>{Math.trunc(mean(c.solveTimes) * 100) / 100}</td>
-                        <td>{Math.trunc(Math.min(...c.solveTimes) * 100) / 100}</td>
-                        <td>{Math.trunc(mean(c.splitTimes) * 100) / 100}</td>
-                        <td>{Math.trunc(Math.min(...c.splitTimes) * 100) / 100}</td>
-                    </tr>
-                );
-            })}
+            <tbody>
+                {tableData
+                    .sort((a, b) => {
+                        const aVal = a[Math.abs(sortBy) - 1];
+                        const bVal = b[Math.abs(sortBy) - 1];
+                        if (typeof aVal === 'number' && typeof bVal === 'number') {
+                            return sortBy > 0 ? aVal - bVal : bVal - aVal;
+                        }
+                        if (typeof aVal === 'string' && typeof bVal === 'string') {
+                            return sortBy > 0 ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                        }
+                        return 0;
+                    })
+                    .map((row, index) => {
+                        return (
+                            <tr key={index}>
+                                {row.map((cell, index) => {
+                                    return <td key={index}>{cell}</td>;
+                                })}
+                            </tr>
+                        );
+                    })}
+                <tr>
+                    <td>
+                        {tableData.length} / {totalCases} {tableData.length === totalCases ? 'Nice!' : ''}
+                    </td>
+                    <td>{sum(tableData.map((d) => d[1]))}</td>
+                    <td>{formatData(mean(tableData.map((d) => d[2])))}</td>
+                    <td>{formatData(Math.min(...tableData.map((d) => d[3])))}</td>
+                    <td>{formatData(mean(tableData.map((d) => d[4])))}</td>
+                    <td>{formatData(Math.min(...tableData.map((d) => d[5])))}</td>
+                </tr>
+            </tbody>
         </table>
     );
 }
