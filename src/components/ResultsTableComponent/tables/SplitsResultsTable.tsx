@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { DialogType } from '../../../dialogs/UseDialogsContext';
 import { DataType } from '../../../utils/cubingUtils';
 import { getFormattedTime, classNames, getFormattedTimeBySolve } from '../../../utils/genericUtils';
+import { getOllById } from '../../CasePickerComponent/OllCases';
+import { getPllById } from '../../CasePickerComponent/PllCases';
 import { NormalResultsTableProps } from './NormalResultsTable';
 
 type SplitsTableProps = Omit<NormalResultsTableProps, 'settings'> & {
@@ -42,6 +44,7 @@ function getEmptyTable(titles: string[]) {
 
 export function SplitsResultsTable({ results, setDialogData, splitNames = [] }: SplitsTableProps): JSX.Element {
     const { solves, bests } = results;
+    const isCfop = splitNames.includes('PLL');
 
     const [invertedBestSplitIndexes, setInvertedBestSplitIndexes] = useState<number[]>([]);
     const [bestSplitIndexes, setBestSplitIndexes] = useState<number[]>([]);
@@ -104,6 +107,19 @@ export function SplitsResultsTable({ results, setDialogData, splitNames = [] }: 
                             )}
                         </td>
                     </tr>
+                    {isCfop && (
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                {getOllById(solves[invertedBestSplitIndexes[2]]?.analysisData?.ollCase)?.name ?? '--'}
+                            </td>
+                            <td>
+                                {getPllById(solves[invertedBestSplitIndexes[3]]?.analysisData?.pllCase)?.name ?? '--'}
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
             <table className='timer__results'>
