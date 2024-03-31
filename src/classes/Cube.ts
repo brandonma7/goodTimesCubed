@@ -1,12 +1,13 @@
 import { getCubeOrder, PuzzleType } from '../utils/cubingUtils';
 
-enum Color {
+export enum Color {
     WHITE,
     ORANGE,
     GREEN,
     RED,
     BLUE,
     YELLOW,
+    GRAY,
 }
 
 type Face = Color[];
@@ -24,6 +25,7 @@ const ColorToFaceIndexMap = {
     [Color.RED]: 3,
     [Color.BLUE]: 4,
     [Color.YELLOW]: 5,
+    [Color.GRAY]: 6,
 };
 
 export default class Cube {

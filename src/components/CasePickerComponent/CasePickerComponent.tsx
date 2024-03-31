@@ -1,143 +1,122 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Solve } from '../../utils/cubingUtils';
-//import { classNames } from '../../utils/genericUtils';
+import { FaceState, SingleFaceVisualizationComponent } from '../CubeVisualizationComponent';
+import { SolveDataAction } from '../Timer';
 
-type CasePickerType = 'oll' | 'pll';
+import './CasePickerComponent.scss';
+import { pllCases } from './PllCases';
+import { ollCases } from './OllCases';
+
+type AlgSets = 'oll' | 'pll';
 
 type CasePickerComponentProps = {
     solve: Solve;
-    type: CasePickerType;
+    algSet: AlgSets;
+    dispatchSolveData: React.Dispatch<SolveDataAction>;
+    solveIndex: number;
 };
 
-/*type BldLetter = 'A' | 'B' | 'C' | 'D';
+/** A group of cases, like Opposite Swap or T-shapes */
+export type CaseGroup = {
+    name: string;
+    cases: Case[];
+}[];
 
-type Case = {
+/** A specific case, like T perm */
+export type Case = {
     id: string;
     name: string;
-    order: Turn[] | BldLetter[];
+    state: FaceState;
 };
-type CaseGroup = {
-    [id: string]: {
-        name: string;
-        cases: Case[] | BldLetter[];
+
+const algSetDataMap: {
+    [k in AlgSets]: {
+        caseGroup: CaseGroup;
+        setAction: 'SET_PLL_CASE' | 'SET_OLL_CASE';
+        id: 'pllCase' | 'ollCase';
     };
-};
-
-const pllCases: CaseGroup = {
-    //opposite: {},
-    adjacent: {
-        name: 'Adjacent',
-        cases: [
-            {
-                id: 'tperm',
-                name: 'T Perm',
-                order: ['A', 'A', 'C', 'D', 'B', 'C', 'D', 'B'],
-            },
-        ],
+} = {
+    pll: {
+        caseGroup: pllCases,
+        setAction: 'SET_PLL_CASE',
+        id: 'pllCase',
+    },
+    oll: {
+        caseGroup: ollCases,
+        setAction: 'SET_OLL_CASE',
+        id: 'ollCase',
     },
 };
 
-const ollCases: CaseGroup = {
-    //cross: {},
-    //lines: {},
-    cShapes: {
-        name: 'C Shapes',
-        cases: [
-            {
-                id: 'num50',
-                name: '#50',
-                order: ['U', 'U', 'R', 'R', 'R', 'U', 'U', 'L'],
-            },
-        ],
-    },
-    //lShapes: {},
-    //fishes: {},
-    //wShapes: {},
-    //knights: {},
-    //cactus: {},
-    //dot: {},
-};
+export default function CasePickerComponent({
+    solve,
+    algSet,
+    dispatchSolveData,
+    solveIndex,
+}: CasePickerComponentProps): JSX.Element {
+    // Alg set data contains case definitions and other metadata
+    const algSetData = algSetDataMap[algSet];
+    // Selected case currently stored for this solve
+    const currentCaseId = solve.analysisData[algSetData.id];
+    // What case group does this solve already have so we can start there
+    const currentlySelectedCaseGroupIndex = algSetData.caseGroup.findIndex((cg) => {
+        return cg.cases.findIndex((c) => c.id === currentCaseId) !== -1;
+    });
+    const [currentGroupIndex, setCurrentGroupIndex] = useState(Math.max(currentlySelectedCaseGroupIndex, 0));
 
-function drawOll(order: Turn[]) {
-    function drawSticker(direction: Turn) {
-        switch (direction) {
-            case 'U':
-                return <div className='timer__cube-sticker yellow' />;
-            case 'B':
-                return <div className='timer__cube-sticker gray border-top-yellow' />;
-            case 'R':
-                return <div className='timer__cube-sticker gray border-right-yellow' />;
-            case 'F':
-                return <div className='timer__cube-sticker gray border-bottom-yellow' />;
-            case 'L':
-                return <div className='timer__cube-sticker gray border-left-yellow' />;
-        }
-    }
+    // Group names refer to sub groups like opposite, adjacent, T-shapes
+    const groupNames = algSetData.caseGroup.map((g) => g.name);
+    // Current group of cases to render
+    const currentlyViewingCaseGroup = algSetData.caseGroup[currentGroupIndex];
+    // Name of currently selected case
+    const currentCaseName = currentlyViewingCaseGroup.cases.find((c) => c.id === currentCaseId)?.name;
 
     return (
         <div>
-            <div className='timer__cube-face'>{order.map(drawSticker)}</div>
-        </div>
-    );
-}
-
-const pllStickerDirection = [
-    ['border-left-', 'border-top'],
-    ['border-top-'],
-    ['border-top-', 'border-right'],
-    ['border-right-'],
-    ['border-right-', 'border-bottom'],
-    ['border-bottom-'],
-    ['border-bottom-', 'border-left'],
-    ['border-left-'],
-];
-
-const pllStickerColors = [
-    {
-        A: ['green', 'red'],
-        B: ['red', 'blue'],
-        C: ['blue', 'orange'],
-        D: ['orange', 'green'],
-    },
-    {
-        A: ['red'],
-        B: ['blue'],
-        C: ['orange'],
-        D: ['green'],
-    },
-];
-
-function drawPll(order: BldLetter[]) {
-    function drawSticker(letter: BldLetter, index: number) {
-        const classes = classNames('timer__cube-sticker', 'yellow');
-        switch (letter) {
-            case 'A':
-                return <div key={index} className={classes} />;
-            case 'B':
-                return <div key={index} className={classes} />;
-            case 'C':
-                return <div key={index} className={classes} />;
-            case 'D':
-                return <div key={index} className={classes} />;
-        }
-    }
-
-    return (
-        <div>
-            <div className='timer__cube-face'>
-                {order.map((letter, index) => {
-                    return drawSticker(letter, index);
+            {algSet.toUpperCase()}: {currentCaseName ?? 'Not selected'}
+            <div className='case-picker__group-tabs'>
+                {groupNames.map((name, index) => {
+                    const isSelected = currentGroupIndex === index;
+                    return (
+                        <div
+                            key={index}
+                            className={`group-tab${isSelected ? ' selected' : ''}`}
+                            onClick={() => {
+                                setCurrentGroupIndex(index);
+                            }}
+                        >
+                            {name}
+                        </div>
+                    );
                 })}
-                <div className=''></div>
             </div>
-        </div>
-    );
-}*/
-
-export default function CasePickerComponent({ solve, type }: CasePickerComponentProps): JSX.Element {
-    return (
-        <div>
-            solve: {solve.time}, type: {type}
+            <div
+                className='case-picker__case-list'
+                style={{
+                    width: currentlyViewingCaseGroup.cases.length === 4 ? 300 : 450,
+                }}
+            >
+                {currentlyViewingCaseGroup.cases.map((c, index) => {
+                    return (
+                        <div
+                            className={`case${currentCaseId === c.id ? ' case--selected' : ''}`}
+                            key={index}
+                            onClick={() => {
+                                dispatchSolveData({
+                                    type: algSetData.setAction,
+                                    data: {
+                                        index: solveIndex,
+                                        value: c.id,
+                                    },
+                                });
+                            }}
+                        >
+                            <div>{c.name}</div>
+                            <SingleFaceVisualizationComponent faceState={c.state} puzzleType='3x3x3' />
+                        </div>
+                    );
+                })}
+            </div>
         </div>
     );
 }

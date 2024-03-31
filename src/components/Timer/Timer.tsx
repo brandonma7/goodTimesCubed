@@ -48,7 +48,7 @@ export type SolveDataAction =
           type: 'SET_DNF';
           data: {
               index: number;
-              value: boolean;
+              value: boolean | null;
           };
       }
     | {
@@ -70,6 +70,20 @@ export type SolveDataAction =
           data: {
               index: number;
               value: boolean;
+          };
+      }
+    | {
+          type: 'SET_PLL_CASE';
+          data: {
+              index: number;
+              value: string;
+          };
+      }
+    | {
+          type: 'SET_OLL_CASE';
+          data: {
+              index: number;
+              value: string;
           };
       }
     | {
@@ -99,15 +113,19 @@ const solveDataReducer = (state: SolveData, action: SolveDataAction): SolveData 
             });
         case 'SET_DNF':
             return state.map((solve, index) => {
-                if (index === action.data.index) {
-                    solve.isDNF = action.data.value;
+                const targetIndex = action.data.index;
+                const dataIndex = targetIndex >= 0 ? targetIndex : targetIndex + state.length;
+                if (index === dataIndex) {
+                    solve.isDNF = action.data.value ?? !solve.isDNF;
                 }
                 return solve;
             });
         case 'SET_PLUS_TWO':
             return state.map((solve, index) => {
                 const isPlusTwo = action.data.value;
-                if (index === action.data.index && solve.isPlusTwo !== isPlusTwo) {
+                const targetIndex = action.data.index;
+                const dataIndex = targetIndex >= 0 ? targetIndex : targetIndex + state.length;
+                if (index === dataIndex && solve.isPlusTwo !== isPlusTwo) {
                     solve.isPlusTwo = isPlusTwo;
                     solve.time += isPlusTwo ? 200 : -200;
                 }
@@ -130,6 +148,26 @@ const solveDataReducer = (state: SolveData, action: SolveDataAction): SolveData 
                         solve.analysisData = {};
                     }
                     solve.analysisData.isPllSkip = action.data.value;
+                }
+                return solve;
+            });
+        case 'SET_PLL_CASE':
+            return state.map((solve, index) => {
+                if (index === action.data.index) {
+                    if (!solve.analysisData) {
+                        solve.analysisData = {};
+                    }
+                    solve.analysisData.pllCase = action.data.value;
+                }
+                return solve;
+            });
+        case 'SET_OLL_CASE':
+            return state.map((solve, index) => {
+                if (index === action.data.index) {
+                    if (!solve.analysisData) {
+                        solve.analysisData = {};
+                    }
+                    solve.analysisData.ollCase = action.data.value;
                 }
                 return solve;
             });
@@ -252,7 +290,7 @@ export default function Timer() {
             alerts.push(`New best single: ${getFormattedTime(newBests[DataType.SINGLE]?.time)}!`);
         }
 
-        if (alerts.length) {
+        if (alerts.length && solveData.length > 5) {
             pushAlert(alerts);
         }
 

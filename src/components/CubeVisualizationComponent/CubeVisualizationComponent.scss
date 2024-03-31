@@ -18,6 +18,38 @@
     justify-content: space-around;
 }
 
+.timer__cube-face-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.timer__cube-face--only {
+    width: 9vw;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 60px;
+    height: 60px;
+    justify-content: space-around;
+
+    &.column {
+        width: 10px;
+        flex-direction: column;
+
+        .timer__cube-sticker {
+            width: 10px;
+        }
+    }
+    &.row {
+        height: 10px;
+
+        .timer__cube-sticker {
+            height: 10px;
+        }
+    }
+}
+
 .timer__cube-face {
     width: 9vw;
     display: flex;
@@ -53,6 +85,10 @@
 
     &--yellow {
         background: $cube-sticker-yellow;
+    }
+
+    &--gray {
+        background: $cube-sticker-gray;
     }
 }
 

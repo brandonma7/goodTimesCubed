@@ -28,7 +28,7 @@ const TimerComponent = memo(function TimerComponentInternal({
     numSplits,
     timerComponentRef,
 }: TimerComponentProps) {
-    const { isManualEntryMode } = useContext(SettingsContext);
+    const { isManualEntryMode, setIsManualEntryMode } = useContext(SettingsContext);
     const { isMobile } = useContext(MetaDataContext);
     const [timerEntry, setTimerEntry] = useState(isManualEntryMode ? '' : '0.00');
     const [isPrepping, setIsPrepping] = useState(false);
@@ -324,6 +324,63 @@ const TimerComponent = memo(function TimerComponentInternal({
                     }}
                 >
                     New Scramble
+                </button>
+                <button
+                    className='timer__button'
+                    onClick={() => {
+                        dispatchSolveData({
+                            type: 'SET_DNF',
+                            data: {
+                                index: -1,
+                                value: true,
+                            },
+                        });
+                    }}
+                >
+                    DNF
+                </button>
+                <button
+                    className='timer__button'
+                    onClick={() => {
+                        dispatchSolveData({
+                            type: 'SET_PLUS_TWO',
+                            data: {
+                                index: -1,
+                                value: true,
+                            },
+                        });
+                    }}
+                >
+                    +2
+                </button>
+                <button
+                    className='timer__button'
+                    onClick={() => {
+                        dispatchSolveData({
+                            type: 'SET_DNF',
+                            data: {
+                                index: -1,
+                                value: false,
+                            },
+                        });
+                        dispatchSolveData({
+                            type: 'SET_PLUS_TWO',
+                            data: {
+                                index: -1,
+                                value: false,
+                            },
+                        });
+                    }}
+                >
+                    OK
+                </button>
+                <button
+                    className='timer__button'
+                    onClick={() => {
+                        setIsManualEntryMode(!isManualEntryMode);
+                    }}
+                >
+                    Mode
                 </button>
             </div>
             {/*scramble.split(' ').map((_, index, scrambleList) => {

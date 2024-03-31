@@ -233,8 +233,22 @@ export default function SolveDialog({
                     </button>
                 </div>
 
-                {isOllSelectionMode && <CasePickerComponent type='oll' solve={solve} />}
-                {isPllSelectionMode && <CasePickerComponent type='pll' solve={solve} />}
+                {isOllSelectionMode && (
+                    <CasePickerComponent
+                        algSet='oll'
+                        solve={solve}
+                        dispatchSolveData={solveDispatcher}
+                        solveIndex={index}
+                    />
+                )}
+                {isPllSelectionMode && (
+                    <CasePickerComponent
+                        algSet='pll'
+                        solve={solve}
+                        dispatchSolveData={solveDispatcher}
+                        solveIndex={index}
+                    />
+                )}
 
                 <div className='timer__solve-dialog-actions'>
                     <button

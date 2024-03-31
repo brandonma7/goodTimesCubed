@@ -26,7 +26,7 @@ export type Solve = {
     analysisData: {
         isOllSkip?: boolean;
         isPllSkip?: boolean;
-        ollCase?: number;
+        ollCase?: string;
         pllCase?: string;
     };
 };

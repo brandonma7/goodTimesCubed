@@ -1,0 +1,41 @@
+@import '../../styles/global-variables';
+
+.case-picker__group-tabs {
+    margin: 10px 0;
+    .group-tab  {
+        border-bottom: solid white thin;
+        display: inline;
+        padding: 4px 8px;
+
+        &:hover {
+            background-color: $button-background-color-hover;
+            cursor: pointer;
+        }
+
+        &.selected {
+            border: solid white thin;
+        }
+    }
+}
+.case-picker__case-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 0 auto;
+
+    .case {
+        border-bottom: thin white solid;
+        padding: 0 20px;
+        width: 110px;
+
+        &.case--selected {
+            background-color: $button-background-color-active;
+        }
+
+        &:hover {
+            cursor: pointer;
+            background-color: $button-background-color-hover;
+        }
+    }
+}
