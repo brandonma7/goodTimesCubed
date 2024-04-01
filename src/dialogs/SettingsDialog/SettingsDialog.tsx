@@ -86,7 +86,7 @@ export default function SettingsDialog() {
 
     return (
         <div
-            className='timer__settings-dialog'
+            className='timer__dialog timer__settings-dialog'
             tabIndex={0}
             onKeyDown={(event) => {
                 if (event.code === 'Escape') {

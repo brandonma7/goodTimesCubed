@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import CubeVisualizationComponent from '../../components/CubeVisualizationComponent';
 import { SolveData, SolveDataAction } from '../../components/Timer';
-import { AlertsContext } from '../../TimerApp';
+import { AlertsContext, MetaDataContext } from '../../TimerApp';
 import { PuzzleType } from '../../utils/cubingUtils';
 import { getFormattedTime, unFormatTime } from '../../utils/genericUtils';
 import { DialogContext, DialogType } from '../UseDialogsContext';
@@ -36,6 +36,7 @@ export default function SolveDialog({
     // So the component know what specific Dialog Data it's dealing with
     const dialogData = ddata as SolveDialogData;
     const solve = solves[dialogData.index];
+    const { isMobile } = useContext(MetaDataContext);
 
     const [isOllSelectionMode, setIsOllSelectionMode] = useState(false);
     const [isPllSelectionMode, setIsPllSelectionMode] = useState(false);
@@ -66,7 +67,7 @@ export default function SolveDialog({
 
     return (
         <div
-            className='timer__solve-dialog'
+            className='timer__dialog timer__solve-dialog'
             tabIndex={0}
             onKeyDown={(event) => {
                 if (event.code === 'Escape') {
@@ -259,6 +260,15 @@ export default function SolveDialog({
                     >
                         Close
                     </button>
+                </div>
+                <CubeVisualizationComponent
+                    puzzleType={puzzleType}
+                    scramble={scramble}
+                    width={isMobile ? 150 : 300}
+                    height={isMobile ? 112 : 224}
+                />
+
+                <div className='timer__solve-dialog-actions'>
                     <button
                         className='timer__button'
                         onClick={async () => {
@@ -274,7 +284,6 @@ export default function SolveDialog({
                         Delete
                     </button>
                 </div>
-                <CubeVisualizationComponent puzzleType={puzzleType} scramble={scramble} width={300} />
             </div>
         </div>
     );

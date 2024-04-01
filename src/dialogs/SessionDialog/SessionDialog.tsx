@@ -67,7 +67,7 @@ export default function SessionDialog({
 
     return (
         <div
-            className='timer__session-dialog'
+            className='timer__dialog timer__session-dialog'
             tabIndex={0}
             onKeyDown={(event) => {
                 if (event.code === 'Escape') {

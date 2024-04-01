@@ -48,7 +48,7 @@ export default function InsightsDialog({ solves = [], bests }: InsightsDialogPro
     }
     return (
         <div
-            className='timer__insights-dialog'
+            className='timer__dialog timer__insights-dialog'
             tabIndex={0}
             onKeyDown={(event) => {
                 if (event.code === 'Escape') {

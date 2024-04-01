@@ -59,7 +59,7 @@ export default function MultiSolveDialog({ solves = [] }: MultiSolveDialogProps)
 
     return (
         <div
-            className='timer__multi-solve-dialog'
+            className='timer__dialog timer__multi-solve-dialog'
             tabIndex={0}
             onKeyDown={(event) => {
                 if (event.code === 'Escape') {
