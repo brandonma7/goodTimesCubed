@@ -5,6 +5,7 @@
     margin: $size-s 0;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 
     .group-tab  {
         border-bottom: solid white thin;
@@ -30,8 +31,7 @@
     .case {
         border-bottom: thin white solid;
         margin: $size-m 0;
-        padding: 0 20px;
-        width: 110px;
+        width: 140px;
 
         &.case--selected {
             background-color: $button-background-color-active;

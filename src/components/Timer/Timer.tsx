@@ -15,11 +15,13 @@ import {
     getFormattedTime,
     getSessionDataFromLocalStorage,
     getSessionListFromLocalStorage,
+    isAncestorOf,
+    isAnyDialogOpen,
     saveSessionDataToLocalStorage,
 } from '../../utils/genericUtils';
 import useStickyState from '../../utils/useStickyState';
 import SessionDialog from '../../dialogs/SessionDialog';
-import useDialogContext from '../../dialogs/UseDialogsContext';
+import { DialogContext } from '../../dialogs/UseDialogsContext';
 import SessionManagementComponent, { areSessionsSame } from '../SessionManagementComponent';
 import SettingsDialog, { SettingsContext } from '../../dialogs/SettingsDialog';
 import InsightsDialog from '../../dialogs/InsightsDialog';
@@ -199,12 +201,11 @@ export function getBestOfType(bests: BestsData, type: DataType, size: number): B
     return bests[type].find((best) => best.size === size);
 }
 
-export default function Timer() {
+export default function Timer({ timerComponentRef }: { timerComponentRef: React.RefObject<HTMLDivElement> }) {
     const timerRef = useRef<HTMLDivElement>(null);
     const { width } = useContainerDimensions(timerRef);
-    const timerComponentRef = useRef<HTMLDivElement>(null);
 
-    const DialogContextProvider = useDialogContext(timerComponentRef);
+    const { closeDialog } = useContext(DialogContext);
     const { pushAlert } = useContext(AlertsContext);
     const { solveSettings } = useContext(SettingsContext);
     const { isMobile, setIsMobile, timerIsRunning } = useContext(MetaDataContext);
@@ -311,33 +312,32 @@ export default function Timer() {
                 ) {
                     return;
                 }
+                if (isAnyDialogOpen() && !isAncestorOf(target, 'dialog')) {
+                    closeDialog();
+                }
                 timerComponentRef.current && timerComponentRef.current.focus();
             }}
         >
-            <DialogContextProvider>
-                <HeaderComponent />
-            </DialogContextProvider>
+            <HeaderComponent />
             <div className='timer__main'>
-                <DialogContextProvider>
-                    {!timerIsRunning ? (
-                        <section className='timer__left-bar'>
-                            <BestsTableComponent solves={solveData} bests={bestsData} />
-                            <SessionManagementComponent
-                                sessionData={sessionData}
-                                setSessionId={setSessionId}
-                                timerComponentRef={timerComponentRef}
-                            />
-                            <ResultsTableComponent
-                                solves={solveData}
-                                bests={bestsData}
-                                sessionType={sessionData.sessionType}
-                                numSplits={sessionData.numSplits}
-                            />
-                        </section>
-                    ) : (
-                        <></>
-                    )}
-                </DialogContextProvider>
+                {!timerIsRunning ? (
+                    <section className='timer__left-bar'>
+                        <BestsTableComponent solves={solveData} bests={bestsData} />
+                        <SessionManagementComponent
+                            sessionData={sessionData}
+                            setSessionId={setSessionId}
+                            timerComponentRef={timerComponentRef}
+                        />
+                        <ResultsTableComponent
+                            solves={solveData}
+                            bests={bestsData}
+                            sessionType={sessionData.sessionType}
+                            numSplits={sessionData.numSplits}
+                        />
+                    </section>
+                ) : (
+                    <></>
+                )}
                 <TimerComponent
                     dispatchSolveData={dispatchSolveData}
                     puzzleType={sessionData.type}
@@ -357,37 +357,35 @@ export default function Timer() {
                     }}
                 />*/}
             </div>
-            <DialogContextProvider>
-                <>
-                    <SolveDialog
-                        solves={solveData}
-                        puzzleType={sessionData.type}
-                        sessionType={sessionData.sessionType}
-                        solveDispatcher={dispatchSolveData}
-                        onAction={() => {
-                            suppressBestAlerts();
-                        }}
-                    />
-                    <MultiSolveDialog solves={solveData} />
-                    <SessionDialog
-                        sessionData={sessionData}
-                        hideDeleteButton={sessionList.length < 2}
-                        onUpdateSessionData={(newData) => {
-                            saveSessionDataToLocalStorage(newData);
-                        }}
-                        onClearSessionData={() => {
-                            suppressBestAlerts();
-                        }}
-                        onDeleteSession={() => {
-                            const index = sessionList[0] === sessionData.id ? 1 : 0;
-                            setSessionId(sessionList[index]);
-                        }}
-                        solveDispatcher={dispatchSolveData}
-                    />
-                    <SettingsDialog />
-                    <InsightsDialog solves={solveData} bests={bestsData} />
-                </>
-            </DialogContextProvider>
+            <>
+                <SolveDialog
+                    solves={solveData}
+                    puzzleType={sessionData.type}
+                    sessionType={sessionData.sessionType}
+                    solveDispatcher={dispatchSolveData}
+                    onAction={() => {
+                        suppressBestAlerts();
+                    }}
+                />
+                <MultiSolveDialog solves={solveData} />
+                <SessionDialog
+                    sessionData={sessionData}
+                    hideDeleteButton={sessionList.length < 2}
+                    onUpdateSessionData={(newData) => {
+                        saveSessionDataToLocalStorage(newData);
+                    }}
+                    onClearSessionData={() => {
+                        suppressBestAlerts();
+                    }}
+                    onDeleteSession={() => {
+                        const index = sessionList[0] === sessionData.id ? 1 : 0;
+                        setSessionId(sessionList[index]);
+                    }}
+                    solveDispatcher={dispatchSolveData}
+                />
+                <SettingsDialog />
+                <InsightsDialog solves={solveData} bests={bestsData} />
+            </>
             <AlertsComponent />
         </div>
     );

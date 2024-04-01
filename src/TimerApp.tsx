@@ -1,8 +1,9 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useRef, useState } from 'react';
 import Timer from './components/Timer';
 
 import './App.css';
 import { SettingsContextProvider } from './dialogs/SettingsDialog';
+import useDialogContext from './dialogs/UseDialogsContext';
 
 type AlertContextType = {
     alerts: string[];
@@ -36,6 +37,9 @@ export function MetaDataContextProvider({ children }: { children: JSX.Element })
 }
 
 function App() {
+    const timerComponentRef = useRef<HTMLDivElement>(null);
+    const DialogContextProvider = useDialogContext(timerComponentRef);
+
     const [alerts, setAlerts] = useState<string[]>([]);
     let alertTimeout: NodeJS.Timeout;
     const pushAlert = (alert: string | string[]) => {
@@ -56,13 +60,15 @@ function App() {
     };
     const alertContextValue = { alerts, pushAlert, deleteAlert };
     return (
-        <SettingsContextProvider>
-            <MetaDataContextProvider>
-                <AlertsContext.Provider value={alertContextValue}>
-                    <Timer />
-                </AlertsContext.Provider>
-            </MetaDataContextProvider>
-        </SettingsContextProvider>
+        <DialogContextProvider>
+            <SettingsContextProvider>
+                <MetaDataContextProvider>
+                    <AlertsContext.Provider value={alertContextValue}>
+                        <Timer timerComponentRef={timerComponentRef} />
+                    </AlertsContext.Provider>
+                </MetaDataContextProvider>
+            </SettingsContextProvider>
+        </DialogContextProvider>
     );
 }
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import './App.css';
@@ -6,9 +6,10 @@ import Timer from './components/Timer';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const timerComponentRef = useRef<HTMLDivElement>(null);
 root.render(
     <React.StrictMode>
-        <Timer />
+        <Timer timerComponentRef={timerComponentRef} />
     </React.StrictMode>,
 );
 
