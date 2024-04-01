@@ -158,3 +158,20 @@ export function mean(list: number[]) {
 export function sum(list: number[]) {
     return list.length === 0 ? 0 : list.reduce((prev, curr) => prev + curr, 0);
 }
+
+export function isAncestorOf(child: Element, parentClass: string): boolean {
+    const parentElement = child.parentElement;
+    if (parentElement == null) {
+        return false;
+    }
+
+    if (parentElement.className.includes(parentClass)) {
+        return true;
+    }
+
+    return isAncestorOf(parentElement, parentClass);
+}
+
+export function isAnyDialogOpen() {
+    return document.querySelectorAll('.timer__dialog').length;
+}
