@@ -44,7 +44,7 @@ function getEmptyTable(titles: string[]) {
 
 export function SplitsResultsTable({ results, splitNames = [] }: SplitsTableProps): JSX.Element {
     const { solves, bests } = results;
-    const isCfop = splitNames.includes('PLL');
+    const isCfop = splitNames.includes('Cross');
 
     const [invertedBestSplitIndexes, setInvertedBestSplitIndexes] = useState<number[]>([]);
     const [bestSplitIndexes, setBestSplitIndexes] = useState<number[]>([]);

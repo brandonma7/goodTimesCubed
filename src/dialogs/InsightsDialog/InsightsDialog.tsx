@@ -16,7 +16,7 @@ import { getOllById } from '../../components/CasePickerComponent/OllCases';
 import { getPllById } from '../../components/CasePickerComponent/PllCases';
 import { BestsData, getBestOfType, SolveData } from '../../components/GoodTimes';
 import { calculateAverage, calculateMean, DataType, Solve } from '../../utils/cubingUtils';
-import { mean, sum, getFormattedTime } from '../../utils/genericUtils';
+import { mean, sum, getFormattedTime, valueAtPercentile } from '../../utils/genericUtils';
 import { SettingsContext } from '../SettingsDialog';
 import { DialogContext, DialogType } from '../UseDialogsContext';
 
@@ -72,11 +72,11 @@ export default function InsightsDialog({ solves = [], bests }: InsightsDialogPro
             <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexGrow: 1 }}>
                 <div>
                     <div style={{ margin: 16 }}>OLL Data</div>
-                    <InsightsTable solves={solves} getName={getOllById} caseKey={'ollCase'} totalCases={57} />
+                    <InsightsTable solves={solves} getCase={getOllById} caseKey={'ollCase'} totalCases={57} />
                 </div>
                 <div>
                     <div style={{ margin: 16 }}>PLL Data</div>
-                    <InsightsTable solves={solves} getName={getPllById} caseKey={'pllCase'} totalCases={21} />
+                    <InsightsTable solves={solves} getCase={getPllById} caseKey={'pllCase'} totalCases={21} />
                 </div>
             </div>
         </div>
@@ -84,46 +84,56 @@ export default function InsightsDialog({ solves = [], bests }: InsightsDialogPro
 }
 
 function RandomDataTable({ solves }: { solves: Solve[] }): JSX.Element {
-    const timesList = solves.filter((solve) => !solve.isDNF).map((solve) => solve.time);
-    const sortedTimesList = timesList.sort();
-
-    const indexForPercentile = (percentile: number): number => {
-        return Math.round(timesList.length * percentile);
-    };
-
-    const valueAtPercentile = (percentile: number): number | string => {
-        const index = indexForPercentile(percentile);
-        if (index < 0 || index >= timesList.length) {
-            return '--';
-        }
-        return sortedTimesList[index] / 100;
-    };
+    const goodSolves = solves.filter((solve) => !solve.isDNF);
+    const timesList = goodSolves.map((solve) => solve.time).sort();
+    const splitsLists = goodSolves.map((solve) => solve.splits ?? []);
+    const splitsTableData = splitsLists[0]?.map((_, index) => {
+        return splitsLists.map((s) => s[index]).sort((a, b) => a - b);
+    });
 
     return (
         <div>
-            <div>Overall mean: {Math.trunc(mean(timesList)) / 100}</div>
-            <table className='basic-table'>
+            <table className='basic-table' style={{ width: '80%' }}>
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Fastest</th>
-                        <th>20th Percentile</th>
-                        <th>40th Percentile</th>
+                        <th>20th %</th>
+                        <th>40th %</th>
                         <th>Median</th>
-                        <th>60th Percentile</th>
-                        <th>80th Percentile</th>
+                        <th>60th %</th>
+                        <th>80th %</th>
                         <th>Slowest</th>
+                        <th>Mean</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{sortedTimesList[0] / 100}</td>
-                        <td>{valueAtPercentile(0.2)}</td>
-                        <td>{valueAtPercentile(0.4)}</td>
-                        <td>{valueAtPercentile(0.5)}</td>
-                        <td>{valueAtPercentile(0.6)}</td>
-                        <td>{valueAtPercentile(0.8)}</td>
-                        <td>{(sortedTimesList.at(-1) ?? 0) / 100}</td>
+                        <td>Solve</td>
+                        <td>{timesList[0] / 100}</td>
+                        <td>{valueAtPercentile(0.2, timesList)}</td>
+                        <td>{valueAtPercentile(0.4, timesList)}</td>
+                        <td>{valueAtPercentile(0.5, timesList)}</td>
+                        <td>{valueAtPercentile(0.6, timesList)}</td>
+                        <td>{valueAtPercentile(0.8, timesList)}</td>
+                        <td>{(timesList.at(-1) ?? 0) / 100}</td>
+                        <td>{Math.trunc(mean(timesList)) / 100}</td>
                     </tr>
+                    {splitsTableData.map((splitList, index) => {
+                        return (
+                            <tr key={index}>
+                                <td>Split {index + 1}</td>
+                                <td>{splitList[0] / 100}</td>
+                                <td>{valueAtPercentile(0.2, splitList)}</td>
+                                <td>{valueAtPercentile(0.4, splitList)}</td>
+                                <td>{valueAtPercentile(0.5, splitList)}</td>
+                                <td>{valueAtPercentile(0.6, splitList)}</td>
+                                <td>{valueAtPercentile(0.8, splitList)}</td>
+                                <td>{(splitList.at(-1) ?? 0) / 100}</td>
+                                <td>{Math.trunc(mean(splitList)) / 100}</td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>
@@ -132,13 +142,14 @@ function RandomDataTable({ solves }: { solves: Solve[] }): JSX.Element {
 
 function InsightsTable({
     solves,
-    getName,
+    getCase,
     caseKey,
     totalCases,
 }: {
     solves: Solve[];
+
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    getName: (id: string) => any;
+    getCase: (id: string) => any;
     caseKey: 'ollCase' | 'pllCase';
     totalCases: number;
 }): JSX.Element {
@@ -167,7 +178,7 @@ function InsightsTable({
     const tableData: [string, ...number[]][] = Object.keys(data).map((id) => {
         const c = data[id];
         return [
-            getName(id)?.name ?? 'unknown',
+            getCase(id)?.name ?? 'unknown',
             c.timesSeen,
             formatData(mean(c.splitTimes)),
             formatData(Math.min(...c.splitTimes)),

@@ -88,14 +88,11 @@ export default function AppRoot() {
 
     P1
         Comp mode (ao5 groups)
-        Close dialog with ESC
         Restrict session settings based on puzzle type and if there are solves
         Warning confirmation when clearing/deleting sessions
 
     P2
         Goal mode for CFOP splits
-        CFOP trainer
-            display results by oll/pll
 
         OLL Trainer
         PLL Trainer

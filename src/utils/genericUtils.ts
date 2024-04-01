@@ -159,8 +159,21 @@ export function sum(list: number[]) {
     return list.length === 0 ? 0 : list.reduce((prev, curr) => prev + curr, 0);
 }
 
+const indexForPercentile = (percentile: number, size: number): number => {
+    return Math.round(size * percentile);
+};
+
+export const valueAtPercentile = (percentile: number, sortedList: number[]): number | string => {
+    const index = indexForPercentile(percentile, sortedList.length);
+    if (index < 0 || index >= sortedList.length) {
+        return '--';
+    }
+    return sortedList[index] / 100;
+};
+// End math
+
 export function isAncestorOf(child: Element, parentClass: string): boolean {
-    if (child.className.includes(parentClass)) {
+    if (child.className.includes && child.className.includes(parentClass)) {
         return true;
     }
     const parentElement = child.parentElement;
@@ -168,7 +181,7 @@ export function isAncestorOf(child: Element, parentClass: string): boolean {
         return false;
     }
 
-    if (parentElement.className.includes(parentClass)) {
+    if (parentElement.className.includes && parentElement.className.includes(parentClass)) {
         return true;
     }
 
