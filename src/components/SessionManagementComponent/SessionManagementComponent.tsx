@@ -10,6 +10,7 @@ import './SessionManagementComponent.scss';
 import { SolveData, SolveDataAction } from '../GoodTimes';
 import { isEmpty, isEqual, xorWith } from 'lodash';
 import { PuzzleType } from '../../utils/cubingUtils';
+import SessionDialog from '../../dialogs/SessionDialog';
 
 type SessionManagementComponentProps = {
     sessionData: SessionData;
@@ -139,6 +140,21 @@ export default function SessionManagementComponent({
                     New Session
                 </button>
             </div>
+            <SessionDialog
+                sessionData={sessionData}
+                hideDeleteButton={sessionList.length < 2}
+                onUpdateSessionData={(newData) => {
+                    saveSessionDataToLocalStorage(newData);
+                }}
+                onClearSessionData={() => {
+                    suppressBestAlerts();
+                }}
+                onDeleteSession={() => {
+                    const index = sessionList[0] === sessionData.id ? 1 : 0;
+                    setSessionId(sessionList[index]);
+                }}
+                solveDispatcher={dispatchSolveData}
+            />
         </>
     );
 }

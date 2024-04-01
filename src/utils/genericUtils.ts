@@ -160,6 +160,9 @@ export function sum(list: number[]) {
 }
 
 export function isAncestorOf(child: Element, parentClass: string): boolean {
+    if (child.className.includes(parentClass)) {
+        return true;
+    }
     const parentElement = child.parentElement;
     if (parentElement == null) {
         return false;

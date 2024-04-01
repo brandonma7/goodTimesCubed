@@ -19,7 +19,6 @@ import {
     getSessionDataFromLocalStorage,
 } from '../../utils/genericUtils';
 import useStickyState from '../../utils/useStickyState';
-import SessionDialog from '../../dialogs/SessionDialog';
 import { DialogContext } from '../../dialogs/UseDialogsContext';
 import SessionManagementComponent from '../SessionManagementComponent';
 import { SettingsContext } from '../../dialogs/SettingsDialog';
@@ -339,14 +338,6 @@ export default function GoodTimes() {
                     mostRecentSolve={solveData.at(-1) ?? null}
                     mostRecentSolveIndex={solveData.length - 1}
                 />
-                {/* TODO: custom scrambles
-                <input
-                    type='text'
-                    value={scramble}
-                    onChange={(newValue) => {
-                        setScramble(newValue.target.value);
-                    }}
-                />*/}
             </div>
             <>
                 <SolveDialog
@@ -358,60 +349,9 @@ export default function GoodTimes() {
                         suppressBestAlerts();
                     }}
                 />
-                <SessionDialog
-                    sessionData={sessionData}
-                    hideDeleteButton={sessionList.length < 2}
-                    onUpdateSessionData={(newData) => {
-                        saveSessionDataToLocalStorage(newData);
-                    }}
-                    onClearSessionData={() => {
-                        suppressBestAlerts();
-                    }}
-                    onDeleteSession={() => {
-                        const index = sessionList[0] === sessionData.id ? 1 : 0;
-                        setSessionId(sessionList[index]);
-                    }}
-                    solveDispatcher={dispatchSolveData}
-                />
             </>
             <AlertsComponent />
             <InsightsDialog solves={solveData} bests={bestsData} />
         </div>
     );
 }
-/*
-                        onRenameSession={(newName) => {
-                            const { id, type, sessionType } = sessionData;
-                            sessionData.name = newName;
-                            saveSessionDataToLocalStorage({
-                                id,
-                                type,
-                                name: newName,
-                                data: solveData,
-                                sessionType,
-                            });
-                        }}
-                        onChangeSessionPuzzleType={(newType) => {
-                            const { id, name, sessionType } = sessionData;
-                            const newSessionData = {
-                                id,
-                                name,
-                                type: newType,
-                                sessionType,
-                                data: solveData,
-                            };
-                            sessionData.type = newSessionData.type;
-                            saveSessionDataToLocalStorage(newSessionData);
-                        }}
-                        onChangeSessionType={(newType) => {
-                            const { id, name, type } = sessionData;
-                            const newSessionData = {
-                                id,
-                                name,
-                                type,
-                                sessionType: newType,
-                                data: solveData,
-                            };
-                            sessionData.sessionType = newSessionData.sessionType;
-                            saveSessionDataToLocalStorage(newSessionData);
-                        }}*/
