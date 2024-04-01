@@ -63,25 +63,23 @@ export function MetaDataContextProvider({ children }: { children: JSX.Element })
     return <MetaDataContext.Provider value={metaDataContextValue}>{children}</MetaDataContext.Provider>;
 }
 
-function AppRoot() {
+export default function AppRoot() {
     //const [scramble, setScramble] = useState<string>(generateScramble('3x3x3'));
     console.log('App');
 
     const DialogContextProvider = useDialogContext();
     return (
-        <DialogContextProvider>
-            <SettingsContextProvider>
-                <MetaDataContextProvider>
-                    <AlertsContextProvider>
+        <SettingsContextProvider>
+            <MetaDataContextProvider>
+                <AlertsContextProvider>
+                    <DialogContextProvider>
                         <GoodTimes />
-                    </AlertsContextProvider>
-                </MetaDataContextProvider>
-            </SettingsContextProvider>
-        </DialogContextProvider>
+                    </DialogContextProvider>
+                </AlertsContextProvider>
+            </MetaDataContextProvider>
+        </SettingsContextProvider>
     );
 }
-
-export default AppRoot;
 
 /*
     TODO

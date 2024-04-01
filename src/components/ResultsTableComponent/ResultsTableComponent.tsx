@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { SettingsContext } from '../../dialogs/SettingsDialog';
-import { DialogContext } from '../../dialogs/UseDialogsContext';
 
 import { BestsData, SolveData } from '../GoodTimes';
 
@@ -18,7 +17,6 @@ export type ResultsTableComponentProps = {
 
 export default function ResultsTableComponent(results: ResultsTableComponentProps): JSX.Element {
     const { solveSettings } = useContext(SettingsContext);
-    const { setDialogData } = useContext(DialogContext);
 
     switch (results.sessionType) {
         case 'splits':
@@ -26,19 +24,12 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
                 <SplitsResultsTable
                     results={results}
                     splitNames={[...Array.from({ length: results.numSplits ?? 1 })].map((_, index) => `${++index}`)}
-                    setDialogData={setDialogData}
                 />
             );
         case 'cfopTrainer':
         case 'yauTrainer':
-            return (
-                <SplitsResultsTable
-                    results={results}
-                    splitNames={SessionTypeMap[results.sessionType].splitNames}
-                    setDialogData={setDialogData}
-                />
-            );
+            return <SplitsResultsTable results={results} splitNames={SessionTypeMap[results.sessionType].splitNames} />;
         default:
-            return <NormalResultsTable results={results} settings={solveSettings} setDialogData={setDialogData} />;
+            return <NormalResultsTable results={results} settings={solveSettings} />;
     }
 }

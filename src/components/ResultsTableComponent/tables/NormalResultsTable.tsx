@@ -1,5 +1,5 @@
-import React from 'react';
-import { DialogType, SetDialogDataType } from '../../../dialogs/UseDialogsContext';
+import React, { useContext } from 'react';
+import { DialogContext, DialogType } from '../../../dialogs/UseDialogsContext';
 import { DataType, DataTypeToTextMap, calculateAverage, calculateMean } from '../../../utils/cubingUtils';
 import { getFormattedTime, getFormattedTimeBySolve, classNames } from '../../../utils/genericUtils';
 import { getBestOfType } from '../../GoodTimes';
@@ -9,12 +9,12 @@ import { ResultsTableComponentProps } from '../ResultsTableComponent';
 export type NormalResultsTableProps = {
     results: ResultsTableComponentProps;
     settings: SolveSetting[];
-    setDialogData: SetDialogDataType;
 };
 
-export function NormalResultsTable({ results, settings, setDialogData }: NormalResultsTableProps): JSX.Element {
+export function NormalResultsTable({ results, settings }: NormalResultsTableProps): JSX.Element {
     const { solves, bests } = results;
     const getHeaderString = (type: DataType, size: number) => `${DataTypeToTextMap[type]}${size > 1 ? size : ''}`;
+    const { openDialog } = useContext(DialogContext);
 
     return solves?.length ? (
         <table className='timer__results'>
@@ -44,7 +44,7 @@ export function NormalResultsTable({ results, settings, setDialogData }: NormalR
                             <tr key={index} className={isEndOfSettingGroup ? 'timer__group-indicator' : undefined}>
                                 <td
                                     onClick={() => {
-                                        setDialogData({
+                                        openDialog({
                                             dialogType: DialogType.SOLVE,
                                             isOpen: true,
                                             index: tableIndex,
@@ -91,15 +91,16 @@ export function NormalResultsTable({ results, settings, setDialogData }: NormalR
                                                         setting.type === DataType.AVERAGE ||
                                                         setting.type === DataType.MEAN
                                                     ) {
-                                                        setDialogData({
+                                                        openDialog({
                                                             dialogType: DialogType.MULTISOLVE,
                                                             isOpen: true,
                                                             index: tableIndex,
                                                             size: setting.size,
                                                             isMean: setting.type === DataType.MEAN,
+                                                            solves,
                                                         });
                                                     } else {
-                                                        setDialogData({
+                                                        openDialog({
                                                             dialogType: DialogType.SOLVE,
                                                             isOpen: true,
                                                             index: tableIndex,

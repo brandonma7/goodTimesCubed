@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { DialogType } from '../../../dialogs/UseDialogsContext';
+import React, { useContext, useEffect, useState } from 'react';
+import { DialogContext, DialogType } from '../../../dialogs/UseDialogsContext';
 import { DataType } from '../../../utils/cubingUtils';
 import { getFormattedTime, classNames, getFormattedTimeBySolve } from '../../../utils/genericUtils';
 import { getOllById } from '../../CasePickerComponent/OllCases';
@@ -42,12 +42,13 @@ function getEmptyTable(titles: string[]) {
     );
 }
 
-export function SplitsResultsTable({ results, setDialogData, splitNames = [] }: SplitsTableProps): JSX.Element {
+export function SplitsResultsTable({ results, splitNames = [] }: SplitsTableProps): JSX.Element {
     const { solves, bests } = results;
     const isCfop = splitNames.includes('PLL');
 
     const [invertedBestSplitIndexes, setInvertedBestSplitIndexes] = useState<number[]>([]);
     const [bestSplitIndexes, setBestSplitIndexes] = useState<number[]>([]);
+    const { openDialog } = useContext(DialogContext);
 
     useEffect(() => {
         // This one is called inverted because it's inverted relative to how the table renders
@@ -146,7 +147,7 @@ export function SplitsResultsTable({ results, setDialogData, splitNames = [] }: 
                                 <tr
                                     key={index}
                                     onClick={() => {
-                                        setDialogData({
+                                        openDialog({
                                             dialogType: DialogType.SOLVE,
                                             isOpen: true,
                                             index: tableIndex,
@@ -170,7 +171,7 @@ export function SplitsResultsTable({ results, setDialogData, splitNames = [] }: 
                                                     isSkip ? 'timer__result--skip' : '',
                                                 )}
                                                 onClick={() => {
-                                                    setDialogData({
+                                                    openDialog({
                                                         dialogType: DialogType.SOLVE,
                                                         isOpen: true,
                                                         index: tableIndex,
@@ -188,7 +189,7 @@ export function SplitsResultsTable({ results, setDialogData, splitNames = [] }: 
                                             isBest ? 'timer__result--best' : '',
                                         )}
                                         onClick={() => {
-                                            setDialogData({
+                                            openDialog({
                                                 dialogType: DialogType.SOLVE,
                                                 isOpen: true,
                                                 index: tableIndex,

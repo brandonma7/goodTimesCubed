@@ -64,8 +64,8 @@ $cube-sticker-yellow: #FFFF00;
 $cube-sticker-gray: #999;
 
 
-// Common
-@mixin common-dialog-styles {
+// Common stuff
+.timer__dialog {
     background: $main-background-color;
     position: absolute;
     border: $thin-border-size $main-border-color;

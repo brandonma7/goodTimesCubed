@@ -105,7 +105,7 @@ export function calculateBests(settings: SolveSetting[], solves: Solve[]) {
 }
 
 export default function BestsTableComponent({ solves, bests }: BestsTableComponentProps) {
-    const { setDialogData } = useContext(DialogContext);
+    const { openDialog } = useContext(DialogContext);
     const { solveSettings: settings } = useContext(SettingsContext);
 
     const rows = settings.map((setting, index) => {
@@ -137,15 +137,16 @@ export default function BestsTableComponent({ solves, bests }: BestsTableCompone
                 <td
                     onClick={() => {
                         if (type === DataType.AVERAGE || type === DataType.MEAN) {
-                            setDialogData({
+                            openDialog({
                                 dialogType: DialogType.MULTISOLVE,
                                 isOpen: true,
                                 index: solves.length - 1,
                                 size: size,
                                 isMean: type === DataType.MEAN,
+                                solves,
                             });
                         } else {
-                            setDialogData({
+                            openDialog({
                                 dialogType: DialogType.SOLVE,
                                 isOpen: true,
                                 index: solves.length - 1,
@@ -160,15 +161,16 @@ export default function BestsTableComponent({ solves, bests }: BestsTableCompone
                         const index = bests[DataType.SINGLE]?.index ?? -1;
                         if (index >= 0) {
                             if (type === DataType.AVERAGE || type === DataType.MEAN) {
-                                setDialogData({
+                                openDialog({
                                     dialogType: DialogType.MULTISOLVE,
                                     isOpen: true,
                                     index: getBestOfType(bests, type, size)?.index ?? 0,
                                     size: size,
                                     isMean: type === DataType.MEAN,
+                                    solves,
                                 });
                             } else {
-                                setDialogData({
+                                openDialog({
                                     dialogType: DialogType.SOLVE,
                                     isOpen: true,
                                     index,

@@ -8,7 +8,6 @@ import './GoodTimes.scss';
 import TimerComponent from '../TimerComponent';
 import { DataType, generateScramble, Solve } from '../../utils/cubingUtils';
 import SolveDialog from '../../dialogs/SolveDialog';
-import MultiSolveDialog from '../../dialogs/MultiSolveDialog';
 import AlertsComponent from '../AlertsComponent';
 import { AlertsContext, MetaDataContext } from '../../TimerApp';
 import {
@@ -23,9 +22,9 @@ import useStickyState from '../../utils/useStickyState';
 import SessionDialog from '../../dialogs/SessionDialog';
 import { DialogContext } from '../../dialogs/UseDialogsContext';
 import SessionManagementComponent from '../SessionManagementComponent';
-import SettingsDialog, { SettingsContext } from '../../dialogs/SettingsDialog';
-import InsightsDialog from '../../dialogs/InsightsDialog';
+import { SettingsContext } from '../../dialogs/SettingsDialog';
 import { useContainerDimensions } from '../../utils/useContainerDimensions';
+import InsightsDialog from '../../dialogs/InsightsDialog';
 
 const SMALL_SCREEN_SIZE_WIDTH = 768;
 
@@ -359,7 +358,6 @@ export default function GoodTimes() {
                         suppressBestAlerts();
                     }}
                 />
-                <MultiSolveDialog solves={solveData} />
                 <SessionDialog
                     sessionData={sessionData}
                     hideDeleteButton={sessionList.length < 2}
@@ -375,10 +373,9 @@ export default function GoodTimes() {
                     }}
                     solveDispatcher={dispatchSolveData}
                 />
-                <SettingsDialog />
-                <InsightsDialog solves={solveData} bests={bestsData} />
             </>
             <AlertsComponent />
+            <InsightsDialog solves={solveData} bests={bestsData} />
         </div>
     );
 }

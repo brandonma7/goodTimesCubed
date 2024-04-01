@@ -70,7 +70,7 @@ export default function SessionManagementComponent({
     dispatchSolveData,
     suppressBestAlerts,
 }: SessionManagementComponentProps) {
-    const { setDialogData } = useContext(DialogContext);
+    const { openDialog } = useContext(DialogContext);
     const sessionNames = getSessionNamesFromLocalStorage();
     const sessionList = sessionNames.map((sesh) => sesh.id);
 
@@ -106,7 +106,7 @@ export default function SessionManagementComponent({
                 <button
                     className='timer__button'
                     onClick={() => {
-                        setDialogData({
+                        openDialog({
                             dialogType: DialogType.SESSION,
                             isOpen: true,
                         });

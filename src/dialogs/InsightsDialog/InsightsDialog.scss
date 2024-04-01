@@ -1,7 +1,6 @@
 @import '../../styles/global-variables';
 
 .timer__insights-dialog {
-    @include common-dialog-styles;
     width: 70%;
     left: 15%;
     padding: 1vw;

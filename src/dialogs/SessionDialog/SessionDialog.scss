@@ -1,7 +1,6 @@
 @import '../../styles/global-variables';
 
 .timer__session-dialog  {
-    @include common-dialog-styles;
     display: flex;
     flex-direction: column;
 

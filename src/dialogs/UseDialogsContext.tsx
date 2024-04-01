@@ -1,8 +1,8 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useCallback, useMemo, useState } from 'react';
 import { SolveDialogData } from './SolveDialog';
-import { MultiSolveDialogData } from './MultiSolveDialog';
+import MultiSolveDialog, { MultiSolveDialogData } from './MultiSolveDialog';
 import { SessionDialogData } from './SessionDialog';
-import { SettingsDialogData } from './SettingsDialog';
+import SettingsDialog, { SettingsDialogData } from './SettingsDialog';
 import { InsightsDialogData } from './InsightsDialog';
 
 export enum DialogType {
@@ -17,7 +17,7 @@ export type SetDialogDataType = React.Dispatch<React.SetStateAction<DialogData>>
 
 type DialogContextType = {
     dialogData: DialogData;
-    setDialogData: SetDialogDataType;
+    openDialog: (dialogData: DialogData) => void;
     closeDialog: () => void;
 };
 
@@ -33,7 +33,7 @@ export const DialogContext = createContext<DialogContextType>({
         dialogType: DialogType.SETTINGS,
         isOpen: false,
     },
-    setDialogData: () => null,
+    openDialog: () => null,
     closeDialog: () => null,
 });
 
@@ -42,7 +42,15 @@ export default function useDialogContext() {
         dialogType: DialogType.SETTINGS,
         isOpen: false,
     });
-    const closeDialog = () => {
+
+    const openDialog = useCallback((dialogData: DialogData) => {
+        setDialogData({
+            ...dialogData,
+            isOpen: true,
+        });
+    }, []);
+
+    const closeDialog = useCallback(() => {
         setDialogData({
             dialogType: DialogType.SETTINGS,
             isOpen: false,
@@ -51,11 +59,20 @@ export default function useDialogContext() {
         if (timerElement) {
             (timerElement as HTMLElement).focus();
         }
-    };
-    const dialogContextValue = { dialogData, setDialogData, closeDialog };
+    }, []);
+    const dialogContextValue = useMemo(
+        () => ({ dialogData, openDialog, closeDialog }),
+        [dialogData, openDialog, closeDialog],
+    );
 
     function DialogContextProvider({ children }: { children: JSX.Element }) {
-        return <DialogContext.Provider value={dialogContextValue}>{children}</DialogContext.Provider>;
+        return (
+            <DialogContext.Provider value={dialogContextValue}>
+                {children}
+                <SettingsDialog />
+                <MultiSolveDialog />
+            </DialogContext.Provider>
+        );
     }
 
     return DialogContextProvider;

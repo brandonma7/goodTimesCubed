@@ -7,7 +7,7 @@ import { ReactComponent as GraphIcon } from '../../icons/graph.svg';
 import './HeaderComponent.scss';
 
 export default function HeaderComponent() {
-    const { setDialogData } = useContext(DialogContext);
+    const { openDialog } = useContext(DialogContext);
 
     return (
         <header className='timer__header'>
@@ -15,7 +15,7 @@ export default function HeaderComponent() {
                 <button
                     className='timer__button'
                     onClick={() => {
-                        setDialogData({
+                        openDialog({
                             dialogType: DialogType.INSIGHTS,
                             isOpen: true,
                         });
@@ -26,7 +26,7 @@ export default function HeaderComponent() {
                 <button
                     className='timer__button'
                     onClick={() => {
-                        setDialogData({
+                        openDialog({
                             dialogType: DialogType.SETTINGS,
                             isOpen: true,
                         });

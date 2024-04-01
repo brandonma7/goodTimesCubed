@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { calculateAverage, calculateMean, compareSolveTimes } from '../../utils/cubingUtils';
 import { SolveData } from '../../components/GoodTimes';
+import { calculateAverage, calculateMean, compareSolveTimes } from '../../utils/cubingUtils';
 import { getFormattedTime, getFormattedTimeBySolve } from '../../utils/genericUtils';
 import { DialogContext, DialogType } from '../UseDialogsContext';
 
@@ -12,20 +12,17 @@ export type MultiSolveDialogData = {
     index: number;
     size: number;
     isMean: boolean;
+    solves: SolveData;
 };
 
-type MultiSolveDialogProps = {
-    solves?: SolveData;
-};
-
-export default function MultiSolveDialog({ solves = [] }: MultiSolveDialogProps) {
+export default function MultiSolveDialog() {
     const { dialogData, closeDialog } = useContext(DialogContext);
 
     if (dialogData?.dialogType !== DialogType.MULTISOLVE || !dialogData.isOpen) {
         return <></>;
     }
 
-    const { index, size = 3, isMean } = dialogData;
+    const { index, size = 3, isMean, solves } = dialogData;
 
     const title = `${isMean ? 'Mean of' : 'Average of'} ${size} for solves #${index - size + 2} - #${index + 1}`;
     const time = getFormattedTime(isMean ? calculateMean(solves, index, size) : calculateAverage(solves, index, size));

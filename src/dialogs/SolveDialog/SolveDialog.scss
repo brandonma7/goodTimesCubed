@@ -1,7 +1,6 @@
 @import '../../styles/global-variables';
 
 .timer__solve-dialog  {
-    @include common-dialog-styles;
     width: 70%;
     left: 15%;
 
