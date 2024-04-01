@@ -1,9 +1,10 @@
-import React, { createContext, useRef, useState } from 'react';
-import Timer from './components/Timer';
+import React, { createContext, useState } from 'react';
 
 import './App.css';
+import GoodTimes from './components/GoodTimes';
 import { SettingsContextProvider } from './dialogs/SettingsDialog';
 import useDialogContext from './dialogs/UseDialogsContext';
+// import { generateScramble } from './utils/cubingUtils';
 
 type AlertContextType = {
     alerts: string[];
@@ -15,6 +16,32 @@ export const AlertsContext = createContext<AlertContextType>({
     pushAlert: () => null,
     deleteAlert: () => null,
 });
+
+function AlertsContextProvider({ children }: { children: JSX.Element }) {
+    const [alerts, setAlerts] = useState<string[]>([]);
+
+    let alertTimeout: NodeJS.Timeout;
+    const pushAlert = (alert: string | string[]) => {
+        if (Array.isArray(alert)) {
+            setAlerts(alert);
+        } else {
+            setAlerts([alert]);
+        }
+        clearTimeout(alertTimeout);
+        alertTimeout = setTimeout(() => {
+            // TODO this is causing a big re-render, clearing out timer time data *thinking face*
+            setAlerts([]);
+        }, 5000);
+    };
+    const deleteAlert = (index: number) => {
+        const newAlerts = alerts.slice(0);
+        newAlerts.splice(index, 1);
+        setAlerts(newAlerts);
+    };
+
+    const alertContextValue = { alerts, pushAlert, deleteAlert };
+    return <AlertsContext.Provider value={alertContextValue}>{children}</AlertsContext.Provider>;
+}
 
 type MetaDataContextType = {
     isMobile: boolean;
@@ -36,43 +63,25 @@ export function MetaDataContextProvider({ children }: { children: JSX.Element })
     return <MetaDataContext.Provider value={metaDataContextValue}>{children}</MetaDataContext.Provider>;
 }
 
-function App() {
-    const timerComponentRef = useRef<HTMLDivElement>(null);
-    const DialogContextProvider = useDialogContext(timerComponentRef);
+function AppRoot() {
+    //const [scramble, setScramble] = useState<string>(generateScramble('3x3x3'));
+    console.log('App');
 
-    const [alerts, setAlerts] = useState<string[]>([]);
-    let alertTimeout: NodeJS.Timeout;
-    const pushAlert = (alert: string | string[]) => {
-        if (Array.isArray(alert)) {
-            setAlerts(alert);
-        } else {
-            setAlerts([alert]);
-        }
-        clearTimeout(alertTimeout);
-        alertTimeout = setTimeout(() => {
-            setAlerts([]);
-        }, 5000);
-    };
-    const deleteAlert = (index: number) => {
-        const newAlerts = alerts.slice(0);
-        newAlerts.splice(index, 1);
-        setAlerts(newAlerts);
-    };
-    const alertContextValue = { alerts, pushAlert, deleteAlert };
+    const DialogContextProvider = useDialogContext();
     return (
         <DialogContextProvider>
             <SettingsContextProvider>
                 <MetaDataContextProvider>
-                    <AlertsContext.Provider value={alertContextValue}>
-                        <Timer timerComponentRef={timerComponentRef} />
-                    </AlertsContext.Provider>
+                    <AlertsContextProvider>
+                        <GoodTimes />
+                    </AlertsContextProvider>
                 </MetaDataContextProvider>
             </SettingsContextProvider>
         </DialogContextProvider>
     );
 }
 
-export default App;
+export default AppRoot;
 
 /*
     TODO

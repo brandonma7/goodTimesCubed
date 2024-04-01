@@ -4,7 +4,7 @@ import { DialogContext, DialogType } from '../../dialogs/UseDialogsContext';
 import { calculateAverage, calculateMean, DataType, DataTypeToTextMap, Solve } from '../../utils/cubingUtils';
 import { getFormattedTime, getFormattedTimeBySolve } from '../../utils/genericUtils';
 
-import { BestsData, SolveData, getBestOfType } from '../Timer';
+import { BestsData, SolveData, getBestOfType } from '../GoodTimes';
 
 import './BestsTableComponent.scss';
 

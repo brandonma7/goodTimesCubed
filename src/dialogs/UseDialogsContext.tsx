@@ -37,7 +37,7 @@ export const DialogContext = createContext<DialogContextType>({
     closeDialog: () => null,
 });
 
-export default function useDialogContext(timerComponentRef: React.RefObject<HTMLDivElement>) {
+export default function useDialogContext() {
     const [dialogData, setDialogData] = useState<DialogData>({
         dialogType: DialogType.SETTINGS,
         isOpen: false,
@@ -47,7 +47,10 @@ export default function useDialogContext(timerComponentRef: React.RefObject<HTML
             dialogType: DialogType.SETTINGS,
             isOpen: false,
         });
-        timerComponentRef.current && timerComponentRef.current.focus();
+        const timerElement = document.querySelector('.timer__time-input') ?? document.querySelector('.timer__timer');
+        if (timerElement) {
+            (timerElement as HTMLElement).focus();
+        }
     };
     const dialogContextValue = { dialogData, setDialogData, closeDialog };
 

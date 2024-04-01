@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { SettingsContext } from '../../dialogs/SettingsDialog';
 import { DialogContext } from '../../dialogs/UseDialogsContext';
 
-import { BestsData, SolveData } from '../Timer';
+import { BestsData, SolveData } from '../GoodTimes';
 
 import './ResultsTableComponent.scss';
 import { NormalResultsTable } from './tables/NormalResultsTable';

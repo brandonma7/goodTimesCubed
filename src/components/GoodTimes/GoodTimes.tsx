@@ -4,7 +4,7 @@ import HeaderComponent from '../HeaderComponent';
 import ResultsTableComponent from '../ResultsTableComponent';
 import BestsTableComponent, { calculateBests } from '../BestsTableComponent';
 
-import './Timer.scss';
+import './GoodTimes.scss';
 import TimerComponent from '../TimerComponent';
 import { DataType, generateScramble, Solve } from '../../utils/cubingUtils';
 import SolveDialog from '../../dialogs/SolveDialog';
@@ -13,16 +13,16 @@ import AlertsComponent from '../AlertsComponent';
 import { AlertsContext, MetaDataContext } from '../../TimerApp';
 import {
     getFormattedTime,
-    getSessionDataFromLocalStorage,
     getSessionListFromLocalStorage,
     isAncestorOf,
     isAnyDialogOpen,
     saveSessionDataToLocalStorage,
+    getSessionDataFromLocalStorage,
 } from '../../utils/genericUtils';
 import useStickyState from '../../utils/useStickyState';
 import SessionDialog from '../../dialogs/SessionDialog';
 import { DialogContext } from '../../dialogs/UseDialogsContext';
-import SessionManagementComponent, { areSessionsSame } from '../SessionManagementComponent';
+import SessionManagementComponent from '../SessionManagementComponent';
 import SettingsDialog, { SettingsContext } from '../../dialogs/SettingsDialog';
 import InsightsDialog from '../../dialogs/InsightsDialog';
 import { useContainerDimensions } from '../../utils/useContainerDimensions';
@@ -201,8 +201,9 @@ export function getBestOfType(bests: BestsData, type: DataType, size: number): B
     return bests[type].find((best) => best.size === size);
 }
 
-export default function Timer({ timerComponentRef }: { timerComponentRef: React.RefObject<HTMLDivElement> }) {
+export default function GoodTimes() {
     const timerRef = useRef<HTMLDivElement>(null);
+    const timerComponentRef = useRef<HTMLDivElement>(null);
     const { width } = useContainerDimensions(timerRef);
 
     const { closeDialog } = useContext(DialogContext);
@@ -241,19 +242,8 @@ export default function Timer({ timerComponentRef }: { timerComponentRef: React.
     }, [width]);
 
     useEffect(() => {
-        const newSolveData = getSessionDataFromLocalStorage(sessionId);
-        if (!areSessionsSame(solveData, newSolveData.data)) {
-            dispatchSolveData({
-                type: 'CHANGE_SESSION',
-                data: newSolveData.data,
-            });
-            suppressBestAlerts();
-        }
-    }, [sessionId]);
-
-    useEffect(() => {
         newScramble();
-    }, [sessionData.type]);
+    }, [sessionId]);
 
     useEffect(() => {
         saveSessionDataToLocalStorage({
@@ -327,6 +317,8 @@ export default function Timer({ timerComponentRef }: { timerComponentRef: React.
                             sessionData={sessionData}
                             setSessionId={setSessionId}
                             timerComponentRef={timerComponentRef}
+                            dispatchSolveData={dispatchSolveData}
+                            suppressBestAlerts={suppressBestAlerts}
                         />
                         <ResultsTableComponent
                             solves={solveData}

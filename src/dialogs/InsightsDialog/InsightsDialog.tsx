@@ -14,7 +14,7 @@ import {
 import { ValueType, NameType } from 'recharts/types/component/DefaultTooltipContent';
 import { getOllById } from '../../components/CasePickerComponent/OllCases';
 import { getPllById } from '../../components/CasePickerComponent/PllCases';
-import { BestsData, getBestOfType, SolveData } from '../../components/Timer';
+import { BestsData, getBestOfType, SolveData } from '../../components/GoodTimes';
 import { calculateAverage, calculateMean, DataType, Solve } from '../../utils/cubingUtils';
 import { mean, sum, getFormattedTime } from '../../utils/genericUtils';
 import { SettingsContext } from '../SettingsDialog';

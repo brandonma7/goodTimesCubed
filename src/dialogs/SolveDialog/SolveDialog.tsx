@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import CubeVisualizationComponent from '../../components/CubeVisualizationComponent';
-import { SolveData, SolveDataAction } from '../../components/Timer';
+import { SolveData, SolveDataAction } from '../../components/GoodTimes';
 import { AlertsContext, MetaDataContext } from '../../TimerApp';
 import { PuzzleType } from '../../utils/cubingUtils';
 import { getFormattedTime, unFormatTime } from '../../utils/genericUtils';

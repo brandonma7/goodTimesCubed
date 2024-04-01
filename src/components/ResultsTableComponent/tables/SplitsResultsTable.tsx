@@ -91,6 +91,9 @@ export function SplitsResultsTable({ results, setDialogData, splitNames = [] }: 
                     <tr>
                         <td></td>
                         {invertedBestSplitIndexes.map((bestIndex, index) => {
+                            if (bestIndex >= solves.length) {
+                                return <></>;
+                            }
                             const splits = solves[bestIndex].splits ?? [];
                             return (
                                 <td key={index} style={{ width: 100 }}>
@@ -101,6 +104,9 @@ export function SplitsResultsTable({ results, setDialogData, splitNames = [] }: 
                         <td>
                             {getFormattedTime(
                                 invertedBestSplitIndexes.reduce((prev, curr, index) => {
+                                    if (curr >= solves.length) {
+                                        return 0;
+                                    }
                                     const currSplits = solves[curr].splits ?? [];
                                     return prev + (index > currSplits.length ? 0 : currSplits[index]);
                                 }, 0),

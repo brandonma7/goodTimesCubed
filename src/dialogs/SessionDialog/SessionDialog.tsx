@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { SolveDataAction } from '../../components/Timer';
+import { SolveDataAction } from '../../components/GoodTimes';
 import { SessionData, SessionType, SessionTypeMap } from '../../components/SessionManagementComponent';
 import { DialogContext, DialogType } from '../UseDialogsContext';
 import { clearLocalStorageForSession } from '../../utils/genericUtils';

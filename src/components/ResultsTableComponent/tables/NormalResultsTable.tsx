@@ -2,7 +2,7 @@ import React from 'react';
 import { DialogType, SetDialogDataType } from '../../../dialogs/UseDialogsContext';
 import { DataType, DataTypeToTextMap, calculateAverage, calculateMean } from '../../../utils/cubingUtils';
 import { getFormattedTime, getFormattedTimeBySolve, classNames } from '../../../utils/genericUtils';
-import { getBestOfType } from '../../Timer';
+import { getBestOfType } from '../../GoodTimes';
 import { SolveSetting } from '../../../dialogs/SettingsDialog';
 import { ResultsTableComponentProps } from '../ResultsTableComponent';
 

@@ -1,6 +1,6 @@
 import React, { useContext, memo, useRef, useState, useEffect } from 'react';
 
-import { SolveDataAction } from '../Timer';
+import { SolveDataAction } from '../GoodTimes';
 import CubeVisualizationComponent, { SingleFaceVisualizationComponent } from '../CubeVisualizationComponent';
 
 import { classNames, getFormattedTime, unFormatTime } from '../../utils/genericUtils';

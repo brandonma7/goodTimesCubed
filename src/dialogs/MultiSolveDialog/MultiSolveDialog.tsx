@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { calculateAverage, calculateMean, compareSolveTimes } from '../../utils/cubingUtils';
-import { SolveData } from '../../components/Timer';
+import { SolveData } from '../../components/GoodTimes';
 import { getFormattedTime, getFormattedTimeBySolve } from '../../utils/genericUtils';
 import { DialogContext, DialogType } from '../UseDialogsContext';
 

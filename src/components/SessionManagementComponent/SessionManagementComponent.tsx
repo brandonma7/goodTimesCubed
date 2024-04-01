@@ -1,9 +1,13 @@
 import React, { useContext } from 'react';
 import { DialogContext, DialogType } from '../../dialogs/UseDialogsContext';
-import { getSessionNamesFromLocalStorage, saveSessionDataToLocalStorage } from '../../utils/genericUtils';
+import {
+    getSessionDataFromLocalStorage,
+    getSessionNamesFromLocalStorage,
+    saveSessionDataToLocalStorage,
+} from '../../utils/genericUtils';
 
 import './SessionManagementComponent.scss';
-import { SolveData } from '../Timer';
+import { SolveData, SolveDataAction } from '../GoodTimes';
 import { isEmpty, isEqual, xorWith } from 'lodash';
 import { PuzzleType } from '../../utils/cubingUtils';
 
@@ -11,6 +15,8 @@ type SessionManagementComponentProps = {
     sessionData: SessionData;
     setSessionId: (newValue: string) => void;
     timerComponentRef: React.RefObject<HTMLDivElement>;
+    dispatchSolveData: React.Dispatch<SolveDataAction>;
+    suppressBestAlerts: () => void;
 };
 
 export type SessionType = 'normal' | 'splits' | 'cfopTrainer' | 'yauTrainer' | 'ollTrainer' | 'pllTrainer';
@@ -61,6 +67,8 @@ export default function SessionManagementComponent({
     sessionData,
     setSessionId,
     timerComponentRef,
+    dispatchSolveData,
+    suppressBestAlerts,
 }: SessionManagementComponentProps) {
     const { setDialogData } = useContext(DialogContext);
     const sessionNames = getSessionNamesFromLocalStorage();
@@ -71,8 +79,16 @@ export default function SessionManagementComponent({
             <select
                 className='timer__select timer__select-session'
                 onChange={(event) => {
-                    if (sessionData.id !== event.target.value) {
-                        setSessionId(event.target.value);
+                    const newSessionId = event.target.value;
+                    if (sessionData.id !== newSessionId) {
+                        setSessionId(newSessionId);
+
+                        const newSolveData = getSessionDataFromLocalStorage(newSessionId);
+                        dispatchSolveData({
+                            type: 'CHANGE_SESSION',
+                            data: newSolveData.data,
+                        });
+                        suppressBestAlerts();
                         timerComponentRef.current && timerComponentRef.current.focus();
                     }
                 }}

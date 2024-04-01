@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Solve } from '../../utils/cubingUtils';
 import { FaceState, SingleFaceVisualizationComponent } from '../CubeVisualizationComponent';
-import { SolveDataAction } from '../Timer';
+import { SolveDataAction } from '../GoodTimes';
 
 import './CasePickerComponent.scss';
 import { pllCases } from './PllCases';
