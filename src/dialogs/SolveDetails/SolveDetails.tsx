@@ -1,41 +1,39 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import CubeVisualizationComponent from '../../components/CubeVisualizationComponent';
-import { SolveData, SolveDataAction } from '../../components/GoodTimes';
+import { SolveDataAction } from '../../components/GoodTimes';
 import { AlertsContext, MetaDataContext } from '../../TimerApp';
-import { PuzzleType } from '../../utils/cubingUtils';
+import { PuzzleType, Solve } from '../../utils/cubingUtils';
 import { getFormattedTime, unFormatTime } from '../../utils/genericUtils';
-import { DialogContext, DialogType } from '../UseDialogsContext';
+import { DialogType } from '../UseDialogsContext';
 
-import './SolveDialog.scss';
+import './SolveDetails.scss';
 import { SessionType, SessionTypeMap } from '../../components/SessionManagementComponent';
 import CasePickerComponent from '../../components/CasePickerComponent';
 
-export type SolveDialogData = {
+export type SolveDetailsData = {
     dialogType: DialogType.SOLVE;
     isOpen: boolean;
     index: number;
 };
 
-type SolveDialogProps = {
-    solves: SolveData;
+type SolveDetailsProps = {
+    solve: Solve;
+    solveIndex: number;
     puzzleType: PuzzleType;
     sessionType: SessionType;
     solveDispatcher: React.Dispatch<SolveDataAction>;
     onAction: () => void;
 };
 
-export default function SolveDialog({
-    solves,
+export default function SolveDetails({
+    solve,
+    solveIndex,
     puzzleType,
     sessionType,
     solveDispatcher,
     onAction,
-}: SolveDialogProps): JSX.Element {
-    const { dialogData: ddata, closeDialog } = useContext(DialogContext);
-    // So the component know what specific Dialog Data it's dealing with
-    const dialogData = ddata as SolveDialogData;
-    const solve = solves[dialogData.index];
+}: SolveDetailsProps): JSX.Element {
     const { isMobile } = useContext(MetaDataContext);
 
     const [isOllSelectionMode, setIsOllSelectionMode] = useState(false);
@@ -43,6 +41,7 @@ export default function SolveDialog({
 
     const { pushAlert } = useContext(AlertsContext);
     const [solveTimeEntry, setSolveTimeEntry] = useState(getFormattedTime(solve?.time ?? 0, false, true));
+    const [isTryingToDelete, setIsTryingToDelete] = useState(false);
 
     useEffect(() => {
         if (solve?.time != null) {
@@ -50,11 +49,10 @@ export default function SolveDialog({
         }
     }, [solve?.time]);
 
-    if (dialogData?.dialogType !== DialogType.SOLVE || !dialogData.isOpen || solve == null) {
+    if (solve == null) {
         return <></>;
     }
 
-    const { index } = dialogData;
     const { time, scramble, date, isDNF, isPlusTwo, analysisData } = solve;
 
     const { isOllSkip, isPllSkip, ollCase, pllCase } = analysisData ?? {};
@@ -66,18 +64,9 @@ export default function SolveDialog({
     }/${dateObject.getDate()}/${dateObject.getFullYear()}`;
 
     return (
-        <div
-            className='timer__dialog timer__solve-dialog'
-            tabIndex={0}
-            onKeyDown={(event) => {
-                if (event.code === 'Escape') {
-                    event.preventDefault();
-                    closeDialog();
-                }
-            }}
-        >
+        <div>
             <div className='timer__solve-dialog-inner'>
-                <div>Solve #{index + 1}</div>
+                <div>Solve #{solveIndex + 1}</div>
                 <input
                     type='text'
                     className='timer__solve-dialog-time'
@@ -95,7 +84,7 @@ export default function SolveDialog({
                                 solveDispatcher({
                                     type: 'SET_TIME',
                                     data: {
-                                        index,
+                                        index: solveIndex,
                                         time: newTime,
                                     },
                                 });
@@ -123,8 +112,8 @@ export default function SolveDialog({
                         </tbody>
                     </table>
                 )}
-                <div>{scramble}</div>
                 <div className='timer__solve-dialog-date'>{formattedDate}</div>
+                <div className='timer__solve-dialog-scramble'>{scramble}</div>
 
                 <div className='timer__solve-dialog-actions'>
                     <button
@@ -135,7 +124,7 @@ export default function SolveDialog({
                                 solveDispatcher({
                                     type: 'SET_DNF',
                                     data: {
-                                        index,
+                                        index: solveIndex,
                                         value: !isDNF,
                                     },
                                 });
@@ -154,7 +143,7 @@ export default function SolveDialog({
                                 solveDispatcher({
                                     type: 'SET_PLUS_TWO',
                                     data: {
-                                        index,
+                                        index: solveIndex,
                                         value: !isPlusTwo,
                                     },
                                 });
@@ -176,7 +165,7 @@ export default function SolveDialog({
                                 solveDispatcher({
                                     type: 'SET_OLL_SKIP',
                                     data: {
-                                        index,
+                                        index: solveIndex,
                                         value: !isOllSkip,
                                     },
                                 });
@@ -195,7 +184,7 @@ export default function SolveDialog({
                                 solveDispatcher({
                                     type: 'SET_PLL_SKIP',
                                     data: {
-                                        index,
+                                        index: solveIndex,
                                         value: !isPllSkip,
                                     },
                                 });
@@ -234,55 +223,67 @@ export default function SolveDialog({
                     </button>
                 </div>
 
-                {isOllSelectionMode && (
-                    <CasePickerComponent
-                        algSet='oll'
-                        solve={solve}
-                        dispatchSolveData={solveDispatcher}
-                        solveIndex={index}
-                    />
-                )}
-                {isPllSelectionMode && (
-                    <CasePickerComponent
-                        algSet='pll'
-                        solve={solve}
-                        dispatchSolveData={solveDispatcher}
-                        solveIndex={index}
-                    />
-                )}
-
-                <div className='timer__solve-dialog-actions'>
-                    <button
-                        className='timer__button'
-                        onClick={() => {
-                            closeDialog();
-                        }}
-                    >
-                        Close
-                    </button>
+                <div className='timer__solve-dialog-case-pickers'>
+                    {isOllSelectionMode && (
+                        <CasePickerComponent
+                            algSet='oll'
+                            solve={solve}
+                            dispatchSolveData={solveDispatcher}
+                            solveIndex={solveIndex}
+                        />
+                    )}
+                    {isPllSelectionMode && (
+                        <CasePickerComponent
+                            algSet='pll'
+                            solve={solve}
+                            dispatchSolveData={solveDispatcher}
+                            solveIndex={solveIndex}
+                        />
+                    )}
                 </div>
                 <CubeVisualizationComponent
                     puzzleType={puzzleType}
                     scramble={scramble}
-                    width={isMobile ? 150 : 300}
-                    height={isMobile ? 112 : 224}
+                    width={isMobile ? 160 : 200}
+                    height={isMobile ? 120 : 150}
                 />
 
                 <div className='timer__solve-dialog-actions'>
-                    <button
-                        className='timer__button'
-                        onClick={async () => {
-                            onAction();
-                            // Need to await this for some reason or else the delete doesn't happen :shrug:
-                            await solveDispatcher({
-                                type: 'DELETE_SOLVE',
-                                data: index,
-                            });
-                            closeDialog();
-                        }}
-                    >
-                        Delete
-                    </button>
+                    {isTryingToDelete ? (
+                        <>
+                            <button
+                                className='timer__button'
+                                onClick={async () => {
+                                    setIsTryingToDelete(false);
+                                }}
+                            >
+                                Nevermind!
+                            </button>
+                            <button
+                                className='timer__button'
+                                onClick={async () => {
+                                    onAction();
+                                    // Need to await this for some reason or else the delete doesn't happen :shrug:
+                                    await solveDispatcher({
+                                        type: 'DELETE_SOLVE',
+                                        data: solveIndex,
+                                    });
+                                    //closeDialog();
+                                }}
+                            >
+                                Confirm Delete
+                            </button>
+                        </>
+                    ) : (
+                        <button
+                            className='timer__button'
+                            onClick={async () => {
+                                setIsTryingToDelete(true);
+                            }}
+                        >
+                            Delete
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

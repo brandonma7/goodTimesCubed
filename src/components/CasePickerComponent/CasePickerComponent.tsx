@@ -70,12 +70,9 @@ export default function CasePickerComponent({
     const groupNames = algSetData.caseGroup.map((g) => g.name);
     // Current group of cases to render
     const currentlyViewingCaseGroup = algSetData.caseGroup[currentGroupIndex];
-    // Name of currently selected case
-    const currentCaseName = currentlyViewingCaseGroup.cases.find((c) => c.id === currentCaseId)?.name;
 
     return (
-        <div>
-            {algSet.toUpperCase()}: {currentCaseName ?? 'Not selected'}
+        <div className='case-picker'>
             <div className='case-picker__group-tabs'>
                 {groupNames.map((name, index) => {
                     const isSelected = currentGroupIndex === index;
@@ -92,23 +89,19 @@ export default function CasePickerComponent({
                     );
                 })}
             </div>
-            <div
-                className='case-picker__case-list'
-                style={{
-                    width: currentlyViewingCaseGroup.cases.length === 4 ? 300 : 450,
-                }}
-            >
+            <div className='case-picker__case-list'>
                 {currentlyViewingCaseGroup.cases.map((c, index) => {
                     return (
                         <div
                             className={`case${currentCaseId === c.id ? ' case--selected' : ''}`}
                             key={index}
                             onClick={() => {
+                                const value = currentCaseId === c.id ? undefined : c.id;
                                 dispatchSolveData({
                                     type: algSetData.setAction,
                                     data: {
                                         index: solveIndex,
-                                        value: c.id,
+                                        value,
                                     },
                                 });
                                 onSelect();

@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { DialogContext, DialogType } from '../../../dialogs/UseDialogsContext';
+import React, { useEffect, useState } from 'react';
 import { DataType } from '../../../utils/cubingUtils';
 import { getFormattedTime, classNames, getFormattedTimeBySolve } from '../../../utils/genericUtils';
 import { getOllById } from '../../CasePickerComponent/OllCases';
@@ -48,7 +47,9 @@ export function SplitsResultsTable({ results, splitNames = [] }: SplitsTableProp
 
     const [invertedBestSplitIndexes, setInvertedBestSplitIndexes] = useState<number[]>([]);
     const [bestSplitIndexes, setBestSplitIndexes] = useState<number[]>([]);
-    const { openDialog } = useContext(DialogContext);
+    const [isShortList, setIsShortList] = useState(false);
+    // Hardcoding because Ao12, might make a setting later
+    const lengthOfShortList = 12;
 
     useEffect(() => {
         // This one is called inverted because it's inverted relative to how the table renders
@@ -133,7 +134,7 @@ export function SplitsResultsTable({ results, splitNames = [] }: SplitsTableProp
                 {getSplitsTableHeader(splitNames)}
                 <tbody>
                     {solves
-                        .slice(0)
+                        .slice(isShortList ? -lengthOfShortList : 0)
                         .reverse()
                         .map((solve, index) => {
                             const tableIndex = solves.length - index - 1;
@@ -147,11 +148,11 @@ export function SplitsResultsTable({ results, splitNames = [] }: SplitsTableProp
                                 <tr
                                     key={index}
                                     onClick={() => {
-                                        openDialog({
+                                        /*openDialog({
                                             dialogType: DialogType.SOLVE,
                                             isOpen: true,
                                             index: tableIndex,
-                                        });
+                                        });*/
                                     }}
                                 >
                                     <td>{tableIndex + 1}</td>
@@ -171,11 +172,11 @@ export function SplitsResultsTable({ results, splitNames = [] }: SplitsTableProp
                                                     isSkip ? 'timer__result--skip' : '',
                                                 )}
                                                 onClick={() => {
-                                                    openDialog({
+                                                    /*openDialog({
                                                         dialogType: DialogType.SOLVE,
                                                         isOpen: true,
                                                         index: tableIndex,
-                                                    });
+                                                    });*/
                                                 }}
                                             >
                                                 {cellText}
@@ -189,11 +190,11 @@ export function SplitsResultsTable({ results, splitNames = [] }: SplitsTableProp
                                             isBest ? 'timer__result--best' : '',
                                         )}
                                         onClick={() => {
-                                            openDialog({
+                                            /* openDialog({
                                                 dialogType: DialogType.SOLVE,
                                                 isOpen: true,
                                                 index: tableIndex,
-                                            });
+                                            });*/
                                         }}
                                     >
                                         {getFormattedTimeBySolve(solve)}
@@ -201,6 +202,16 @@ export function SplitsResultsTable({ results, splitNames = [] }: SplitsTableProp
                                 </tr>
                             );
                         })}
+                    <tr>
+                        <td
+                            className='clickable'
+                            colSpan={splitNames.length + 2}
+                            onClick={() => setIsShortList(!isShortList)}
+                            style={{ textAlign: 'center' }}
+                        >
+                            See {isShortList ? 'More' : 'Less'}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </>

@@ -146,11 +146,11 @@ export default function BestsTableComponent({ solves, bests }: BestsTableCompone
                                 solves,
                             });
                         } else {
-                            openDialog({
+                            /*openDialog({
                                 dialogType: DialogType.SOLVE,
                                 isOpen: true,
                                 index: solves.length - 1,
-                            });
+                            });*/
                         }
                     }}
                 >
@@ -170,11 +170,11 @@ export default function BestsTableComponent({ solves, bests }: BestsTableCompone
                                     solves,
                                 });
                             } else {
-                                openDialog({
+                                /* openDialog({
                                     dialogType: DialogType.SOLVE,
                                     isOpen: true,
                                     index,
-                                });
+                                });*/
                             }
                         }
                     }}

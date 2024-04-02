@@ -1,5 +1,4 @@
 import React, { createContext, useCallback, useMemo, useState } from 'react';
-import { SolveDialogData } from './SolveDialog';
 import MultiSolveDialog, { MultiSolveDialogData } from './MultiSolveDialog';
 import { SessionDialogData } from './SessionDialog';
 import SettingsDialog, { SettingsDialogData } from './SettingsDialog';
@@ -21,12 +20,7 @@ type DialogContextType = {
     closeDialog: () => void;
 };
 
-export type DialogData =
-    | SolveDialogData
-    | MultiSolveDialogData
-    | SessionDialogData
-    | SettingsDialogData
-    | InsightsDialogData;
+export type DialogData = MultiSolveDialogData | SessionDialogData | SettingsDialogData | InsightsDialogData;
 
 export const DialogContext = createContext<DialogContextType>({
     dialogData: {

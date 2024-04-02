@@ -33,6 +33,10 @@
     }
 }
 
+.timer__close-solve-details {
+    margin-bottom: $size-xs;
+}
+
 @media (max-width: $small-screen-width) {
     .timer__results td {
         padding: $size-s $size-xs;

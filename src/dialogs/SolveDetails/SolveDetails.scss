@@ -9,26 +9,35 @@
     }
 }
 
-.timer__solve-dialog-inner {
-    overflow-y: auto;
-    max-height: 72vh;
-}
-
 input.timer__solve-dialog-time {
     background: $input-background-color;
     border: $primary-border-size $input-border-color;
     border-radius: $size-xs;
-    height: 4vw;
-    width: 90%;
     color: $input-font-color;
-    font-size: 4vw;
     text-align: center;
     font-family: monospace;
-    margin-bottom: 1vw;
+    margin-bottom: $size-m;
+    width: 150px;
+    height: $size-l;
+    font-size: $size-l;
+}
+
+.timer__solve-dialog-date {
+    margin-bottom: $size-s;
+}
+
+.timer__solve-dialog-scramble {
+    width: 400px;
+    margin: 0 auto;
+    margin-bottom: $size-s;
 }
 
 .timer__solve-dialog-actions .timer__button {
     margin: $size-xxs;
+}
+
+.timer__solve-dialog-case-pickers {
+    max-width: 450px;
 }
 
 @media (max-width: $small-screen-width) {

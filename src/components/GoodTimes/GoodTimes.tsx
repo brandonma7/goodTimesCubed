@@ -7,7 +7,6 @@ import BestsTableComponent, { calculateBests } from '../BestsTableComponent';
 import './GoodTimes.scss';
 import TimerComponent from '../TimerComponent';
 import { DataType, generateScramble, Solve } from '../../utils/cubingUtils';
-import SolveDialog from '../../dialogs/SolveDialog';
 import AlertsComponent from '../AlertsComponent';
 import { AlertsContext, MetaDataContext } from '../../TimerApp';
 import {
@@ -76,14 +75,14 @@ export type SolveDataAction =
           type: 'SET_PLL_CASE';
           data: {
               index: number;
-              value: string;
+              value: string | undefined;
           };
       }
     | {
           type: 'SET_OLL_CASE';
           data: {
               index: number;
-              value: string;
+              value: string | undefined;
           };
       }
     | {
@@ -323,6 +322,9 @@ export default function GoodTimes() {
                             bests={bestsData}
                             sessionType={sessionData.sessionType}
                             numSplits={sessionData.numSplits}
+                            puzzleType={sessionData.type}
+                            solveDispatcher={dispatchSolveData}
+                            onAction={suppressBestAlerts}
                         />
                     </section>
                 ) : (
@@ -339,17 +341,6 @@ export default function GoodTimes() {
                     mostRecentSolveIndex={solveData.length - 1}
                 />
             </div>
-            <>
-                <SolveDialog
-                    solves={solveData}
-                    puzzleType={sessionData.type}
-                    sessionType={sessionData.sessionType}
-                    solveDispatcher={dispatchSolveData}
-                    onAction={() => {
-                        suppressBestAlerts();
-                    }}
-                />
-            </>
             <AlertsComponent />
             <InsightsDialog solves={solveData} bests={bestsData} />
         </div>

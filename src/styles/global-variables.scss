@@ -99,3 +99,12 @@ $cube-sticker-yellow-faded: #ffffbe;
         border-collapse: collapse;
     }
 }
+
+.clickable {
+    cursor: pointer;
+    
+    &:hover {
+        background-color: $button-background-color-hover;
+        border-color: $button-border-color-hover;
+    }
+}
