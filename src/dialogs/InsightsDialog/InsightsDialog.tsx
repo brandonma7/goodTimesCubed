@@ -67,24 +67,33 @@ export default function InsightsDialog({ solves = [], bests }: InsightsDialogPro
                     Close
                 </button>
             </div>
-            <SolveDataChart solves={solves} bests={bests} />
-            <RandomDataTable solves={solves} />
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexGrow: 1 }}>
-                <div>
-                    <div style={{ margin: 16 }}>OLL Data</div>
-                    <InsightsTable solves={solves} getCase={getOllById} caseKey={'ollCase'} totalCases={57} />
-                </div>
-                <div>
-                    <div style={{ margin: 16 }}>PLL Data</div>
-                    <InsightsTable solves={solves} getCase={getPllById} caseKey={'pllCase'} totalCases={21} />
-                </div>
-            </div>
+            {solves.length === 0 ? (
+                'No insights for this session, go solve a cube!'
+            ) : (
+                <>
+                    <SolveDataChart solves={solves} bests={bests} />
+                    <RandomDataTable solves={solves} />
+                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexGrow: 1 }}>
+                        <div>
+                            <div style={{ margin: 16 }}>OLL Data</div>
+                            <InsightsTable solves={solves} getCase={getOllById} caseKey={'ollCase'} totalCases={57} />
+                        </div>
+                        <div>
+                            <div style={{ margin: 16 }}>PLL Data</div>
+                            <InsightsTable solves={solves} getCase={getPllById} caseKey={'pllCase'} totalCases={21} />
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 }
 
 function RandomDataTable({ solves }: { solves: Solve[] }): JSX.Element {
     const goodSolves = solves.filter((solve) => !solve.isDNF);
+    if (goodSolves.length === 0) {
+        return <></>;
+    }
     const timesList = goodSolves.map((solve) => solve.time).sort();
     const splitsLists = goodSolves.map((solve) => solve.splits ?? []);
     const splitsTableData = splitsLists[0]?.map((_, index) => {
@@ -156,6 +165,10 @@ function InsightsTable({
     const applicableSolves = solves.filter((solve) => solve?.analysisData?.[caseKey] != null);
     const data: InsightsDataPoint = {};
     const [sortBy, setSortBy] = useState(1);
+    if (applicableSolves.length === 0) {
+        return <></>;
+    }
+    const hasSplits = applicableSolves[0].splits && applicableSolves[0].splits.length > 2;
 
     applicableSolves.forEach((solve) => {
         const id = solve?.analysisData?.[caseKey] ?? 'unknown';
@@ -168,6 +181,7 @@ function InsightsTable({
         }
         data[id].timesSeen++;
         data[id].solveTimes.push(solve.time / 100);
+        // Same condition as hasSplits, but need to check the specific solve for type safety
         if (solve.splits && solve.splits.length > 2) {
             data[id].splitTimes.push(solve.splits[2] / 100);
         }
@@ -177,28 +191,35 @@ function InsightsTable({
 
     const tableData: [string, ...number[]][] = Object.keys(data).map((id) => {
         const c = data[id];
+        // This is to add the splits to the dataset conditionally, so we can just hide the whole-ass columns
+        const splitSubset = hasSplits ? [formatData(mean(c.splitTimes)), formatData(Math.min(...c.splitTimes))] : [];
         return [
             getCase(id)?.name ?? 'unknown',
             c.timesSeen,
-            formatData(mean(c.splitTimes)),
-            formatData(Math.min(...c.splitTimes)),
+            ...splitSubset,
             formatData(mean(c.solveTimes)),
             formatData(Math.min(...c.solveTimes)),
         ];
     });
     const sortBySetter = (index: number) => () => sortBy === index ? setSortBy(-index) : setSortBy(index);
+    // Needs to start at 1 because negative values will denote DESC order, therefore we can't use 0
+    let sortByIndex = 1;
     return (
         <table className='basic-table' style={{ width: 400 }}>
             <thead>
                 <tr>
-                    <th onClick={sortBySetter(1)} style={{ minWidth: 180 }}>
+                    <th onClick={sortBySetter(sortByIndex++)} style={{ minWidth: 180 }}>
                         Case
                     </th>
-                    <th onClick={sortBySetter(2)}>No. Seen</th>
-                    <th onClick={sortBySetter(3)}>Avg Split</th>
-                    <th onClick={sortBySetter(4)}>Best Split</th>
-                    <th onClick={sortBySetter(5)}>Avg Solve</th>
-                    <th onClick={sortBySetter(6)}>Best Solve</th>
+                    <th onClick={sortBySetter(sortByIndex++)}>No. Seen</th>
+                    {hasSplits && (
+                        <>
+                            <th onClick={sortBySetter(sortByIndex++)}>Avg Split</th>
+                            <th onClick={sortBySetter(sortByIndex++)}>Best Split</th>
+                        </>
+                    )}
+                    <th onClick={sortBySetter(sortByIndex++)}>Avg Solve</th>
+                    <th onClick={sortBySetter(sortByIndex++)}>Best Solve</th>
                 </tr>
             </thead>
             <tbody>
@@ -228,10 +249,14 @@ function InsightsTable({
                         {tableData.length} / {totalCases} {tableData.length === totalCases ? 'Nice!' : ''}
                     </td>
                     <td>{sum(tableData.map((d) => d[1]))}</td>
-                    <td>{formatData(mean(tableData.map((d) => d[2])))}</td>
-                    <td>{formatData(Math.min(...tableData.map((d) => d[3])))}</td>
-                    <td>{formatData(mean(tableData.map((d) => d[4])))}</td>
-                    <td>{formatData(Math.min(...tableData.map((d) => d[5])))}</td>
+                    {hasSplits && (
+                        <>
+                            <td>{formatData(mean(tableData.map((d) => d[2])))}</td>
+                            <td>{formatData(Math.min(...tableData.map((d) => d[3])))}</td>
+                        </>
+                    )}
+                    <td>{formatData(mean(tableData.map((d) => d[hasSplits ? 4 : 2])))}</td>
+                    <td>{formatData(Math.min(...tableData.map((d) => d[hasSplits ? 5 : 3])))}</td>
                 </tr>
             </tbody>
         </table>

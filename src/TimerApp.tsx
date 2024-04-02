@@ -93,10 +93,11 @@ export default function AppRoot() {
 
     P2
         Goal mode for CFOP splits
+        OLL/PLL picker always open, full width?
 
         OLL Trainer
         PLL Trainer
-        PLL two side recognition trainer
+        PLL two side recognition trainer (with difficulty levels!)
 
     P3
         Make skip logic more generic instead of hard-coding oll/pll

@@ -29,6 +29,30 @@
         font-size: 100%;
         margin-bottom: 1vw;
         width: 80%;
+
+        .timer_scramble-letter {
+            margin-left: $size-xs;
+            margin-right: $size-xs;
+
+            &.white {
+                color: $cube-sticker-white-faded;
+            }
+            &.orange {
+                color: $cube-sticker-orange-faded;
+            }
+            &.green {
+                color: $cube-sticker-green-faded;
+            }
+            &.red {
+                color: $cube-sticker-red-faded;
+            }
+            &.blue {
+                color: $cube-sticker-blue-faded;
+            }
+            &.yellow {
+                color: $cube-sticker-yellow-faded;
+            }
+        }
     }
 
     .timer__splits-table {

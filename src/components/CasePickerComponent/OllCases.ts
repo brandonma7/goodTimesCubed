@@ -76,10 +76,10 @@ export const ollCases: CaseGroup = [
                 name: '25. Bowtie',
                 state: [
                     getEdgeColors('000'),
-                    getEdgeColors('100'),
+                    getEdgeColors('000'),
                     getFaceColors('110', '111', '011'),
                     getEdgeColors('100'),
-                    getEdgeColors('000'),
+                    getEdgeColors('100'),
                 ],
             },
             {
