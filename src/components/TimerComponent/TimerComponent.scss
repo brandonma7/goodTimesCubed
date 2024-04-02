@@ -29,6 +29,9 @@
         font-size: 100%;
         margin-bottom: 1vw;
         width: 80%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
 
         .timer_scramble-letter {
             margin-left: $size-xs;
