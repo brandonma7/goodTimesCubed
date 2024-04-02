@@ -20,6 +20,10 @@
         flex: 1 0 auto;
         padding: $size-xs;
         min-width: 20%;
+
+        &.timer__left-bar--running {
+            display: none;
+        }
     }
 
     .timer__button {

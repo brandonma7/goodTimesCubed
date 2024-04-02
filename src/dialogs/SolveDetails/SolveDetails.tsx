@@ -268,7 +268,7 @@ export default function SolveDetails({
                                         type: 'DELETE_SOLVE',
                                         data: solveIndex,
                                     });
-                                    //closeDialog();
+                                    setIsTryingToDelete(false);
                                 }}
                             >
                                 Confirm Delete

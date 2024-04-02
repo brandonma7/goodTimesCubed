@@ -307,29 +307,25 @@ export default function GoodTimes() {
         >
             <HeaderComponent />
             <div className='timer__main'>
-                {!timerIsRunning ? (
-                    <section className='timer__left-bar'>
-                        <BestsTableComponent solves={solveData} bests={bestsData} />
-                        <SessionManagementComponent
-                            sessionData={sessionData}
-                            setSessionId={setSessionId}
-                            timerComponentRef={timerComponentRef}
-                            dispatchSolveData={dispatchSolveData}
-                            suppressBestAlerts={suppressBestAlerts}
-                        />
-                        <ResultsTableComponent
-                            solves={solveData}
-                            bests={bestsData}
-                            sessionType={sessionData.sessionType}
-                            numSplits={sessionData.numSplits}
-                            puzzleType={sessionData.type}
-                            solveDispatcher={dispatchSolveData}
-                            onAction={suppressBestAlerts}
-                        />
-                    </section>
-                ) : (
-                    <></>
-                )}
+                <section className={`timer__left-bar${timerIsRunning ? ' timer__left-bar--running' : ''}`}>
+                    <BestsTableComponent solves={solveData} bests={bestsData} />
+                    <SessionManagementComponent
+                        sessionData={sessionData}
+                        setSessionId={setSessionId}
+                        timerComponentRef={timerComponentRef}
+                        dispatchSolveData={dispatchSolveData}
+                        suppressBestAlerts={suppressBestAlerts}
+                    />
+                    <ResultsTableComponent
+                        solves={solveData}
+                        bests={bestsData}
+                        sessionType={sessionData.sessionType}
+                        numSplits={sessionData.numSplits}
+                        puzzleType={sessionData.type}
+                        solveDispatcher={dispatchSolveData}
+                        onAction={suppressBestAlerts}
+                    />
+                </section>
                 <TimerComponent
                     dispatchSolveData={dispatchSolveData}
                     puzzleType={sessionData.type}

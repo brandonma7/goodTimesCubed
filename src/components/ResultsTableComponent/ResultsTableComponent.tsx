@@ -57,7 +57,7 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
                     />
                 );
         }
-    }, []);
+    }, [solves]);
 
     return (
         <>

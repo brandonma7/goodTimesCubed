@@ -480,20 +480,20 @@ const TimerComponent = memo(function TimerComponentInternal({
                             />
                         )}
                     </div>
-                </>
-            )}
 
-            {/*scramble.split(' ').map((_, index, scrambleList) => {
-                const subScramble = scrambleList.slice(0, index + 1).join(' ');
-                return <CubeVisualizationComponent key={index} scramble={subScramble} puzzleType={puzzleType} />;
-            })*/}
-            {!NonStandardPuzzles.includes(puzzleType) && (
-                <CubeVisualizationComponent
-                    scramble={scramble}
-                    puzzleType={puzzleType}
-                    width={isMobile ? 200 : 400}
-                    height={isMobile ? 150 : 300}
-                />
+                    {/*scramble.split(' ').map((_, index, scrambleList) => {
+                        const subScramble = scrambleList.slice(0, index + 1).join(' ');
+                        return <CubeVisualizationComponent key={index} scramble={subScramble} puzzleType={puzzleType} />;
+                    })*/}
+                    {!NonStandardPuzzles.includes(puzzleType) && (
+                        <CubeVisualizationComponent
+                            scramble={scramble}
+                            puzzleType={puzzleType}
+                            width={isMobile ? 200 : 400}
+                            height={isMobile ? 150 : 300}
+                        />
+                    )}
+                </>
             )}
         </section>
     );
