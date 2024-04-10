@@ -5,14 +5,12 @@ import { SolveDataAction } from '../../components/GoodTimes';
 import { AlertsContext, MetaDataContext } from '../../TimerApp';
 import { PuzzleType, Solve } from '../../utils/cubingUtils';
 import { getFormattedTime, unFormatTime } from '../../utils/genericUtils';
-import { DialogType } from '../UseDialogsContext';
 
 import './SolveDetails.scss';
 import { SessionType, SessionTypeMap } from '../../components/SessionManagementComponent';
 import CasePickerComponent from '../../components/CasePickerComponent';
 
 export type SolveDetailsData = {
-    dialogType: DialogType.SOLVE;
     isOpen: boolean;
     index: number;
 };

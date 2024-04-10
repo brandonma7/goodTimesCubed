@@ -30,7 +30,7 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
     };
 
     const Table = useMemo(() => {
-        switch (results.sessionType) {
+        switch (sessionType) {
             case 'splits':
                 return (
                     <SplitsResultsTable
@@ -44,7 +44,7 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
                 return (
                     <SplitsResultsTable
                         results={results}
-                        splitNames={SessionTypeMap[results.sessionType].splitNames}
+                        splitNames={SessionTypeMap[sessionType].splitNames}
                         setSolveDetailsIndex={setSolveDetailsIndex}
                     />
                 );
@@ -61,7 +61,7 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
 
     return (
         <>
-            {solveDetailsIndex !== -1 && (
+            {solveDetailsIndex !== -1 && solveDetailsIndex < solves.length && (
                 <>
                     <SolveDetails
                         solve={solves[solveDetailsIndex]}

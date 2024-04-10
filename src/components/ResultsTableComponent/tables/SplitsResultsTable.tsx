@@ -41,7 +41,7 @@ function getEmptyTable(titles: string[]) {
     );
 }
 
-export function SplitsResultsTable({ results, splitNames = [] }: SplitsTableProps): JSX.Element {
+export function SplitsResultsTable({ results, splitNames = [], setSolveDetailsIndex }: SplitsTableProps): JSX.Element {
     const { solves, bests } = results;
     const isCfop = splitNames.includes('Cross');
 
@@ -148,11 +148,7 @@ export function SplitsResultsTable({ results, splitNames = [] }: SplitsTableProp
                                 <tr
                                     key={index}
                                     onClick={() => {
-                                        /*openDialog({
-                                            dialogType: DialogType.SOLVE,
-                                            isOpen: true,
-                                            index: tableIndex,
-                                        });*/
+                                        setSolveDetailsIndex(tableIndex);
                                     }}
                                 >
                                     <td>{tableIndex + 1}</td>
@@ -172,11 +168,7 @@ export function SplitsResultsTable({ results, splitNames = [] }: SplitsTableProp
                                                     isSkip ? 'timer__result--skip' : '',
                                                 )}
                                                 onClick={() => {
-                                                    /*openDialog({
-                                                        dialogType: DialogType.SOLVE,
-                                                        isOpen: true,
-                                                        index: tableIndex,
-                                                    });*/
+                                                    setSolveDetailsIndex(tableIndex);
                                                 }}
                                             >
                                                 {cellText}
@@ -190,11 +182,7 @@ export function SplitsResultsTable({ results, splitNames = [] }: SplitsTableProp
                                             isBest ? 'timer__result--best' : '',
                                         )}
                                         onClick={() => {
-                                            /* openDialog({
-                                                dialogType: DialogType.SOLVE,
-                                                isOpen: true,
-                                                index: tableIndex,
-                                            });*/
+                                            setSolveDetailsIndex(tableIndex);
                                         }}
                                     >
                                         {getFormattedTimeBySolve(solve)}

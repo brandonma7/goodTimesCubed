@@ -308,7 +308,13 @@ export default function GoodTimes() {
             <HeaderComponent />
             <div className='timer__main'>
                 <section className={`timer__left-bar${timerIsRunning ? ' timer__left-bar--running' : ''}`}>
-                    <BestsTableComponent solves={solveData} bests={bestsData} />
+                    <BestsTableComponent
+                        solves={solveData}
+                        bests={bestsData}
+                        sessionData={sessionData}
+                        solveDispatcher={dispatchSolveData}
+                        onAction={suppressBestAlerts}
+                    />
                     <SessionManagementComponent
                         sessionData={sessionData}
                         setSessionId={setSessionId}

@@ -1,16 +1,21 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { SolveSetting, SettingsContext } from '../../dialogs/SettingsDialog';
+import SolveDetails from '../../dialogs/SolveDetails';
 import { DialogContext, DialogType } from '../../dialogs/UseDialogsContext';
 import { calculateAverage, calculateMean, DataType, DataTypeToTextMap, Solve } from '../../utils/cubingUtils';
 import { getFormattedTime, getFormattedTimeBySolve } from '../../utils/genericUtils';
 
-import { BestsData, SolveData, getBestOfType } from '../GoodTimes';
+import { BestsData, SolveData, getBestOfType, SolveDataAction } from '../GoodTimes';
+import { SessionData } from '../SessionManagementComponent';
 
 import './BestsTableComponent.scss';
 
 type BestsTableComponentProps = {
     solves: SolveData;
     bests: BestsData;
+    sessionData: SessionData;
+    solveDispatcher: React.Dispatch<SolveDataAction>;
+    onAction: () => void;
 };
 
 export function calculateBests(settings: SolveSetting[], solves: Solve[]) {
@@ -104,9 +109,20 @@ export function calculateBests(settings: SolveSetting[], solves: Solve[]) {
     return bestsData;
 }
 
-export default function BestsTableComponent({ solves, bests }: BestsTableComponentProps) {
+export default function BestsTableComponent({
+    solves,
+    bests,
+    sessionData,
+    solveDispatcher,
+    onAction,
+}: BestsTableComponentProps) {
     const { openDialog } = useContext(DialogContext);
     const { solveSettings: settings } = useContext(SettingsContext);
+    const [solveDetailsIndex, setSolveDetails] = useState(-1);
+
+    const setSolveDetailsIndex = (value: number) => {
+        setSolveDetails(value === solveDetailsIndex ? -1 : value);
+    };
 
     const rows = settings.map((setting, index) => {
         const { size, type } = setting;
@@ -146,11 +162,7 @@ export default function BestsTableComponent({ solves, bests }: BestsTableCompone
                                 solves,
                             });
                         } else {
-                            /*openDialog({
-                                dialogType: DialogType.SOLVE,
-                                isOpen: true,
-                                index: solves.length - 1,
-                            });*/
+                            setSolveDetailsIndex(solves.length - 1);
                         }
                     }}
                 >
@@ -170,11 +182,7 @@ export default function BestsTableComponent({ solves, bests }: BestsTableCompone
                                     solves,
                                 });
                             } else {
-                                /* openDialog({
-                                    dialogType: DialogType.SOLVE,
-                                    isOpen: true,
-                                    index,
-                                });*/
+                                setSolveDetailsIndex(index);
                             }
                         }
                     }}
@@ -186,25 +194,47 @@ export default function BestsTableComponent({ solves, bests }: BestsTableCompone
     });
 
     return (
-        <table className='timer__bests'>
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>CURRENT</th>
-                    <th>BEST</th>
-                </tr>
-            </thead>
-            <tbody>
-                {solves.length ? (
-                    rows
-                ) : (
+        <>
+            <table className='timer__bests'>
+                <thead>
                     <tr>
-                        <td>TIME</td>
-                        <td>-</td>
-                        <td>-</td>
+                        <th></th>
+                        <th>CURRENT</th>
+                        <th>BEST</th>
                     </tr>
-                )}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {solves.length ? (
+                        rows
+                    ) : (
+                        <tr>
+                            <td>TIME</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+            {solveDetailsIndex !== -1 && solveDetailsIndex < solves.length && (
+                <>
+                    <SolveDetails
+                        solve={solves[solveDetailsIndex]}
+                        solveIndex={solveDetailsIndex}
+                        puzzleType={sessionData.type}
+                        sessionType={sessionData.sessionType}
+                        solveDispatcher={solveDispatcher}
+                        onAction={onAction}
+                    />
+                    <button
+                        className='timer__button timer__close-solve-details'
+                        onClick={() => {
+                            setSolveDetailsIndex(-1);
+                        }}
+                    >
+                        Close
+                    </button>
+                </>
+            )}
+        </>
     );
 }
