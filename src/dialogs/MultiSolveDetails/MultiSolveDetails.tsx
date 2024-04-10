@@ -1,28 +1,21 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { SolveData } from '../../components/GoodTimes';
 import { calculateAverage, calculateMean, compareSolveTimes } from '../../utils/cubingUtils';
 import { getFormattedTime, getFormattedTimeBySolve } from '../../utils/genericUtils';
-import { DialogContext, DialogType } from '../UseDialogsContext';
 
-import './MultiSolveDialog.scss';
+import './MultiSolveDetails.scss';
 
-export type MultiSolveDialogData = {
-    dialogType: DialogType.MULTISOLVE;
-    isOpen: boolean;
+export type MultiSolveDetailsProps = {
     index: number;
     size: number;
     isMean: boolean;
     solves: SolveData;
 };
 
-export default function MultiSolveDialog() {
-    const { dialogData, closeDialog } = useContext(DialogContext);
-
-    if (dialogData?.dialogType !== DialogType.MULTISOLVE || !dialogData.isOpen) {
+export default function MultiSolveDetails({ index, size = 3, isMean, solves }: MultiSolveDetailsProps) {
+    if (solves[index] == null) {
         return <></>;
     }
-
-    const { index, size = 3, isMean, solves } = dialogData;
 
     const title = `${isMean ? 'Mean of' : 'Average of'} ${size} for solves #${index - size + 2} - #${index + 1}`;
     const time = getFormattedTime(isMean ? calculateMean(solves, index, size) : calculateAverage(solves, index, size));
@@ -55,18 +48,10 @@ export default function MultiSolveDialog() {
     });
 
     return (
-        <div
-            className='timer__dialog timer__multi-solve-dialog'
-            tabIndex={0}
-            onKeyDown={(event) => {
-                if (event.code === 'Escape') {
-                    event.preventDefault();
-                    closeDialog();
-                }
-            }}
-        >
-            <div>{title}</div>
-            <div className='timer__multi-solve-dialog-time'>{time}</div>
+        <div className='timer__multi-solve-dialog' tabIndex={0}>
+            <div>
+                {time} - {title}
+            </div>
             <table className='timer__multi-solve-dialog-times'>
                 <thead>
                     <tr>
@@ -77,17 +62,6 @@ export default function MultiSolveDialog() {
                 </thead>
                 <tbody>{rows}</tbody>
             </table>
-
-            <div>
-                <button
-                    className='timer__button'
-                    onClick={() => {
-                        closeDialog();
-                    }}
-                >
-                    Close
-                </button>
-            </div>
         </div>
     );
 }

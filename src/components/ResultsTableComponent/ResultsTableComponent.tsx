@@ -9,6 +9,7 @@ import { SplitsResultsTable } from './tables/SplitsResultsTable';
 import { SessionType, SessionTypeMap } from '../SessionManagementComponent';
 import SolveDetails from '../../dialogs/SolveDetails';
 import { PuzzleType } from '../../utils/cubingUtils';
+import MultiSolveDetails from '../../dialogs/MultiSolveDetails';
 
 export type ResultsTableComponentProps = {
     solves: SolveData;
@@ -25,8 +26,13 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
     const { solves, sessionType, puzzleType, solveDispatcher, onAction } = results;
     const [solveDetailsIndex, setSolveDetails] = useState(-1);
 
-    const setSolveDetailsIndex = (value: number) => {
-        setSolveDetails(value === solveDetailsIndex ? -1 : value);
+    const [solveDetailsSize, setSolveSize] = useState(1);
+    const [isMean, setIsMean] = useState(false);
+
+    const setSolveDetailsIndex = (value: number, size = 1, isMean = false) => {
+        setSolveDetails(value === solveDetailsIndex && size === solveDetailsSize ? -1 : value);
+        setSolveSize(size ?? 1);
+        setIsMean(isMean);
     };
 
     const Table = useMemo(() => {
@@ -63,14 +69,23 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
         <>
             {solveDetailsIndex !== -1 && solveDetailsIndex < solves.length && (
                 <>
-                    <SolveDetails
-                        solve={solves[solveDetailsIndex]}
-                        solveIndex={solveDetailsIndex}
-                        puzzleType={puzzleType}
-                        sessionType={sessionType}
-                        solveDispatcher={solveDispatcher}
-                        onAction={onAction}
-                    />
+                    {solveDetailsSize === 1 ? (
+                        <SolveDetails
+                            solve={solves[solveDetailsIndex]}
+                            solveIndex={solveDetailsIndex}
+                            puzzleType={puzzleType}
+                            sessionType={sessionType}
+                            solveDispatcher={solveDispatcher}
+                            onAction={onAction}
+                        />
+                    ) : (
+                        <MultiSolveDetails
+                            solves={solves}
+                            index={solveDetailsIndex}
+                            size={solveDetailsSize}
+                            isMean={isMean}
+                        />
+                    )}
                     <button
                         className='timer__button timer__close-solve-details'
                         onClick={() => {

@@ -151,7 +151,7 @@ export function SplitsResultsTable({ results, splitNames = [], setSolveDetailsIn
                                         setSolveDetailsIndex(tableIndex);
                                     }}
                                 >
-                                    <td>{tableIndex + 1}</td>
+                                    <td className='clickable'>{tableIndex + 1}</td>
                                     {solve.splits.map((time, cellIndex, list) => {
                                         const cellText = getFormattedTime(time);
                                         const isSplitBest = bestSplitIndexes[cellIndex] === index;
@@ -164,6 +164,7 @@ export function SplitsResultsTable({ results, splitNames = [], setSolveDetailsIn
                                             <td
                                                 key={cellIndex}
                                                 className={classNames(
+                                                    'clickable',
                                                     isSplitBest ? 'timer__result--best' : '',
                                                     isSkip ? 'timer__result--skip' : '',
                                                 )}
@@ -178,6 +179,7 @@ export function SplitsResultsTable({ results, splitNames = [], setSolveDetailsIn
                                     <td
                                         key={index}
                                         className={classNames(
+                                            'clickable',
                                             isPenalty ? 'timer__result--penalty' : '',
                                             isBest ? 'timer__result--best' : '',
                                         )}

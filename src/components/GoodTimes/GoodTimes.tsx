@@ -12,13 +12,10 @@ import { AlertsContext, MetaDataContext } from '../../TimerApp';
 import {
     getFormattedTime,
     getSessionListFromLocalStorage,
-    isAncestorOf,
-    isAnyDialogOpen,
     saveSessionDataToLocalStorage,
     getSessionDataFromLocalStorage,
 } from '../../utils/genericUtils';
 import useStickyState from '../../utils/useStickyState';
-import { DialogContext } from '../../dialogs/UseDialogsContext';
 import SessionManagementComponent from '../SessionManagementComponent';
 import { SettingsContext } from '../../dialogs/SettingsDialog';
 import { useContainerDimensions } from '../../utils/useContainerDimensions';
@@ -203,7 +200,6 @@ export default function GoodTimes() {
     const timerComponentRef = useRef<HTMLDivElement>(null);
     const { width } = useContainerDimensions(timerRef);
 
-    const { closeDialog } = useContext(DialogContext);
     const { pushAlert } = useContext(AlertsContext);
     const { solveSettings } = useContext(SettingsContext);
     const { isMobile, setIsMobile, timerIsRunning } = useContext(MetaDataContext);
@@ -298,9 +294,6 @@ export default function GoodTimes() {
                     (target?.className?.includes('input') || target?.className?.includes('select'))
                 ) {
                     return;
-                }
-                if (isAnyDialogOpen() && !isAncestorOf(target, 'dialog')) {
-                    closeDialog();
                 }
                 timerComponentRef.current && timerComponentRef.current.focus();
             }}

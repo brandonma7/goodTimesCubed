@@ -8,7 +8,7 @@ import { ResultsTableComponentProps } from '../ResultsTableComponent';
 export type NormalResultsTableProps = {
     results: ResultsTableComponentProps;
     settings: SolveSetting[];
-    setSolveDetailsIndex: (value: number) => void;
+    setSolveDetailsIndex: (value: number, size?: number, isMean?: boolean) => void;
 };
 
 export function NormalResultsTable({ results, settings, setSolveDetailsIndex }: NormalResultsTableProps): JSX.Element {
@@ -45,6 +45,7 @@ export function NormalResultsTable({ results, settings, setSolveDetailsIndex }: 
                         return (
                             <tr key={index} className={isEndOfSettingGroup ? 'timer__group-indicator' : undefined}>
                                 <td
+                                    className='clickable'
                                     onClick={() => {
                                         setSolveDetailsIndex(tableIndex);
                                     }}
@@ -81,6 +82,7 @@ export function NormalResultsTable({ results, settings, setSolveDetailsIndex }: 
                                             <td
                                                 key={cellIndex}
                                                 className={classNames(
+                                                    'clickable',
                                                     isPenalty ? 'timer__result--penalty' : '',
                                                     isBest ? 'timer__result--best' : '',
                                                 )}
@@ -97,6 +99,11 @@ export function NormalResultsTable({ results, settings, setSolveDetailsIndex }: 
                                                             isMean: setting.type === DataType.MEAN,
                                                             solves,
                                                         });*/
+                                                        setSolveDetailsIndex(
+                                                            tableIndex,
+                                                            setting.size,
+                                                            setting.type === DataType.MEAN,
+                                                        );
                                                     } else {
                                                         setSolveDetailsIndex(tableIndex);
                                                     }

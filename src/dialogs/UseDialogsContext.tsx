@@ -1,12 +1,10 @@
 import React, { createContext, useCallback, useMemo, useState } from 'react';
-import MultiSolveDialog, { MultiSolveDialogData } from './MultiSolveDialog';
 import { SessionDialogData } from './SessionDialog';
 import SettingsDialog, { SettingsDialogData } from './SettingsDialog';
 import { InsightsDialogData } from './InsightsDialog';
 
 export enum DialogType {
     SOLVE,
-    MULTISOLVE,
     SETTINGS,
     SESSION,
     INSIGHTS,
@@ -20,7 +18,7 @@ type DialogContextType = {
     closeDialog: () => void;
 };
 
-export type DialogData = MultiSolveDialogData | SessionDialogData | SettingsDialogData | InsightsDialogData;
+export type DialogData = SessionDialogData | SettingsDialogData | InsightsDialogData;
 
 export const DialogContext = createContext<DialogContextType>({
     dialogData: {
@@ -64,7 +62,6 @@ export default function useDialogContext() {
             <DialogContext.Provider value={dialogContextValue}>
                 {children}
                 <SettingsDialog />
-                <MultiSolveDialog />
             </DialogContext.Provider>
         );
     }

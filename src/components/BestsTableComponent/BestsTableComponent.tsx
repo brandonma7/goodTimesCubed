@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
+import MultiSolveDetails from '../../dialogs/MultiSolveDetails';
 import { SolveSetting, SettingsContext } from '../../dialogs/SettingsDialog';
 import SolveDetails from '../../dialogs/SolveDetails';
-import { DialogContext, DialogType } from '../../dialogs/UseDialogsContext';
 import { calculateAverage, calculateMean, DataType, DataTypeToTextMap, Solve } from '../../utils/cubingUtils';
 import { getFormattedTime, getFormattedTimeBySolve } from '../../utils/genericUtils';
 
@@ -116,12 +116,14 @@ export default function BestsTableComponent({
     solveDispatcher,
     onAction,
 }: BestsTableComponentProps) {
-    const { openDialog } = useContext(DialogContext);
     const { solveSettings: settings } = useContext(SettingsContext);
     const [solveDetailsIndex, setSolveDetails] = useState(-1);
+    const [solveDetailsSize, setSolveSize] = useState(1);
+    const [isMean, setIsMean] = useState(false);
 
-    const setSolveDetailsIndex = (value: number) => {
-        setSolveDetails(value === solveDetailsIndex ? -1 : value);
+    const setSolveDetailsIndex = (value: number, size: number) => {
+        setSolveDetails(value === solveDetailsIndex && size === solveDetailsSize ? -1 : value);
+        setSolveSize(size ?? 1);
     };
 
     const rows = settings.map((setting, index) => {
@@ -151,38 +153,28 @@ export default function BestsTableComponent({
             <tr key={index}>
                 <td>{nameCellText}</td>
                 <td
+                    className='clickable'
                     onClick={() => {
                         if (type === DataType.AVERAGE || type === DataType.MEAN) {
-                            openDialog({
-                                dialogType: DialogType.MULTISOLVE,
-                                isOpen: true,
-                                index: solves.length - 1,
-                                size: size,
-                                isMean: type === DataType.MEAN,
-                                solves,
-                            });
+                            setSolveDetailsIndex(solves.length - 1, size);
+                            setIsMean(type === DataType.MEAN);
                         } else {
-                            setSolveDetailsIndex(solves.length - 1);
+                            setSolveDetailsIndex(solves.length - 1, 1);
                         }
                     }}
                 >
                     {currentCellText}
                 </td>
                 <td
+                    className='clickable'
                     onClick={() => {
                         const index = bests[DataType.SINGLE]?.index ?? -1;
                         if (index >= 0) {
                             if (type === DataType.AVERAGE || type === DataType.MEAN) {
-                                openDialog({
-                                    dialogType: DialogType.MULTISOLVE,
-                                    isOpen: true,
-                                    index: getBestOfType(bests, type, size)?.index ?? 0,
-                                    size: size,
-                                    isMean: type === DataType.MEAN,
-                                    solves,
-                                });
+                                setSolveDetailsIndex(getBestOfType(bests, type, size)?.index ?? 0, size);
+                                setIsMean(type === DataType.MEAN);
                             } else {
-                                setSolveDetailsIndex(index);
+                                setSolveDetailsIndex(index, 1);
                             }
                         }
                     }}
@@ -217,18 +209,28 @@ export default function BestsTableComponent({
             </table>
             {solveDetailsIndex !== -1 && solveDetailsIndex < solves.length && (
                 <>
-                    <SolveDetails
-                        solve={solves[solveDetailsIndex]}
-                        solveIndex={solveDetailsIndex}
-                        puzzleType={sessionData.type}
-                        sessionType={sessionData.sessionType}
-                        solveDispatcher={solveDispatcher}
-                        onAction={onAction}
-                    />
+                    {solveDetailsSize === 1 ? (
+                        <SolveDetails
+                            solve={solves[solveDetailsIndex]}
+                            solveIndex={solveDetailsIndex}
+                            puzzleType={sessionData.type}
+                            sessionType={sessionData.sessionType}
+                            solveDispatcher={solveDispatcher}
+                            onAction={onAction}
+                        />
+                    ) : (
+                        <MultiSolveDetails
+                            solves={solves}
+                            index={solveDetailsIndex}
+                            size={solveDetailsSize}
+                            isMean={isMean}
+                        />
+                    )}
+
                     <button
                         className='timer__button timer__close-solve-details'
                         onClick={() => {
-                            setSolveDetailsIndex(-1);
+                            setSolveDetailsIndex(-1, 1);
                         }}
                     >
                         Close

@@ -1,14 +1,11 @@
 @import '../../styles/global-variables';
 
 .timer__multi-solve-dialog {
-    width: 70%;
-    left: 15%;
-    padding: 1vw;
-    overflow-y: auto;
+    max-width: 400px;
+    font-size: $size-m;
 }
 
 .timer__multi-solve-dialog-times {
-    font-size: 1.2vw;
     margin: $size-xs;
     text-align: left;
     width: 100%;
