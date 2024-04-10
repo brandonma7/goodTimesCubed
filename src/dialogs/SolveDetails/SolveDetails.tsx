@@ -63,11 +63,11 @@ export default function SolveDetails({
 
     return (
         <div>
-            <div className='timer__solve-dialog-inner'>
+            <div className='timer__solve-details-inner'>
                 <div>Solve #{solveIndex + 1}</div>
                 <input
                     type='text'
-                    className='timer__solve-dialog-time'
+                    className='timer__solve-details-time'
                     value={solveTimeEntry}
                     onChange={(event) => {
                         setSolveTimeEntry(event.target.value);
@@ -110,10 +110,10 @@ export default function SolveDetails({
                         </tbody>
                     </table>
                 )}
-                <div className='timer__solve-dialog-date'>{formattedDate}</div>
-                <div className='timer__solve-dialog-scramble'>{scramble}</div>
+                <div className='timer__solve-details-date'>{formattedDate}</div>
+                <div className='timer__solve-details-scramble'>{scramble}</div>
 
-                <div className='timer__solve-dialog-actions'>
+                <div className='timer__solve-details-actions'>
                     <button
                         className={isDNF ? 'timer__button timer__button--active' : 'timer__button'}
                         onClick={() => {
@@ -154,7 +154,7 @@ export default function SolveDetails({
                     </button>
                 </div>
 
-                <div className='timer__solve-dialog-actions'>
+                <div className='timer__solve-details-actions'>
                     <button
                         className={isOllSkip ? 'timer__button timer__button--active' : 'timer__button'}
                         onClick={() => {
@@ -221,7 +221,7 @@ export default function SolveDetails({
                     </button>
                 </div>
 
-                <div className='timer__solve-dialog-case-pickers'>
+                <div className='timer__solve-details-case-pickers'>
                     {isOllSelectionMode && (
                         <CasePickerComponent
                             algSet='oll'
@@ -246,7 +246,7 @@ export default function SolveDetails({
                     height={isMobile ? 120 : 150}
                 />
 
-                <div className='timer__solve-dialog-actions'>
+                <div className='timer__solve-details-actions'>
                     {isTryingToDelete ? (
                         <>
                             <button

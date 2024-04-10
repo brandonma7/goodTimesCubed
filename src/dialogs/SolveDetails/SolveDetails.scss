@@ -1,6 +1,6 @@
 @import '../../styles/global-variables';
 
-.timer__solve-dialog  {
+.timer__solve-details  {
     width: 70%;
     left: 15%;
 
@@ -9,7 +9,7 @@
     }
 }
 
-input.timer__solve-dialog-time {
+input.timer__solve-details-time {
     background: $input-background-color;
     border: $primary-border-size $input-border-color;
     border-radius: $size-xs;
@@ -22,26 +22,26 @@ input.timer__solve-dialog-time {
     font-size: $size-l;
 }
 
-.timer__solve-dialog-date {
+.timer__solve-details-date {
     margin-bottom: $size-s;
 }
 
-.timer__solve-dialog-scramble {
+.timer__solve-details-scramble {
     width: 400px;
     margin: 0 auto;
     margin-bottom: $size-s;
 }
 
-.timer__solve-dialog-actions .timer__button {
+.timer__solve-details-actions .timer__button {
     margin: $size-xxs;
 }
 
-.timer__solve-dialog-case-pickers {
+.timer__solve-details-case-pickers {
     max-width: 450px;
 }
 
 @media (max-width: $small-screen-width) {
-    .timer__solve-dialog  {
+    .timer__solve-details  {
         font-size: $size-l;
         width: 80%;
         left: 10%;
