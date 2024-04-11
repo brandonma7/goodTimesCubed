@@ -1,15 +1,12 @@
 @import '../../styles/global-variables';
 
 .timer__multi-solve-details {
-    max-width: 400px;
-    width: 96%;
     font-size: $size-m;
 }
 
 .timer__multi-solve-details-times {
     margin: $size-xs;
     text-align: left;
-    width: 100%;
 }
 
 .timer__multi-solve-details-times, .timer__multi-solve-details-times th, .timer__multi-solve-details-times td {

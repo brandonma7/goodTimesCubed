@@ -1,45 +1,40 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SolveDataAction } from '../../components/GoodTimes';
 import { SessionData, SessionType, SessionTypeMap } from '../../components/SessionManagementComponent';
-import { DialogContext, DialogType } from '../UseDialogsContext';
-import { clearLocalStorageForSession } from '../../utils/genericUtils';
+import { clearLocalStorageForSession, saveSessionDataToLocalStorage } from '../../utils/genericUtils';
 import { PuzzleType, PuzzleTypeValues, NonStandardPuzzles } from '../../utils/cubingUtils';
 
-import './SessionDialog.scss';
+import './SessionDetails.scss';
 
-export type SessionDialogData = {
-    dialogType: DialogType.SESSION;
-    isOpen: boolean;
-};
-
-type SessionDialogProps = {
+type SessionDetailsProps = {
     sessionData: SessionData;
     hideDeleteButton: boolean;
-    onUpdateSessionData: (newData: SessionData) => void;
     onClearSessionData: () => void;
     onDeleteSession: () => void;
     solveDispatcher: React.Dispatch<SolveDataAction>;
+    close: () => void;
 };
 
-export default function SessionDialog({
+export default function SessionDetails({
     sessionData,
     hideDeleteButton,
-    onUpdateSessionData,
     onClearSessionData,
     onDeleteSession,
     solveDispatcher,
-}: SessionDialogProps): JSX.Element {
+    close,
+}: SessionDetailsProps): JSX.Element {
     const [newSessionIdName, setNewSessionIdName] = useState(sessionData.name);
     const [puzzleType, setPuzzleType] = useState(sessionData.type);
     const [sessionType, setSessionType] = useState(sessionData.sessionType);
     const [sessionNumSplits, setSessionNumSplits] = useState(sessionData.numSplits ?? 1);
-    const { dialogData, closeDialog } = useContext(DialogContext);
+    const [isTryingToClearSession, setIsTryingToClearSession] = useState(false);
+    const [isTryingToDeleteSession, setIsTryingToDeleteSession] = useState(false);
 
     useEffect(() => {
         setNewSessionIdName(sessionData.name);
     }, [sessionData]);
 
-    if (dialogData?.dialogType !== DialogType.SESSION || !dialogData?.isOpen) {
+    if (sessionData == null) {
         return <></>;
     }
 
@@ -66,16 +61,7 @@ export default function SessionDialog({
     );
 
     return (
-        <div
-            className='timer__dialog timer__session-dialog'
-            tabIndex={0}
-            onKeyDown={(event) => {
-                if (event.code === 'Escape') {
-                    event.preventDefault();
-                    closeDialog();
-                }
-            }}
-        >
+        <div className='timer__dialog timer__session-dialog'>
             <input
                 className='timer__input'
                 type='text'
@@ -119,23 +105,46 @@ export default function SessionDialog({
                 ) : (
                     seshSelector
                 ))}
-            {!hideDeleteButton && (
-                <button
-                    className='timer__button'
-                    onClick={() => {
-                        clearLocalStorageForSession(sessionData.id);
-                        onDeleteSession();
-                        closeDialog();
-                    }}
-                >
-                    Delete Session
-                </button>
+
+            {isTryingToDeleteSession ? (
+                <>
+                    <button
+                        className='timer__button'
+                        onClick={async () => {
+                            setIsTryingToDeleteSession(false);
+                        }}
+                    >
+                        Nevermind!
+                    </button>
+                    <button
+                        className='timer__button'
+                        onClick={async () => {
+                            clearLocalStorageForSession(sessionData.id);
+                            onDeleteSession();
+                            setIsTryingToDeleteSession(false);
+                            close();
+                        }}
+                    >
+                        Confirm Delete
+                    </button>
+                </>
+            ) : (
+                !hideDeleteButton && (
+                    <button
+                        className='timer__button'
+                        onClick={() => {
+                            setIsTryingToDeleteSession(true);
+                        }}
+                    >
+                        Delete Session
+                    </button>
+                )
             )}
 
             <button
                 className='timer__button'
                 onClick={() => {
-                    onUpdateSessionData({
+                    saveSessionDataToLocalStorage({
                         id: sessionData.id,
                         data: sessionData.data,
                         name: newSessionIdName,
@@ -143,23 +152,42 @@ export default function SessionDialog({
                         numSplits: sessionNumSplits,
                         type: puzzleType,
                     });
-                    closeDialog();
+                    close();
                 }}
             >
                 Save
             </button>
-            <button className='timer__button' onClick={closeDialog}>
-                Cancel
-            </button>
-            <button
-                className='timer__button'
-                onClick={() => {
-                    onClearSessionData();
-                    solveDispatcher({ type: 'CLEAR_DATA' });
-                }}
-            >
-                Clear Session Data
-            </button>
+            {isTryingToClearSession ? (
+                <>
+                    <button
+                        className='timer__button'
+                        onClick={async () => {
+                            setIsTryingToClearSession(false);
+                        }}
+                    >
+                        Nevermind!
+                    </button>
+                    <button
+                        className='timer__button'
+                        onClick={async () => {
+                            onClearSessionData();
+                            solveDispatcher({ type: 'CLEAR_DATA' });
+                            setIsTryingToClearSession(false);
+                        }}
+                    >
+                        Confirm Clear
+                    </button>
+                </>
+            ) : (
+                <button
+                    className='timer__button'
+                    onClick={() => {
+                        setIsTryingToClearSession(true);
+                    }}
+                >
+                    Clear Session Data
+                </button>
+            )}
         </div>
     );
 }

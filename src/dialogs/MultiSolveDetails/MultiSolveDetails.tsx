@@ -48,7 +48,7 @@ export default function MultiSolveDetails({ index, size = 3, isMean, solves }: M
     });
 
     return (
-        <div className='timer__multi-solve-details' tabIndex={0}>
+        <div className='timer__dialog timer__multi-solve-details' tabIndex={0}>
             <div>
                 {time} - {title}
             </div>

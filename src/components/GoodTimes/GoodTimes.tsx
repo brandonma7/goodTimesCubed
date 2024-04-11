@@ -305,6 +305,7 @@ export default function GoodTimes() {
                         solves={solveData}
                         bests={bestsData}
                         sessionData={sessionData}
+                        sessionId={sessionId}
                         solveDispatcher={dispatchSolveData}
                         onAction={suppressBestAlerts}
                     />
@@ -318,9 +319,8 @@ export default function GoodTimes() {
                     <ResultsTableComponent
                         solves={solveData}
                         bests={bestsData}
-                        sessionType={sessionData.sessionType}
-                        numSplits={sessionData.numSplits}
-                        puzzleType={sessionData.type}
+                        sessionData={sessionData}
+                        sessionId={sessionId}
                         solveDispatcher={dispatchSolveData}
                         onAction={suppressBestAlerts}
                     />
@@ -338,6 +338,7 @@ export default function GoodTimes() {
             </div>
             <AlertsComponent />
             <InsightsDialog solves={solveData} bests={bestsData} />
+            Width: {width}
         </div>
     );
 }

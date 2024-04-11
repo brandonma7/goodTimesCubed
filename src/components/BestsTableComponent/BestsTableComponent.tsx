@@ -14,6 +14,7 @@ type BestsTableComponentProps = {
     solves: SolveData;
     bests: BestsData;
     sessionData: SessionData;
+    sessionId: string;
     solveDispatcher: React.Dispatch<SolveDataAction>;
     onAction: () => void;
 };

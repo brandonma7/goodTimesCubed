@@ -6,24 +6,23 @@ import { BestsData, SolveData, SolveDataAction } from '../GoodTimes';
 import './ResultsTableComponent.scss';
 import { NormalResultsTable } from './tables/NormalResultsTable';
 import { SplitsResultsTable } from './tables/SplitsResultsTable';
-import { SessionType, SessionTypeMap } from '../SessionManagementComponent';
+import { SessionData, SessionTypeMap } from '../SessionManagementComponent';
 import SolveDetails from '../../dialogs/SolveDetails';
-import { PuzzleType } from '../../utils/cubingUtils';
 import MultiSolveDetails from '../../dialogs/MultiSolveDetails';
 
 export type ResultsTableComponentProps = {
     solves: SolveData;
     bests: BestsData;
-    sessionType: SessionType;
-    numSplits: number;
-    puzzleType: PuzzleType;
+    sessionId: string;
+    sessionData: SessionData;
     solveDispatcher: React.Dispatch<SolveDataAction>;
     onAction: () => void;
 };
 
 export default function ResultsTableComponent(results: ResultsTableComponentProps): JSX.Element {
     const { solveSettings } = useContext(SettingsContext);
-    const { solves, sessionType, puzzleType, solveDispatcher, onAction } = results;
+    const { solves, sessionData, sessionId, solveDispatcher, onAction } = results;
+    const { sessionType, numSplits, type: puzzleType } = sessionData;
     const [solveDetailsIndex, setSolveDetails] = useState(-1);
 
     const [solveDetailsSize, setSolveSize] = useState(1);
@@ -41,7 +40,7 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
                 return (
                     <SplitsResultsTable
                         results={results}
-                        splitNames={[...Array.from({ length: results.numSplits ?? 1 })].map((_, index) => `${++index}`)}
+                        splitNames={[...Array.from({ length: numSplits ?? 1 })].map((_, index) => `${++index}`)}
                         setSolveDetailsIndex={setSolveDetailsIndex}
                     />
                 );
@@ -63,7 +62,7 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
                     />
                 );
         }
-    }, [solves]);
+    }, [solves, sessionId]);
 
     return (
         <>

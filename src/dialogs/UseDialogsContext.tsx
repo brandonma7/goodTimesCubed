@@ -1,5 +1,4 @@
 import React, { createContext, useCallback, useMemo, useState } from 'react';
-import { SessionDialogData } from './SessionDialog';
 import SettingsDialog, { SettingsDialogData } from './SettingsDialog';
 import { InsightsDialogData } from './InsightsDialog';
 
@@ -18,7 +17,7 @@ type DialogContextType = {
     closeDialog: () => void;
 };
 
-export type DialogData = SessionDialogData | SettingsDialogData | InsightsDialogData;
+export type DialogData = SettingsDialogData | InsightsDialogData;
 
 export const DialogContext = createContext<DialogContextType>({
     dialogData: {

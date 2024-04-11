@@ -56,6 +56,9 @@ export default function CasePickerComponent({
     solveIndex,
     onSelect = () => null,
 }: CasePickerComponentProps): JSX.Element {
+    if (solve?.analysisData == null || algSetDataMap[algSet] == null) {
+        return <></>;
+    }
     // Alg set data contains case definitions and other metadata
     const algSetData = algSetDataMap[algSet];
     // Selected case currently stored for this solve

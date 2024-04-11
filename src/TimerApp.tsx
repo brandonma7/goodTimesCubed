@@ -93,7 +93,6 @@ export default function AppRoot() {
 
     P2
         Goal mode for CFOP splits
-        OLL/PLL picker always open, full width?
 
         OLL Trainer
         PLL Trainer

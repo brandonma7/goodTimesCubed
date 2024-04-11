@@ -62,7 +62,7 @@ export default function SolveDetails({
     }/${dateObject.getDate()}/${dateObject.getFullYear()}`;
 
     return (
-        <div>
+        <div className='timer__dialog timer__solve-details'>
             <div className='timer__solve-details-inner'>
                 <div>Solve #{solveIndex + 1}</div>
                 <input

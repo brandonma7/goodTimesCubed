@@ -34,7 +34,9 @@
 }
 
 .timer__close-solve-details {
-    margin-bottom: $size-xs;
+    position: absolute;
+    left: 28%;
+    top: 12%;
 }
 
 @media (max-width: $small-screen-width) {

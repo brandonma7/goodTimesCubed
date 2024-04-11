@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import { DialogContext, DialogType } from '../../dialogs/UseDialogsContext';
+import React, { useState } from 'react';
 import {
     getSessionDataFromLocalStorage,
     getSessionNamesFromLocalStorage,
@@ -10,7 +9,7 @@ import './SessionManagementComponent.scss';
 import { SolveData, SolveDataAction } from '../GoodTimes';
 import { isEmpty, isEqual, xorWith } from 'lodash';
 import { PuzzleType } from '../../utils/cubingUtils';
-import SessionDialog from '../../dialogs/SessionDialog';
+import SessionDetails from '../../dialogs/SessionDetails';
 
 type SessionManagementComponentProps = {
     sessionData: SessionData;
@@ -71,9 +70,21 @@ export default function SessionManagementComponent({
     dispatchSolveData,
     suppressBestAlerts,
 }: SessionManagementComponentProps) {
-    const { openDialog } = useContext(DialogContext);
     const sessionNames = getSessionNamesFromLocalStorage();
     const sessionList = sessionNames.map((sesh) => sesh.id);
+    const [isEditingSession, setIsEditingSession] = useState(false);
+
+    function changeSession(newSessionId: string) {
+        setSessionId(newSessionId);
+
+        const newSolveData = getSessionDataFromLocalStorage(newSessionId);
+        dispatchSolveData({
+            type: 'CHANGE_SESSION',
+            data: newSolveData.data,
+        });
+        suppressBestAlerts();
+        timerComponentRef.current && timerComponentRef.current.focus();
+    }
 
     return (
         <>
@@ -82,15 +93,7 @@ export default function SessionManagementComponent({
                 onChange={(event) => {
                     const newSessionId = event.target.value;
                     if (sessionData.id !== newSessionId) {
-                        setSessionId(newSessionId);
-
-                        const newSolveData = getSessionDataFromLocalStorage(newSessionId);
-                        dispatchSolveData({
-                            type: 'CHANGE_SESSION',
-                            data: newSolveData.data,
-                        });
-                        suppressBestAlerts();
-                        timerComponentRef.current && timerComponentRef.current.focus();
+                        changeSession(newSessionId);
                     }
                 }}
                 value={sessionData.id}
@@ -107,10 +110,7 @@ export default function SessionManagementComponent({
                 <button
                     className='timer__button'
                     onClick={() => {
-                        openDialog({
-                            dialogType: DialogType.SESSION,
-                            isOpen: true,
-                        });
+                        setIsEditingSession(!isEditingSession);
                     }}
                 >
                     Edit Session
@@ -118,6 +118,7 @@ export default function SessionManagementComponent({
                 <button
                     className='timer__button'
                     onClick={() => {
+                        setIsEditingSession(false);
                         let newSessionNum = sessionList.length + 1;
                         let newSessionId = `session${newSessionNum}`;
 
@@ -134,27 +135,27 @@ export default function SessionManagementComponent({
                             data: [],
                             numSplits: 1,
                         });
-                        setSessionId(newSessionId);
+                        changeSession(newSessionId);
                     }}
                 >
                     New Session
                 </button>
             </div>
-            <SessionDialog
-                sessionData={sessionData}
-                hideDeleteButton={sessionList.length < 2}
-                onUpdateSessionData={(newData) => {
-                    saveSessionDataToLocalStorage(newData);
-                }}
-                onClearSessionData={() => {
-                    suppressBestAlerts();
-                }}
-                onDeleteSession={() => {
-                    const index = sessionList[0] === sessionData.id ? 1 : 0;
-                    setSessionId(sessionList[index]);
-                }}
-                solveDispatcher={dispatchSolveData}
-            />
+            {isEditingSession && (
+                <SessionDetails
+                    sessionData={sessionData}
+                    hideDeleteButton={sessionList.length < 2}
+                    onClearSessionData={() => {
+                        suppressBestAlerts();
+                    }}
+                    onDeleteSession={() => {
+                        const index = sessionList[0] === sessionData.id ? 1 : 0;
+                        changeSession(sessionList[index]);
+                    }}
+                    solveDispatcher={dispatchSolveData}
+                    close={() => setIsEditingSession(false)}
+                />
+            )}
         </>
     );
 }

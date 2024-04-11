@@ -421,40 +421,44 @@ const TimerComponent = memo(function TimerComponentInternal({
                         >
                             Mode
                         </button>
-                        <button
-                            className={`timer__button${
-                                mostRecentSolve?.analysisData?.ollCase ? ' timer__button--big' : ''
-                            }`}
-                            onClick={() => {
-                                setIsOllSelectionMode(!isOllSelectionMode);
-                            }}
-                        >
-                            {mostRecentSolve?.analysisData?.ollCase ? (
-                                <SingleFaceVisualizationComponent
-                                    faceState={getOllById(mostRecentSolve.analysisData.ollCase)?.state}
-                                    puzzleType='3x3x3'
-                                />
-                            ) : (
-                                'OLL'
-                            )}
-                        </button>
-                        <button
-                            className={`timer__button${
-                                mostRecentSolve?.analysisData?.pllCase ? ' timer__button--big' : ''
-                            }`}
-                            onClick={() => {
-                                setIsPllSelectionMode(!isPllSelectionMode);
-                            }}
-                        >
-                            {mostRecentSolve?.analysisData?.pllCase ? (
-                                <SingleFaceVisualizationComponent
-                                    faceState={getPllById(mostRecentSolve.analysisData.pllCase)?.state}
-                                    puzzleType='3x3x3'
-                                />
-                            ) : (
-                                'PLL'
-                            )}
-                        </button>
+                        {mostRecentSolve?.analysisData != null && (
+                            <>
+                                <button
+                                    className={`timer__button${
+                                        mostRecentSolve?.analysisData?.ollCase ? ' timer__button--big' : ''
+                                    }`}
+                                    onClick={() => {
+                                        setIsOllSelectionMode(!isOllSelectionMode);
+                                    }}
+                                >
+                                    {mostRecentSolve?.analysisData?.ollCase ? (
+                                        <SingleFaceVisualizationComponent
+                                            faceState={getOllById(mostRecentSolve.analysisData.ollCase)?.state}
+                                            puzzleType='3x3x3'
+                                        />
+                                    ) : (
+                                        'OLL'
+                                    )}
+                                </button>
+                                <button
+                                    className={`timer__button${
+                                        mostRecentSolve?.analysisData?.pllCase ? ' timer__button--big' : ''
+                                    }`}
+                                    onClick={() => {
+                                        setIsPllSelectionMode(!isPllSelectionMode);
+                                    }}
+                                >
+                                    {mostRecentSolve?.analysisData?.pllCase ? (
+                                        <SingleFaceVisualizationComponent
+                                            faceState={getPllById(mostRecentSolve.analysisData.pllCase)?.state}
+                                            puzzleType='3x3x3'
+                                        />
+                                    ) : (
+                                        'PLL'
+                                    )}
+                                </button>
+                            </>
+                        )}
                     </div>
                     <div>
                         {isOllSelectionMode && mostRecentSolve != null && (
