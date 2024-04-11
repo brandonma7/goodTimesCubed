@@ -157,6 +157,30 @@ export function compareSolveTimes(a: Solve, b: Solve) {
     return a.time - b.time;
 }
 
+export function calculateAverageRaw(times: number[]) {
+    if (times.length === 0) {
+        return 0;
+    }
+    if (times.length === 1) {
+        return times[0];
+    }
+
+    // We want to trim off the bottom and top 5 percent of values, so get that number to trim here
+    const trimNum = Math.ceil(times.length * 0.05);
+
+    const dataSlice = times
+        .sort((a, b) => a - b) // Sort so we can trim off the best/worst values
+        .slice(trimNum, times.length - trimNum); // trim off the best/worst values
+
+    if (dataSlice[0] === -1) {
+        return -1;
+    }
+
+    const average = Math.trunc(dataSlice.reduce((prev, curr) => prev + curr, 0) / (times.length - trimNum * 2));
+
+    return average;
+}
+
 export function calculateAverage(solvesData: Solve[], index: number, size: number): number {
     if (index + 1 < size) {
         return -1;

@@ -25,6 +25,7 @@ const SMALL_SCREEN_SIZE_WIDTH = 768;
 
 export enum AppMode {
     TIMER,
+    COMP,
     INSIGHTS,
     SETTINGS,
 }
@@ -316,52 +317,67 @@ export default function GoodTimes() {
         >
             <HeaderComponent setAppMode={appModeSetter} />
             <div className='timer__main'>
-                <section className={`timer__left-bar${timerIsRunning ? ' timer__left-bar--running' : ''}`}>
-                    {appMode === AppMode.TIMER && (
-                        <BestsTableComponent
-                            solves={solveData}
-                            bests={bestsData}
-                            sessionData={sessionData}
-                            sessionId={sessionId}
-                            solveDispatcher={dispatchSolveData}
-                            onAction={suppressBestAlerts}
+                {appMode === AppMode.COMP ? (
+                    <>
+                        <TimerComponent
+                            dispatchSolveData={dispatchSolveData}
+                            puzzleType={sessionData.type}
+                            scramble={scramble}
+                            newScramble={newScramble}
+                            timerComponentRef={timerComponentRef}
+                            compMode
                         />
-                    )}
-                    <SessionManagementComponent
-                        sessionData={sessionData}
-                        noSolves={solveData.length === 0}
-                        setSessionId={setSessionId}
-                        timerComponentRef={timerComponentRef}
-                        dispatchSolveData={dispatchSolveData}
-                        suppressBestAlerts={suppressBestAlerts}
-                    />
-                    {appMode === AppMode.TIMER && (
-                        <ResultsTableComponent
-                            solves={solveData}
-                            bests={bestsData}
-                            sessionData={sessionData}
-                            sessionId={sessionId}
-                            solveDispatcher={dispatchSolveData}
-                            onAction={suppressBestAlerts}
-                        />
-                    )}
-                </section>
-                {appMode === AppMode.TIMER && (
-                    <TimerComponent
-                        dispatchSolveData={dispatchSolveData}
-                        puzzleType={sessionData.type}
-                        scramble={scramble}
-                        newScramble={newScramble}
-                        numSplits={sessionData.numSplits}
-                        timerComponentRef={timerComponentRef}
-                        mostRecentSolve={solveData.at(-1) ?? null}
-                        mostRecentSolveIndex={solveData.length - 1}
-                    />
+                    </>
+                ) : (
+                    <>
+                        <section className={`timer__left-bar${timerIsRunning ? ' timer__left-bar--running' : ''}`}>
+                            {appMode === AppMode.TIMER && (
+                                <BestsTableComponent
+                                    solves={solveData}
+                                    bests={bestsData}
+                                    sessionData={sessionData}
+                                    sessionId={sessionId}
+                                    solveDispatcher={dispatchSolveData}
+                                    onAction={suppressBestAlerts}
+                                />
+                            )}
+                            <SessionManagementComponent
+                                sessionData={sessionData}
+                                noSolves={solveData.length === 0}
+                                setSessionId={setSessionId}
+                                timerComponentRef={timerComponentRef}
+                                dispatchSolveData={dispatchSolveData}
+                                suppressBestAlerts={suppressBestAlerts}
+                            />
+                            {appMode === AppMode.TIMER && (
+                                <ResultsTableComponent
+                                    solves={solveData}
+                                    bests={bestsData}
+                                    sessionData={sessionData}
+                                    sessionId={sessionId}
+                                    solveDispatcher={dispatchSolveData}
+                                    onAction={suppressBestAlerts}
+                                />
+                            )}
+                        </section>
+                        {appMode === AppMode.TIMER && (
+                            <TimerComponent
+                                dispatchSolveData={dispatchSolveData}
+                                puzzleType={sessionData.type}
+                                scramble={scramble}
+                                newScramble={newScramble}
+                                numSplits={sessionData.numSplits}
+                                timerComponentRef={timerComponentRef}
+                                mostRecentSolve={solveData.at(-1) ?? undefined}
+                                mostRecentSolveIndex={solveData.length - 1}
+                            />
+                        )}
+                        {appMode === AppMode.INSIGHTS && (
+                            <InsightsView solves={solveData} bests={bestsData} isMobile={isMobile} />
+                        )}
+                        {appMode === AppMode.SETTINGS && <SettingsView />}
+                    </>
                 )}
-                {appMode === AppMode.INSIGHTS && (
-                    <InsightsView solves={solveData} bests={bestsData} isMobile={isMobile} />
-                )}
-                {appMode === AppMode.SETTINGS && <SettingsView />}
             </div>
             <AlertsComponent />
             Width: {width}

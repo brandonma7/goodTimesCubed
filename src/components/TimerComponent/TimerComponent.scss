@@ -130,6 +130,25 @@
     }
 }
 
+.timer__comp-mode {
+    text-align: center;
+    width: 50%;
+    position: absolute;
+    top: 40%;
+    left: 25%;
+    font-size: $size-xl;
+
+    &.inspection--start {
+        color: $green-light;
+    }
+    &.inspection--seven {
+        color: $yellow-light;
+    }
+    &.inspection--twelve {
+        color: $red-light;
+    }
+}
+
 @media (max-width: $small-screen-width) {
     .timer__timer {
         padding: 0;

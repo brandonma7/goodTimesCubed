@@ -21,6 +21,14 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                 <button
                     className='timer__button'
                     onClick={() => {
+                        setAppMode(AppMode.COMP);
+                    }}
+                >
+                    Comp
+                </button>
+                <button
+                    className='timer__button'
+                    onClick={() => {
                         setAppMode(AppMode.INSIGHTS);
                     }}
                 >

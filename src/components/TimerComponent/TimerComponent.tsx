@@ -7,21 +7,41 @@ import { classNames, getFormattedTime, unFormatTime } from '../../utils/genericU
 import { SettingsContext } from '../../dialogs/SettingsView';
 
 import './TimerComponent.scss';
-import { PuzzleType, PuzzleTypeMoveCount, Solve, NonStandardPuzzles } from '../../utils/cubingUtils';
+import {
+    PuzzleType,
+    PuzzleTypeMoveCount,
+    Solve,
+    NonStandardPuzzles,
+    calculateAverageRaw,
+} from '../../utils/cubingUtils';
 import { MetaDataContext } from '../../TimerApp';
 import CasePickerComponent from '../CasePickerComponent';
 import { getPllById } from '../CasePickerComponent/PllCases';
 import { getOllById } from '../CasePickerComponent/OllCases';
+
+enum CompModeStep {
+    SCRAMBLE,
+    INSPECTION,
+    SOLVE,
+    RESULTS,
+}
+
+type CompSolve = {
+    time: number;
+    penalty: number;
+    dnf: boolean;
+};
 
 type TimerComponentProps = {
     dispatchSolveData: React.Dispatch<SolveDataAction>;
     puzzleType: PuzzleType;
     scramble: string;
     newScramble: () => void;
-    numSplits: number;
+    numSplits?: number;
     timerComponentRef: React.RefObject<HTMLDivElement>;
-    mostRecentSolve: Solve | null;
-    mostRecentSolveIndex: number;
+    mostRecentSolve?: Solve;
+    mostRecentSolveIndex?: number;
+    compMode?: boolean;
 };
 
 const TimerComponent = memo(function TimerComponentInternal({
@@ -29,10 +49,11 @@ const TimerComponent = memo(function TimerComponentInternal({
     puzzleType,
     scramble,
     newScramble,
-    numSplits,
+    numSplits = 1,
     timerComponentRef,
     mostRecentSolve,
-    mostRecentSolveIndex,
+    mostRecentSolveIndex = 0,
+    compMode = false,
 }: TimerComponentProps) {
     const { isManualEntryMode, setIsManualEntryMode } = useContext(SettingsContext);
     const { isMobile, setTimerIsRunning } = useContext(MetaDataContext);
@@ -43,6 +64,9 @@ const TimerComponent = memo(function TimerComponentInternal({
     const [currentEntry, setCurrentEntry] = useState<Solve>();
     const [isOllSelectionMode, setIsOllSelectionMode] = useState(false);
     const [isPllSelectionMode, setIsPllSelectionMode] = useState(false);
+    const [compModeStep, setCompModeStep] = useState<CompModeStep>(CompModeStep.SCRAMBLE);
+    const [compModeTimes, setCompModeTimes] = useState<CompSolve[]>([]);
+    const [currentCompModePenalty, setCurrentCompModePenalty] = useState(0);
 
     const isTimerReady = useRef(false);
     const spaceKeyIsDown = useRef(false);
@@ -106,10 +130,18 @@ const TimerComponent = memo(function TimerComponentInternal({
                 };
                 setCurrentEntry(timeEntry);
 
-                dispatchSolveData({
-                    type: 'ADD_SOLVE',
-                    data: timeEntry,
-                });
+                if (compMode) {
+                    compModeTimes.push({
+                        time: baseTime,
+                        penalty: Math.max(currentCompModePenalty, 0),
+                        dnf: isDNF,
+                    });
+                } else {
+                    dispatchSolveData({
+                        type: 'ADD_SOLVE',
+                        data: timeEntry,
+                    });
+                }
 
                 newScramble();
                 setSplitTimes([]);
@@ -164,6 +196,36 @@ const TimerComponent = memo(function TimerComponentInternal({
         }
     }
 
+    function startInspectionTimer() {
+        const interval = 10; // ms
+        let expected = Date.now() + interval;
+        const step = () => {
+            const dt = Date.now() - expected; // the drift (positive for overshooting)
+            if (dt > interval) {
+                console.log('oof');
+            }
+
+            elapsed.current += interval;
+            setTimerEntry(getFormattedTime(elapsed.current / 10));
+
+            expected += interval;
+            timerTimeoutRef.current = setTimeout(step, Math.max(0, interval - dt)); // take into account drift
+            if (elapsed.current > 17000) {
+                clearTimeout(timerTimeoutRef.current);
+                compModeTimes.push({
+                    time: -1,
+                    penalty: 0,
+                    dnf: true,
+                });
+                elapsed.current = 0;
+                setCompModeStep(CompModeStep.RESULTS);
+            } else if (elapsed.current > 15000) {
+                setCurrentCompModePenalty(2);
+            }
+        };
+        timerTimeoutRef.current = setTimeout(step, interval);
+    }
+
     // Arbitrary font sizes for shortest move count and longest that I thought looked good
     const fontSizeFor2x2 = 32;
     const fontSizeFor7x7 = 16;
@@ -174,6 +236,193 @@ const TimerComponent = memo(function TimerComponentInternal({
     const scrambleLetterColors = ['white', 'orange', 'green', 'red', 'blue', 'yellow'];
     // This is always true, but keeping it here in case I decide to control this via settings
     const showScrambleColors = true;
+
+    if (compMode) {
+        switch (compModeStep) {
+            case CompModeStep.SCRAMBLE:
+                return (
+                    <div
+                        className='timer__comp-mode'
+                        ref={timerComponentRef}
+                        tabIndex={0}
+                        onKeyDown={(event) => {
+                            if (event.code === 'Space') {
+                                event.preventDefault();
+                                elapsed.current = 0;
+                                startInspectionTimer();
+                                setCompModeStep(CompModeStep.INSPECTION);
+                            }
+                        }}
+                    >
+                        {scramble}
+                    </div>
+                );
+            case CompModeStep.INSPECTION:
+                return (
+                    <div
+                        className={classNames(
+                            'timer__comp-mode',
+                            elapsed.current < 7000 ? 'inspection--start' : '',
+                            elapsed.current >= 7000 && elapsed.current < 12000 ? 'inspection--seven' : '',
+                            elapsed.current >= 12000 ? 'inspection--twelve' : '',
+                        )}
+                        ref={timerComponentRef}
+                        tabIndex={0}
+                        onKeyDown={(event) => {
+                            if (event.code === 'Space') {
+                                event.preventDefault();
+                                isTimerReady.current = true;
+                                elapsed.current = 0;
+                                clearTimeout(timerTimeoutRef.current);
+                                startTimer();
+                                setCompModeStep(CompModeStep.SOLVE);
+                            }
+                        }}
+                    >
+                        <p>Inspection</p>
+                        <p>{timerEntry}</p>
+                    </div>
+                );
+            case CompModeStep.SOLVE:
+                return (
+                    <div
+                        className='timer__comp-mode'
+                        ref={timerComponentRef}
+                        tabIndex={0}
+                        onKeyDown={(event) => {
+                            if (event.code === 'Space' || event.code === 'Escape') {
+                                event.preventDefault();
+                                startPreppingTimer(event.code === 'Escape');
+                                clearTimeout(timerTimeoutRef.current);
+                                setCompModeStep(CompModeStep.RESULTS);
+                            }
+                        }}
+                    >
+                        <p>Solve</p>
+                        <p>{timerEntry}</p>
+                    </div>
+                );
+            case CompModeStep.RESULTS:
+                return (
+                    <div
+                        className='timer__comp-mode'
+                        ref={timerComponentRef}
+                        tabIndex={0}
+                        onKeyDown={(event) => {
+                            if (event.code === 'Space') {
+                                event.preventDefault();
+                                if (compModeTimes.length === 5) {
+                                    setCompModeTimes([]);
+                                }
+                                setCurrentCompModePenalty(0);
+                                clearTimeout(timerTimeoutRef.current);
+                                setCompModeStep(CompModeStep.SCRAMBLE);
+                            }
+                        }}
+                    >
+                        <table className='timer__results'>
+                            <thead>
+                                <tr>
+                                    <th>Solve</th>
+                                    <th>Time</th>
+                                    <th>Penalties</th>
+                                    <th>DNF?</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {[0, 1, 2, 3, 4].map((_, index) => {
+                                    return (
+                                        <tr key={index}>
+                                            {compModeTimes[index] != null ? (
+                                                <>
+                                                    <td>{index + 1}</td>
+                                                    <td>
+                                                        {getFormattedTime(
+                                                            compModeTimes[index].time +
+                                                                compModeTimes[index].penalty * 100,
+                                                        )}
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            className='clickable'
+                                                            onClick={() => {
+                                                                const cmt = {
+                                                                    ...compModeTimes[index],
+                                                                    penalty: Math.max(
+                                                                        0,
+                                                                        compModeTimes[index].penalty - 2,
+                                                                    ),
+                                                                };
+                                                                const listCopy = compModeTimes.map((t) => t);
+                                                                listCopy.splice(index, 1, cmt);
+                                                                setCompModeTimes(listCopy);
+                                                            }}
+                                                        >
+                                                            -
+                                                        </span>
+                                                        {compModeTimes[index].penalty}
+                                                        <span
+                                                            className='clickable'
+                                                            onClick={() => {
+                                                                const cmt = {
+                                                                    ...compModeTimes[index],
+                                                                    penalty: Math.max(
+                                                                        0,
+                                                                        compModeTimes[index].penalty + 2,
+                                                                    ),
+                                                                };
+                                                                const listCopy = compModeTimes.map((t) => t);
+                                                                listCopy.splice(index, 1, cmt);
+                                                                setCompModeTimes(listCopy);
+                                                            }}
+                                                        >
+                                                            +
+                                                        </span>
+                                                    </td>
+                                                    <td>{compModeTimes[index].dnf ? 'Yes' : 'No'}</td>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <td>{index + 1}</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                    <td>-</td>
+                                                </>
+                                            )}
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                        {compModeTimes.length === 4 && (
+                            <div>
+                                Best Possible Ao5:{' '}
+                                {getFormattedTime(
+                                    calculateAverageRaw([
+                                        ...compModeTimes.map((solve) =>
+                                            solve.dnf ? -1 : solve.time + solve.penalty * 100,
+                                        ),
+                                        1,
+                                    ]),
+                                )}
+                            </div>
+                        )}
+                        {compModeTimes.length === 5 && (
+                            <div>
+                                Ao5:{' '}
+                                {getFormattedTime(
+                                    calculateAverageRaw(
+                                        compModeTimes.map((solve) =>
+                                            solve.dnf ? -1 : solve.time + solve.penalty * 100,
+                                        ),
+                                    ),
+                                )}
+                            </div>
+                        )}
+                    </div>
+                );
+        }
+    }
 
     return (
         <section
