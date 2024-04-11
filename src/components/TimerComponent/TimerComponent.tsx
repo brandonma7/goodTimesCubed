@@ -254,7 +254,18 @@ const TimerComponent = memo(function TimerComponentInternal({
                             }
                         }}
                     >
-                        {scramble}
+                        {scramble.split(' ').map((move, index) => {
+                            // New color every three letters, wrapping after we get to the end of the color list
+                            const colorIndex = Math.trunc((index / 3) % scrambleLetterColors.length);
+                            return (
+                                <span
+                                    key={index}
+                                    className={`timer_scramble-letter ${scrambleLetterColors[colorIndex]}`}
+                                >
+                                    {move}
+                                </span>
+                            );
+                        })}
                     </div>
                 );
             case CompModeStep.INSPECTION:
