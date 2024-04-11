@@ -54,7 +54,7 @@ export default function CubeVisualizationComponent({
                     height,
                     minHeight: height,
                 }}
-                onClick={() => setIsVisible(1)}
+                onClick={() => setIsVisible(puzzleType !== '3x3x3' ? 0 : 1)}
             >
                 <div className='timer__cube-pic-row'>
                     <div className='timer__cube-face'></div>

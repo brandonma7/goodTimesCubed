@@ -88,6 +88,9 @@ export type SolveDataAction =
       }
     | {
           type: 'CLEAR_DATA';
+      }
+    | {
+          type: 'REFRESH';
       };
 
 const solveDataReducer = (state: SolveData, action: SolveDataAction): SolveData => {
@@ -171,6 +174,8 @@ const solveDataReducer = (state: SolveData, action: SolveDataAction): SolveData 
             return [];
         case 'CHANGE_SESSION':
             return action.data;
+        case 'REFRESH':
+            return state.slice(0);
         default:
             return state;
     }
@@ -236,7 +241,7 @@ export default function GoodTimes() {
 
     useEffect(() => {
         newScramble();
-    }, [sessionId]);
+    }, [sessionId, sessionData.type]);
 
     useEffect(() => {
         saveSessionDataToLocalStorage({
@@ -311,6 +316,7 @@ export default function GoodTimes() {
                     />
                     <SessionManagementComponent
                         sessionData={sessionData}
+                        noSolves={solveData.length === 0}
                         setSessionId={setSessionId}
                         timerComponentRef={timerComponentRef}
                         dispatchSolveData={dispatchSolveData}

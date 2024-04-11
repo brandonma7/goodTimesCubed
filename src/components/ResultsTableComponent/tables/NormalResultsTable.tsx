@@ -117,16 +117,18 @@ export function NormalResultsTable({ results, settings, setSolveDetailsIndex }: 
                             </tr>
                         );
                     })}
-                <tr>
-                    <td
-                        className='clickable'
-                        colSpan={settings.length + 1}
-                        onClick={() => setIsShortList(!isShortList)}
-                        style={{ textAlign: 'center' }}
-                    >
-                        See {isShortList ? 'More' : 'Less'}
-                    </td>
-                </tr>
+                {solves.length > lengthOfShortList && (
+                    <tr>
+                        <td
+                            className='clickable'
+                            colSpan={settings.length + 1}
+                            onClick={() => setIsShortList(!isShortList)}
+                            style={{ textAlign: 'center' }}
+                        >
+                            See {isShortList ? 'More' : 'Less'}
+                        </td>
+                    </tr>
+                )}
             </tbody>
         </table>
     ) : (

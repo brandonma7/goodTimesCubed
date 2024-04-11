@@ -14,6 +14,7 @@ import SessionDetails from '../../dialogs/SessionDetails';
 type SessionManagementComponentProps = {
     sessionData: SessionData;
     setSessionId: (newValue: string) => void;
+    noSolves: boolean;
     timerComponentRef: React.RefObject<HTMLDivElement>;
     dispatchSolveData: React.Dispatch<SolveDataAction>;
     suppressBestAlerts: () => void;
@@ -66,6 +67,7 @@ export const areSessionsSame = (x: SolveData, y: SolveData) =>
 export default function SessionManagementComponent({
     sessionData,
     setSessionId,
+    noSolves,
     timerComponentRef,
     dispatchSolveData,
     suppressBestAlerts,
@@ -145,6 +147,7 @@ export default function SessionManagementComponent({
                 <>
                     <SessionDetails
                         sessionData={sessionData}
+                        noSolves={noSolves}
                         hideDeleteButton={sessionList.length < 2}
                         onClearSessionData={() => {
                             suppressBestAlerts();

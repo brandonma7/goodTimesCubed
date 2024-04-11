@@ -8,6 +8,7 @@ import './SessionDetails.scss';
 
 type SessionDetailsProps = {
     sessionData: SessionData;
+    noSolves: boolean;
     hideDeleteButton: boolean;
     onClearSessionData: () => void;
     onDeleteSession: () => void;
@@ -17,6 +18,7 @@ type SessionDetailsProps = {
 
 export default function SessionDetails({
     sessionData,
+    noSolves,
     hideDeleteButton,
     onClearSessionData,
     onDeleteSession,
@@ -70,41 +72,50 @@ export default function SessionDetails({
                     setNewSessionIdName(event.target.value);
                 }}
             />
-            <select
-                className='timer__select'
-                value={puzzleType}
-                onChange={(event) => {
-                    if (event.target.value !== sessionData.type) {
-                        setPuzzleType(event.target.value as PuzzleType);
-                    }
-                }}
-            >
-                {PuzzleTypeValues.map((puzzle, index) => {
-                    return (
-                        <option key={index} value={puzzle}>
-                            {puzzle}
-                        </option>
-                    );
-                })}
-            </select>
-            {!NonStandardPuzzles.includes(puzzleType) &&
-                (sessionType === 'splits' ? (
-                    <div className='timer__splits-input'>
-                        {seshSelector}
-                        <input
-                            className='timer__input'
-                            type='number'
-                            min='1'
-                            max='5'
-                            value={sessionNumSplits}
-                            onChange={(event) => {
-                                setSessionNumSplits(parseInt(event.target.value));
-                            }}
-                        />
-                    </div>
-                ) : (
-                    seshSelector
-                ))}
+            {noSolves ? (
+                <>
+                    <select
+                        className='timer__select'
+                        value={puzzleType}
+                        onChange={(event) => {
+                            if (event.target.value !== sessionData.type) {
+                                setPuzzleType(event.target.value as PuzzleType);
+                            }
+                        }}
+                    >
+                        {PuzzleTypeValues.map((puzzle, index) => {
+                            return (
+                                <option key={index} value={puzzle}>
+                                    {puzzle}
+                                </option>
+                            );
+                        })}
+                    </select>
+                    {!NonStandardPuzzles.includes(puzzleType) &&
+                        (sessionType === 'splits' ? (
+                            <div className='timer__splits-input'>
+                                {seshSelector}
+                                <input
+                                    className='timer__input'
+                                    type='number'
+                                    min='1'
+                                    max='5'
+                                    value={sessionNumSplits}
+                                    onChange={(event) => {
+                                        setSessionNumSplits(parseInt(event.target.value));
+                                    }}
+                                />
+                            </div>
+                        ) : (
+                            seshSelector
+                        ))}
+                </>
+            ) : (
+                <p>
+                    {puzzleType} - {SessionTypeMap[sessionType as SessionType].name}
+                    {sessionType === 'splits' && ` ${sessionNumSplits}`}
+                </p>
+            )}
 
             {isTryingToDeleteSession ? (
                 <>
@@ -151,6 +162,10 @@ export default function SessionDetails({
                         sessionType,
                         numSplits: sessionNumSplits,
                         type: puzzleType,
+                    });
+
+                    solveDispatcher({
+                        type: 'REFRESH',
                     });
                     close();
                 }}

@@ -62,7 +62,7 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
                     />
                 );
         }
-    }, [solves, sessionId]);
+    }, [solves, sessionId, sessionType, numSplits]);
 
     return (
         <>
