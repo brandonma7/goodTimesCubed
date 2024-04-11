@@ -1,6 +1,6 @@
 @import '../../styles/global-variables';
 
-.timer__insights-dialog {
+.timer__insights-view {
     width: 70%;
     left: 15%;
     padding: 1vw;
@@ -20,5 +20,13 @@
         .timer__tooltip-label-key {
             margin-right: $size-l;
         }
+    }
+}
+
+
+@media (max-width: $small-screen-width) {
+    .timer__insights-view {
+        width: 98%;
+        max-height: 85%;
     }
 }

@@ -3,7 +3,7 @@ import React, { useContext, memo, useRef, useState, useEffect } from 'react';
 import { SolveDataAction } from '../GoodTimes';
 import CubeVisualizationComponent, { SingleFaceVisualizationComponent } from '../CubeVisualizationComponent';
 
-import { classNames, getFormattedTime, isAnyDialogOpen, unFormatTime } from '../../utils/genericUtils';
+import { classNames, getFormattedTime, unFormatTime } from '../../utils/genericUtils';
 import { SettingsContext } from '../../dialogs/SettingsDialog';
 
 import './TimerComponent.scss';
@@ -12,7 +12,6 @@ import { MetaDataContext } from '../../TimerApp';
 import CasePickerComponent from '../CasePickerComponent';
 import { getPllById } from '../CasePickerComponent/PllCases';
 import { getOllById } from '../CasePickerComponent/OllCases';
-import { DialogContext } from '../../dialogs/UseDialogsContext';
 
 type TimerComponentProps = {
     dispatchSolveData: React.Dispatch<SolveDataAction>;
@@ -37,7 +36,6 @@ const TimerComponent = memo(function TimerComponentInternal({
 }: TimerComponentProps) {
     const { isManualEntryMode, setIsManualEntryMode } = useContext(SettingsContext);
     const { isMobile, setTimerIsRunning } = useContext(MetaDataContext);
-    const { closeDialog } = useContext(DialogContext);
     const [timerEntry, setTimerEntry] = useState(isManualEntryMode ? '' : '0.00');
     const [isPrepping, setIsPrepping] = useState(false);
     const [isPrepped, setIsPrepped] = useState(false);
@@ -190,10 +188,6 @@ const TimerComponent = memo(function TimerComponentInternal({
                     } else if (timerIsRunning.current) {
                         event.preventDefault();
                         startPreppingTimer(event.code === 'Escape');
-                    } else if (event.code === 'Escape') {
-                        if (isAnyDialogOpen()) {
-                            closeDialog();
-                        }
                     }
                 }
             }}

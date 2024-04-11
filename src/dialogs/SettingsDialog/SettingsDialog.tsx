@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { DataType, DataTypeToTextMap } from '../../utils/cubingUtils';
-import { DialogContext, DialogType } from '../UseDialogsContext';
 
 import './SettingsDialog.scss';
 
@@ -52,11 +51,6 @@ export const SettingsContext = createContext<SettingsContextType>({
     setSolveSettings: () => null,
 });
 
-export type SettingsDialogData = {
-    dialogType: DialogType.SETTINGS;
-    isOpen: boolean;
-};
-
 export function SettingsContextProvider({ children }: { children: JSX.Element }) {
     const { isManualEntryMode: isManualEntryModeFromCache, solveSettings: solveSettingsFromCache } =
         getSettingsFromLocalStorage();
@@ -68,7 +62,6 @@ export function SettingsContextProvider({ children }: { children: JSX.Element })
 }
 
 export default function SettingsDialog() {
-    const { dialogData, closeDialog } = useContext(DialogContext);
     const { isManualEntryMode, setIsManualEntryMode, solveSettings, setSolveSettings } = useContext(SettingsContext);
 
     const [solveSettingsString, setSolveSettingsString] = useState(getSolveSettingString(solveSettings));
@@ -80,21 +73,8 @@ export default function SettingsDialog() {
         });
     }, [isManualEntryMode, solveSettings]);
 
-    if (dialogData?.dialogType !== DialogType.SETTINGS || !dialogData?.isOpen) {
-        return <></>;
-    }
-
     return (
-        <div
-            className='timer__dialog timer__settings-dialog'
-            tabIndex={0}
-            onKeyDown={(event) => {
-                if (event.code === 'Escape') {
-                    event.preventDefault();
-                    closeDialog();
-                }
-            }}
-        >
+        <div className='timer__settings-dialog'>
             <div className='timer__settings-dialog-setting'>
                 <label htmlFor='isManualEntryMode'>
                     <input
@@ -146,9 +126,6 @@ export default function SettingsDialog() {
                     }}
                 />
             </div>
-            <button className='timer__button' onClick={closeDialog}>
-                Close
-            </button>
         </div>
     );
 }

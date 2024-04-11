@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import HeaderComponent from './HeaderComponent';
 
 test('renders learn react link', () => {
-    render(<HeaderComponent />);
+    render(<HeaderComponent setAppMode={() => null} />);
     const titleElement = screen.getByText(/GoodTimes/i);
     const settingsButton = screen.getByLabelText(/Settings/i);
     const insightsButton = screen.getByLabelText(/Insights/i);

@@ -20,7 +20,7 @@ export default function CubeVisualizationComponent({
     width = 400,
     height = 300,
 }: CubeVisualizationComponentProps): JSX.Element {
-    const [isVisible, setIsVisible] = useState(0);
+    const [isVisible, setIsVisible] = useState(2);
     // Annoyingly verbose way of checking this to satisfy TS IndexesToSkip check below
     if (
         puzzleType === 'skewb' ||

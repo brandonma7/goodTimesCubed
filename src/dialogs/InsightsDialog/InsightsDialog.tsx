@@ -18,18 +18,13 @@ import { BestsData, getBestOfType, SolveData } from '../../components/GoodTimes'
 import { calculateAverage, calculateMean, DataType, Solve } from '../../utils/cubingUtils';
 import { mean, sum, getFormattedTime, valueAtPercentile } from '../../utils/genericUtils';
 import { SettingsContext } from '../SettingsDialog';
-import { DialogContext, DialogType } from '../UseDialogsContext';
 
 import './InsightsDialog.scss';
-
-export type InsightsDialogData = {
-    dialogType: DialogType.INSIGHTS;
-    isOpen: boolean;
-};
 
 type InsightsDialogProps = {
     solves?: SolveData;
     bests: BestsData;
+    isMobile?: boolean;
 };
 
 type InsightsDataPoint = {
@@ -40,47 +35,42 @@ type InsightsDataPoint = {
     };
 };
 
-export default function InsightsDialog({ solves = [], bests }: InsightsDialogProps): JSX.Element {
-    const { dialogData, closeDialog } = useContext(DialogContext);
-
-    if (dialogData?.dialogType !== DialogType.INSIGHTS || !dialogData.isOpen) {
-        return <></>;
-    }
+export default function InsightsDialog({ solves = [], bests, isMobile = false }: InsightsDialogProps): JSX.Element {
     return (
-        <div
-            className='timer__dialog timer__insights-dialog'
-            tabIndex={0}
-            onKeyDown={(event) => {
-                if (event.code === 'Escape') {
-                    event.preventDefault();
-                    closeDialog();
-                }
-            }}
-        >
-            <div>
-                <button
-                    className='timer__button'
-                    onClick={() => {
-                        closeDialog();
-                    }}
-                >
-                    Close
-                </button>
-            </div>
+        <div className='timer__insights-view'>
             {solves.length === 0 ? (
                 'No insights for this session, go solve a cube!'
             ) : (
                 <>
                     <SolveDataChart solves={solves} bests={bests} />
                     <RandomDataTable solves={solves} />
-                    <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', flexGrow: 1 }}>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: isMobile ? 'column' : 'row',
+                            justifyContent: 'space-around',
+                            flexGrow: 1,
+                        }}
+                    >
                         <div>
                             <div style={{ margin: 16 }}>OLL Data</div>
-                            <InsightsTable solves={solves} getCase={getOllById} caseKey={'ollCase'} totalCases={57} />
+                            <InsightsTable
+                                solves={solves}
+                                getCase={getOllById}
+                                caseKey={'ollCase'}
+                                totalCases={57}
+                                isMobile={isMobile}
+                            />
                         </div>
                         <div>
                             <div style={{ margin: 16 }}>PLL Data</div>
-                            <InsightsTable solves={solves} getCase={getPllById} caseKey={'pllCase'} totalCases={21} />
+                            <InsightsTable
+                                solves={solves}
+                                getCase={getPllById}
+                                caseKey={'pllCase'}
+                                totalCases={21}
+                                isMobile={isMobile}
+                            />
                         </div>
                     </div>
                 </>
@@ -154,6 +144,7 @@ function InsightsTable({
     getCase,
     caseKey,
     totalCases,
+    isMobile = false,
 }: {
     solves: Solve[];
 
@@ -161,6 +152,7 @@ function InsightsTable({
     getCase: (id: string) => any;
     caseKey: 'ollCase' | 'pllCase';
     totalCases: number;
+    isMobile?: boolean;
 }): JSX.Element {
     const applicableSolves = solves.filter((solve) => solve?.analysisData?.[caseKey] != null);
     const data: InsightsDataPoint = {};
@@ -205,10 +197,10 @@ function InsightsTable({
     // Needs to start at 1 because negative values will denote DESC order, therefore we can't use 0
     let sortByIndex = 1;
     return (
-        <table className='basic-table' style={{ width: 400 }}>
+        <table className='basic-table' style={!isMobile ? { width: 400 } : {}}>
             <thead>
                 <tr>
-                    <th onClick={sortBySetter(sortByIndex++)} style={{ minWidth: 180 }}>
+                    <th onClick={sortBySetter(sortByIndex++)} style={!isMobile ? { minWidth: 180 } : {}}>
                         Case
                     </th>
                     <th onClick={sortBySetter(sortByIndex++)}>No. Seen</th>
@@ -318,7 +310,7 @@ function SolveDataChart({ solves = [], bests }: InsightsDialogProps): JSX.Elemen
             <LineChart data={chartData}>
                 <CartesianGrid stroke='0' />
                 <XAxis dataKey='name' tickLine={false} />
-                <YAxis min={0} max={yAxisMax + 100} width={100} tickFormatter={(value) => getFormattedTime(value)} />
+                <YAxis min={0} max={yAxisMax + 100} width={60} tickFormatter={(value) => getFormattedTime(value)} />
                 <Tooltip content={CustomTooltip} />
                 <Legend />
                 {solveSettings.map((setting, index) => {

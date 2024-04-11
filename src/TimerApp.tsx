@@ -3,8 +3,6 @@ import React, { createContext, useState } from 'react';
 import './App.css';
 import GoodTimes from './components/GoodTimes';
 import { SettingsContextProvider } from './dialogs/SettingsDialog';
-import useDialogContext from './dialogs/UseDialogsContext';
-// import { generateScramble } from './utils/cubingUtils';
 
 type AlertContextType = {
     alerts: string[];
@@ -64,17 +62,13 @@ export function MetaDataContextProvider({ children }: { children: JSX.Element })
 }
 
 export default function AppRoot() {
-    //const [scramble, setScramble] = useState<string>(generateScramble('3x3x3'));
     console.log('App');
 
-    const DialogContextProvider = useDialogContext();
     return (
         <SettingsContextProvider>
             <MetaDataContextProvider>
                 <AlertsContextProvider>
-                    <DialogContextProvider>
-                        <GoodTimes />
-                    </DialogContextProvider>
+                    <GoodTimes />
                 </AlertsContextProvider>
             </MetaDataContextProvider>
         </SettingsContextProvider>
@@ -97,7 +91,6 @@ export default function AppRoot() {
         PLL two side recognition trainer (with difficulty levels!)
 
     P3
-        Make skip logic more generic instead of hard-coding oll/pll
         External timer connection (bluetooth or wired)
 
         More puzzles visualizations

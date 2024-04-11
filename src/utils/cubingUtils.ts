@@ -124,7 +124,9 @@ export function generateScramble(type: PuzzleType = '3x3x3'): string {
             // If the current turn is the same as the last turn...
             turn === prev ||
             // or the turn before the last turn (but only if the two previous turns were opposites, like R and L)...
-            (Math.abs(prev - prever) === 3 && turn === prever)
+            (Math.abs(prev - prever) === 3 && turn === prever) ||
+            // (2x2 specific logic to prevent opposite turns from occuring in sequence ever)...
+            (type === '2x2x2' && Math.abs(turn - prev) === 3)
         ) {
             // then increment the turn index by one while accounting for overflow
             turn = (turn + 1) % TURNS.length;

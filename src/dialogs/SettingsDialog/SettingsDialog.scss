@@ -5,6 +5,8 @@
     flex-direction: column;
     text-align: left;
     font-size: $size-m;
+    width: 70%;
+    padding: $size-m;
 
     .timer__settings-dialog-setting {
         margin-bottom: $size-xs;

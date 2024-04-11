@@ -1,24 +1,31 @@
-import React, { useContext } from 'react';
-import { DialogContext, DialogType } from '../../dialogs/UseDialogsContext';
+import React from 'react';
 
 import { ReactComponent as GearIcon } from '../../icons/gear.svg';
 import { ReactComponent as GraphIcon } from '../../icons/graph.svg';
+import { AppMode } from '../GoodTimes';
 
 import './HeaderComponent.scss';
 
-export default function HeaderComponent() {
-    const { openDialog } = useContext(DialogContext);
-
+export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: AppMode) => void }) {
     return (
         <header className='timer__header'>
             <div className='timer__header-actions'>
                 <button
                     className='timer__button'
                     onClick={() => {
-                        openDialog({
-                            dialogType: DialogType.INSIGHTS,
-                            isOpen: true,
-                        });
+                        setAppMode(AppMode.TIMER);
+                    }}
+                >
+                    Timer
+                </button>
+                <button
+                    className='timer__button'
+                    onClick={() => {
+                        setAppMode(AppMode.INSIGHTS);
+                        // openDialog({
+                        //     dialogType: DialogType.INSIGHTS,
+                        //     isOpen: true,
+                        // });
                     }}
                 >
                     <GraphIcon className='timer__icon' aria-label='Insights' />
@@ -26,19 +33,17 @@ export default function HeaderComponent() {
                 <button
                     className='timer__button'
                     onClick={() => {
-                        openDialog({
-                            dialogType: DialogType.SETTINGS,
-                            isOpen: true,
-                        });
+                        setAppMode(AppMode.SETTINGS);
+                        // openDialog({
+                        //     dialogType: DialogType.SETTINGS,
+                        //     isOpen: true,
+                        // });
                     }}
                 >
                     <GearIcon className='timer__icon' aria-label='Settings' />
                 </button>
             </div>
-            <div className='timer__header-title'>
-                {'(GoodTimes)'}
-                <sup>3</sup>
-            </div>
+            <div className='timer__header-title'>Good Times</div>
         </header>
     );
 }
