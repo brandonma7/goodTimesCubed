@@ -157,6 +157,18 @@ export function compareSolveTimes(a: Solve, b: Solve) {
     return a.time - b.time;
 }
 
+export function compareNumbersWithDNFs(a: number, b: number) {
+    if (a === -1) {
+        return 1;
+    }
+
+    if (b === -1) {
+        return -1;
+    }
+
+    return a - b;
+}
+
 export function calculateAverageRaw(times: number[]) {
     if (times.length === 0) {
         return 0;
@@ -169,10 +181,10 @@ export function calculateAverageRaw(times: number[]) {
     const trimNum = Math.ceil(times.length * 0.05);
 
     const dataSlice = times
-        .sort((a, b) => a - b) // Sort so we can trim off the best/worst values
+        .sort(compareNumbersWithDNFs) // Sort so we can trim off the best/worst values
         .slice(trimNum, times.length - trimNum); // trim off the best/worst values
 
-    if (dataSlice[0] === -1) {
+    if (dataSlice.filter((time) => time === -1).length) {
         return -1;
     }
 

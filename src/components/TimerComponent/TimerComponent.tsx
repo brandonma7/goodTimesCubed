@@ -242,7 +242,7 @@ const TimerComponent = memo(function TimerComponentInternal({
             case CompModeStep.SCRAMBLE:
                 return (
                     <div
-                        className='timer__comp-mode'
+                        className='timer__comp-mode timer__comp-mode-scramble'
                         ref={timerComponentRef}
                         tabIndex={0}
                         onKeyDown={(event) => {
@@ -252,6 +252,11 @@ const TimerComponent = memo(function TimerComponentInternal({
                                 startInspectionTimer();
                                 setCompModeStep(CompModeStep.INSPECTION);
                             }
+                        }}
+                        onTouchStart={() => {
+                            elapsed.current = 0;
+                            startInspectionTimer();
+                            setCompModeStep(CompModeStep.INSPECTION);
                         }}
                     >
                         {scramble.split(' ').map((move, index) => {
@@ -289,6 +294,13 @@ const TimerComponent = memo(function TimerComponentInternal({
                                 setCompModeStep(CompModeStep.SOLVE);
                             }
                         }}
+                        onTouchStart={() => {
+                            isTimerReady.current = true;
+                            elapsed.current = 0;
+                            clearTimeout(timerTimeoutRef.current);
+                            startTimer();
+                            setCompModeStep(CompModeStep.SOLVE);
+                        }}
                     >
                         <p>Inspection</p>
                         <p>{timerEntry}</p>
@@ -307,6 +319,11 @@ const TimerComponent = memo(function TimerComponentInternal({
                                 clearTimeout(timerTimeoutRef.current);
                                 setCompModeStep(CompModeStep.RESULTS);
                             }
+                        }}
+                        onTouchStart={() => {
+                            startPreppingTimer();
+                            clearTimeout(timerTimeoutRef.current);
+                            setCompModeStep(CompModeStep.RESULTS);
                         }}
                     >
                         <p>Solve</p>
@@ -329,6 +346,14 @@ const TimerComponent = memo(function TimerComponentInternal({
                                 clearTimeout(timerTimeoutRef.current);
                                 setCompModeStep(CompModeStep.SCRAMBLE);
                             }
+                        }}
+                        onTouchStart={() => {
+                            if (compModeTimes.length === 5) {
+                                setCompModeTimes([]);
+                            }
+                            setCurrentCompModePenalty(0);
+                            clearTimeout(timerTimeoutRef.current);
+                            setCompModeStep(CompModeStep.SCRAMBLE);
                         }}
                     >
                         <table className='timer__results'>
@@ -390,7 +415,20 @@ const TimerComponent = memo(function TimerComponentInternal({
                                                             +
                                                         </span>
                                                     </td>
-                                                    <td>{compModeTimes[index].dnf ? 'Yes' : 'No'}</td>
+                                                    <td
+                                                        className='clickable'
+                                                        onClick={() => {
+                                                            const cmt = {
+                                                                ...compModeTimes[index],
+                                                                dnf: !compModeTimes[index].dnf,
+                                                            };
+                                                            const listCopy = compModeTimes.map((t) => t);
+                                                            listCopy.splice(index, 1, cmt);
+                                                            setCompModeTimes(listCopy);
+                                                        }}
+                                                    >
+                                                        {compModeTimes[index].dnf ? 'Yes' : 'No'}
+                                                    </td>
                                                 </>
                                             ) : (
                                                 <>
