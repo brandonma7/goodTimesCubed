@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { DataType, DataTypeToTextMap, calculateAverage, calculateMean } from '../../../utils/cubingUtils';
 import { getFormattedTime, getFormattedTimeBySolve, classNames } from '../../../utils/genericUtils';
 import { getBestOfType } from '../../GoodTimes';
-import { SolveSetting } from '../../../dialogs/SettingsDialog';
+import { SolveSetting } from '../../../dialogs/SettingsView';
 import { ResultsTableComponentProps } from '../ResultsTableComponent';
 
 export type NormalResultsTableProps = {
@@ -91,14 +91,6 @@ export function NormalResultsTable({ results, settings, setSolveDetailsIndex }: 
                                                         setting.type === DataType.AVERAGE ||
                                                         setting.type === DataType.MEAN
                                                     ) {
-                                                        /*openDialog({
-                                                            dialogType: DialogType.MULTISOLVE,
-                                                            isOpen: true,
-                                                            index: tableIndex,
-                                                            size: setting.size,
-                                                            isMean: setting.type === DataType.MEAN,
-                                                            solves,
-                                                        });*/
                                                         setSolveDetailsIndex(
                                                             tableIndex,
                                                             setting.size,

@@ -17,9 +17,9 @@ import {
 } from '../../utils/genericUtils';
 import useStickyState from '../../utils/useStickyState';
 import SessionManagementComponent from '../SessionManagementComponent';
-import SettingsDialog, { SettingsContext } from '../../dialogs/SettingsDialog';
+import SettingsView, { SettingsContext } from '../../dialogs/SettingsView';
 import { useContainerDimensions } from '../../utils/useContainerDimensions';
-import InsightsDialog from '../../dialogs/InsightsDialog';
+import InsightsView from '../../dialogs/InsightsView';
 
 const SMALL_SCREEN_SIZE_WIDTH = 768;
 
@@ -359,9 +359,9 @@ export default function GoodTimes() {
                     />
                 )}
                 {appMode === AppMode.INSIGHTS && (
-                    <InsightsDialog solves={solveData} bests={bestsData} isMobile={isMobile} />
+                    <InsightsView solves={solveData} bests={bestsData} isMobile={isMobile} />
                 )}
-                {appMode === AppMode.SETTINGS && <SettingsDialog />}
+                {appMode === AppMode.SETTINGS && <SettingsView />}
             </div>
             <AlertsComponent />
             Width: {width}

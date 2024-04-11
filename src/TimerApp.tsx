@@ -2,7 +2,7 @@ import React, { createContext, useState } from 'react';
 
 import './App.css';
 import GoodTimes from './components/GoodTimes';
-import { SettingsContextProvider } from './dialogs/SettingsDialog';
+import { SettingsContextProvider } from './dialogs/SettingsView';
 
 type AlertContextType = {
     alerts: string[];

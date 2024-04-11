@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { DataType, DataTypeToTextMap } from '../../utils/cubingUtils';
 
-import './SettingsDialog.scss';
+import './SettingsView.scss';
 
 const SETTINGS_CACHE_KEY = 'goodTimesSettings';
 
@@ -61,7 +61,7 @@ export function SettingsContextProvider({ children }: { children: JSX.Element })
     return <SettingsContext.Provider value={settingsContextValue}>{children}</SettingsContext.Provider>;
 }
 
-export default function SettingsDialog() {
+export default function SettingsView() {
     const { isManualEntryMode, setIsManualEntryMode, solveSettings, setSolveSettings } = useContext(SettingsContext);
 
     const [solveSettingsString, setSolveSettingsString] = useState(getSolveSettingString(solveSettings));
@@ -74,8 +74,8 @@ export default function SettingsDialog() {
     }, [isManualEntryMode, solveSettings]);
 
     return (
-        <div className='timer__settings-dialog'>
-            <div className='timer__settings-dialog-setting'>
+        <div className='timer__settings-view'>
+            <div className='timer__settings-view-setting'>
                 <label htmlFor='isManualEntryMode'>
                     <input
                         type='checkbox'
@@ -88,7 +88,7 @@ export default function SettingsDialog() {
                     Manual Entry Mode
                 </label>
             </div>
-            <div className='timer__settings-dialog-setting'>
+            <div className='timer__settings-view-setting'>
                 <div>Score data to display</div>
                 <input
                     type='text'

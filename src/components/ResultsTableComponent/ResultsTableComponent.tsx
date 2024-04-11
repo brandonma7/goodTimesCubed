@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from 'react';
-import { SettingsContext } from '../../dialogs/SettingsDialog';
+import { SettingsContext } from '../../dialogs/SettingsView';
 
 import { BestsData, SolveData, SolveDataAction } from '../GoodTimes';
 

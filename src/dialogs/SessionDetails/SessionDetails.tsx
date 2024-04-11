@@ -63,146 +63,149 @@ export default function SessionDetails({
     );
 
     return (
-        <div className='timer__dialog timer__session-dialog'>
-            <input
-                className='timer__input'
-                type='text'
-                value={newSessionIdName}
-                onChange={(event) => {
-                    setNewSessionIdName(event.target.value);
-                }}
-            />
-            {noSolves ? (
-                <>
-                    <select
-                        className='timer__select'
-                        value={puzzleType}
-                        onChange={(event) => {
-                            if (event.target.value !== sessionData.type) {
-                                setPuzzleType(event.target.value as PuzzleType);
-                            }
-                        }}
-                    >
-                        {PuzzleTypeValues.map((puzzle, index) => {
-                            return (
-                                <option key={index} value={puzzle}>
-                                    {puzzle}
-                                </option>
-                            );
-                        })}
-                    </select>
-                    {!NonStandardPuzzles.includes(puzzleType) &&
-                        (sessionType === 'splits' ? (
-                            <div className='timer__splits-input'>
-                                {seshSelector}
-                                <input
-                                    className='timer__input'
-                                    type='number'
-                                    min='1'
-                                    max='5'
-                                    value={sessionNumSplits}
-                                    onChange={(event) => {
-                                        setSessionNumSplits(parseInt(event.target.value));
-                                    }}
-                                />
-                            </div>
-                        ) : (
-                            seshSelector
-                        ))}
-                </>
-            ) : (
-                <p>
-                    {puzzleType} - {SessionTypeMap[sessionType as SessionType].name}
-                    {sessionType === 'splits' && ` ${sessionNumSplits}`}
-                </p>
-            )}
+        <>
+            <div className='timer__dialog-overlay'></div>
+            <div className='timer__dialog timer__session-details'>
+                <input
+                    className='timer__input'
+                    type='text'
+                    value={newSessionIdName}
+                    onChange={(event) => {
+                        setNewSessionIdName(event.target.value);
+                    }}
+                />
+                {noSolves ? (
+                    <>
+                        <select
+                            className='timer__select'
+                            value={puzzleType}
+                            onChange={(event) => {
+                                if (event.target.value !== sessionData.type) {
+                                    setPuzzleType(event.target.value as PuzzleType);
+                                }
+                            }}
+                        >
+                            {PuzzleTypeValues.map((puzzle, index) => {
+                                return (
+                                    <option key={index} value={puzzle}>
+                                        {puzzle}
+                                    </option>
+                                );
+                            })}
+                        </select>
+                        {!NonStandardPuzzles.includes(puzzleType) &&
+                            (sessionType === 'splits' ? (
+                                <div className='timer__splits-input'>
+                                    {seshSelector}
+                                    <input
+                                        className='timer__input'
+                                        type='number'
+                                        min='1'
+                                        max='5'
+                                        value={sessionNumSplits}
+                                        onChange={(event) => {
+                                            setSessionNumSplits(parseInt(event.target.value));
+                                        }}
+                                    />
+                                </div>
+                            ) : (
+                                seshSelector
+                            ))}
+                    </>
+                ) : (
+                    <p>
+                        {puzzleType} - {SessionTypeMap[sessionType as SessionType].name}
+                        {sessionType === 'splits' && ` ${sessionNumSplits}`}
+                    </p>
+                )}
 
-            {isTryingToDeleteSession ? (
-                <>
-                    <button
-                        className='timer__button'
-                        onClick={async () => {
-                            setIsTryingToDeleteSession(false);
-                        }}
-                    >
-                        Nevermind!
-                    </button>
-                    <button
-                        className='timer__button'
-                        onClick={async () => {
-                            clearLocalStorageForSession(sessionData.id);
-                            onDeleteSession();
-                            setIsTryingToDeleteSession(false);
-                            close();
-                        }}
-                    >
-                        Confirm Delete
-                    </button>
-                </>
-            ) : (
-                !hideDeleteButton && (
-                    <button
-                        className='timer__button'
-                        onClick={() => {
-                            setIsTryingToDeleteSession(true);
-                        }}
-                    >
-                        Delete Session
-                    </button>
-                )
-            )}
+                {isTryingToDeleteSession ? (
+                    <>
+                        <button
+                            className='timer__button'
+                            onClick={async () => {
+                                setIsTryingToDeleteSession(false);
+                            }}
+                        >
+                            Nevermind!
+                        </button>
+                        <button
+                            className='timer__button'
+                            onClick={async () => {
+                                clearLocalStorageForSession(sessionData.id);
+                                onDeleteSession();
+                                setIsTryingToDeleteSession(false);
+                                close();
+                            }}
+                        >
+                            Confirm Delete
+                        </button>
+                    </>
+                ) : (
+                    !hideDeleteButton && (
+                        <button
+                            className='timer__button'
+                            onClick={() => {
+                                setIsTryingToDeleteSession(true);
+                            }}
+                        >
+                            Delete Session
+                        </button>
+                    )
+                )}
 
-            <button
-                className='timer__button'
-                onClick={() => {
-                    saveSessionDataToLocalStorage({
-                        id: sessionData.id,
-                        data: sessionData.data,
-                        name: newSessionIdName,
-                        sessionType,
-                        numSplits: sessionNumSplits,
-                        type: puzzleType,
-                    });
-
-                    solveDispatcher({
-                        type: 'REFRESH',
-                    });
-                    close();
-                }}
-            >
-                Save
-            </button>
-            {isTryingToClearSession ? (
-                <>
-                    <button
-                        className='timer__button'
-                        onClick={async () => {
-                            setIsTryingToClearSession(false);
-                        }}
-                    >
-                        Nevermind!
-                    </button>
-                    <button
-                        className='timer__button'
-                        onClick={async () => {
-                            onClearSessionData();
-                            solveDispatcher({ type: 'CLEAR_DATA' });
-                            setIsTryingToClearSession(false);
-                        }}
-                    >
-                        Confirm Clear
-                    </button>
-                </>
-            ) : (
                 <button
                     className='timer__button'
                     onClick={() => {
-                        setIsTryingToClearSession(true);
+                        saveSessionDataToLocalStorage({
+                            id: sessionData.id,
+                            data: sessionData.data,
+                            name: newSessionIdName,
+                            sessionType,
+                            numSplits: sessionNumSplits,
+                            type: puzzleType,
+                        });
+
+                        solveDispatcher({
+                            type: 'REFRESH',
+                        });
+                        close();
                     }}
                 >
-                    Clear Session Data
+                    Save
                 </button>
-            )}
-        </div>
+                {isTryingToClearSession ? (
+                    <>
+                        <button
+                            className='timer__button'
+                            onClick={async () => {
+                                setIsTryingToClearSession(false);
+                            }}
+                        >
+                            Nevermind!
+                        </button>
+                        <button
+                            className='timer__button'
+                            onClick={async () => {
+                                onClearSessionData();
+                                solveDispatcher({ type: 'CLEAR_DATA' });
+                                setIsTryingToClearSession(false);
+                            }}
+                        >
+                            Confirm Clear
+                        </button>
+                    </>
+                ) : (
+                    <button
+                        className='timer__button'
+                        onClick={() => {
+                            setIsTryingToClearSession(true);
+                        }}
+                    >
+                        Clear Session Data
+                    </button>
+                )}
+            </div>
+        </>
     );
 }

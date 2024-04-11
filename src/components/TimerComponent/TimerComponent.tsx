@@ -4,7 +4,7 @@ import { SolveDataAction } from '../GoodTimes';
 import CubeVisualizationComponent, { SingleFaceVisualizationComponent } from '../CubeVisualizationComponent';
 
 import { classNames, getFormattedTime, unFormatTime } from '../../utils/genericUtils';
-import { SettingsContext } from '../../dialogs/SettingsDialog';
+import { SettingsContext } from '../../dialogs/SettingsView';
 
 import './TimerComponent.scss';
 import { PuzzleType, PuzzleTypeMoveCount, Solve, NonStandardPuzzles } from '../../utils/cubingUtils';

@@ -22,10 +22,6 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                     className='timer__button'
                     onClick={() => {
                         setAppMode(AppMode.INSIGHTS);
-                        // openDialog({
-                        //     dialogType: DialogType.INSIGHTS,
-                        //     isOpen: true,
-                        // });
                     }}
                 >
                     <GraphIcon className='timer__icon' aria-label='Insights' />
@@ -34,10 +30,6 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                     className='timer__button'
                     onClick={() => {
                         setAppMode(AppMode.SETTINGS);
-                        // openDialog({
-                        //     dialogType: DialogType.SETTINGS,
-                        //     isOpen: true,
-                        // });
                     }}
                 >
                     <GearIcon className='timer__icon' aria-label='Settings' />

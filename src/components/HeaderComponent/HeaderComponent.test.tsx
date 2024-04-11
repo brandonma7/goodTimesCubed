@@ -4,7 +4,7 @@ import HeaderComponent from './HeaderComponent';
 
 test('renders learn react link', () => {
     render(<HeaderComponent setAppMode={() => null} />);
-    const titleElement = screen.getByText(/GoodTimes/i);
+    const titleElement = screen.getByText(/Good Times/i);
     const settingsButton = screen.getByLabelText(/Settings/i);
     const insightsButton = screen.getByLabelText(/Insights/i);
     expect(titleElement).toBeInTheDocument();

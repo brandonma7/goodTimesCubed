@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import MultiSolveDetails from '../../dialogs/MultiSolveDetails';
-import { SolveSetting, SettingsContext } from '../../dialogs/SettingsDialog';
+import { SolveSetting, SettingsContext } from '../../dialogs/SettingsView';
 import SolveDetails from '../../dialogs/SolveDetails';
 import { calculateAverage, calculateMean, DataType, DataTypeToTextMap, Solve } from '../../utils/cubingUtils';
 import { getFormattedTime, getFormattedTimeBySolve } from '../../utils/genericUtils';

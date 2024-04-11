@@ -17,11 +17,11 @@ import { getPllById } from '../../components/CasePickerComponent/PllCases';
 import { BestsData, getBestOfType, SolveData } from '../../components/GoodTimes';
 import { calculateAverage, calculateMean, DataType, Solve } from '../../utils/cubingUtils';
 import { mean, sum, getFormattedTime, valueAtPercentile } from '../../utils/genericUtils';
-import { SettingsContext } from '../SettingsDialog';
+import { SettingsContext } from '../SettingsView';
 
-import './InsightsDialog.scss';
+import './InsightsView.scss';
 
-type InsightsDialogProps = {
+type InsightsViewProps = {
     solves?: SolveData;
     bests: BestsData;
     isMobile?: boolean;
@@ -35,7 +35,7 @@ type InsightsDataPoint = {
     };
 };
 
-export default function InsightsDialog({ solves = [], bests, isMobile = false }: InsightsDialogProps): JSX.Element {
+export default function InsightsView({ solves = [], bests, isMobile = false }: InsightsViewProps): JSX.Element {
     return (
         <div className='timer__insights-view'>
             {solves.length === 0 ? (
@@ -255,7 +255,7 @@ function InsightsTable({
     );
 }
 
-function SolveDataChart({ solves = [], bests }: InsightsDialogProps): JSX.Element {
+function SolveDataChart({ solves = [], bests }: InsightsViewProps): JSX.Element {
     const { solveSettings } = useContext(SettingsContext);
     const lineColors = ['#FFF', '#FFA500', '#5E5', '#F44', '#26F', '#FFFF00'];
 
