@@ -43,8 +43,8 @@ const TimerComponent = memo(function TimerComponentInternal({
     const [isPrepped, setIsPrepped] = useState(false);
     const [splitTimes, setSplitTimes] = useState<number[]>([]);
     const [currentEntry, setCurrentEntry] = useState<Solve>();
-    const [isOllSelectionMode, setIsOllSelectionMode] = useState(true);
-    const [isPllSelectionMode, setIsPllSelectionMode] = useState(true);
+    const [isOllSelectionMode, setIsOllSelectionMode] = useState(false);
+    const [isPllSelectionMode, setIsPllSelectionMode] = useState(false);
 
     const isTimerReady = useRef(false);
     const spaceKeyIsDown = useRef(false);

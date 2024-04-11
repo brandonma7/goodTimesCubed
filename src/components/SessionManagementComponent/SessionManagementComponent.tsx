@@ -142,19 +142,24 @@ export default function SessionManagementComponent({
                 </button>
             </div>
             {isEditingSession && (
-                <SessionDetails
-                    sessionData={sessionData}
-                    hideDeleteButton={sessionList.length < 2}
-                    onClearSessionData={() => {
-                        suppressBestAlerts();
-                    }}
-                    onDeleteSession={() => {
-                        const index = sessionList[0] === sessionData.id ? 1 : 0;
-                        changeSession(sessionList[index]);
-                    }}
-                    solveDispatcher={dispatchSolveData}
-                    close={() => setIsEditingSession(false)}
-                />
+                <>
+                    <SessionDetails
+                        sessionData={sessionData}
+                        hideDeleteButton={sessionList.length < 2}
+                        onClearSessionData={() => {
+                            suppressBestAlerts();
+                        }}
+                        onDeleteSession={() => {
+                            const index = sessionList[0] === sessionData.id ? 1 : 0;
+                            changeSession(sessionList[index]);
+                        }}
+                        solveDispatcher={dispatchSolveData}
+                        close={() => setIsEditingSession(false)}
+                    />
+                    <button className='timer__button timer__dialog-closer' onClick={() => setIsEditingSession(false)}>
+                        Close
+                    </button>
+                </>
             )}
         </>
     );

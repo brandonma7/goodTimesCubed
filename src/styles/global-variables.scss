@@ -83,6 +83,39 @@ $cube-sticker-yellow-faded: #ffffbe;
     overflow-x: hidden;
     max-height: 73vh;
     width: 40%;
+    z-index: 10;
+}
+
+.timer__dialog-overlay {
+    background: $select-background-color-active;
+    height: 5000px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    opacity: 0.5;
+    width: 5000px;
+    z-index: 5;
+}
+
+.timer__dialog-closer {
+    position: absolute;
+    left: 28%;
+    top: 12%;
+    z-index: 15;
+}
+
+@media (max-width: $small-screen-width) {
+
+    .timer__dialog {
+        width: 100%;
+        padding: $size-xs $size-xxxl;
+        left: -$size-xxxl;
+    }
+
+    .timer__dialog-closer {
+        left: 5%;
+        top: 13%;
+    }
 }
 
 @mixin common-table-styles {

@@ -76,7 +76,6 @@
         background: $input-background-color;
         border: $thin-border-size $input-border-color;
         border-radius: $size-xs;
-        height: 3vw;
         width: 70%;
         color: $input-font-color;
         text-align: center;
@@ -124,6 +123,9 @@
             font-size: $size-l;
             margin: $size-m;
             width: 90%;
+        }
+        .timer__input-actions {
+            width: 412px;
         }
     }
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import Cube, { Color } from '../../classes/Cube';
 import { IndexesToSkip, PuzzleType } from '../../utils/cubingUtils';
@@ -20,6 +20,7 @@ export default function CubeVisualizationComponent({
     width = 400,
     height = 300,
 }: CubeVisualizationComponentProps): JSX.Element {
+    const [isVisible, setIsVisible] = useState(0);
     // Annoyingly verbose way of checking this to satisfy TS IndexesToSkip check below
     if (
         puzzleType === 'skewb' ||
@@ -44,36 +45,66 @@ export default function CubeVisualizationComponent({
         const colorClass = `timer__cube-sticker--${numToColor[color]}`;
         return <div key={index} className={`timer__cube-sticker ${colorClass}`} />;
     };
+    const fullCube = () => {
+        return (
+            <div
+                className={`timer__cube-pic clickable timer__cube-pic--${puzzleType}`}
+                style={{
+                    width,
+                    height,
+                    minHeight: height,
+                }}
+                onClick={() => setIsVisible(1)}
+            >
+                <div className='timer__cube-pic-row'>
+                    <div className='timer__cube-face'></div>
+                    <div className='timer__cube-face'>{cubeState[0].map(getSticker)}</div>
+                    <div className='timer__cube-face'></div>
+                    <div className='timer__cube-face'></div>
+                </div>
+                <div className='timer__cube-pic-row'>
+                    <div className='timer__cube-face'>{cubeState[1].map(getSticker)}</div>
+                    <div className='timer__cube-face'>{cubeState[2].map(getSticker)}</div>
+                    <div className='timer__cube-face'>{cubeState[3].map(getSticker)}</div>
+                    <div className='timer__cube-face'>{cubeState[4].map(getSticker)}</div>
+                </div>
+                <div className='timer__cube-pic-row'>
+                    <div className='timer__cube-face'></div>
+                    <div className='timer__cube-face'>{cubeState[5].map(getSticker)}</div>
+                    <div className='timer__cube-face'></div>
+                    <div className='timer__cube-face'></div>
+                </div>
+            </div>
+        );
+    };
+    const singleFaceState = () => {
+        return [
+            cubeState[4].slice(0, 3).reverse(),
+            cubeState[1].slice(0, 3),
+            cubeState[0],
+            cubeState[3].slice(0, 3).reverse(),
+            cubeState[2].slice(0, 3),
+        ];
+    };
 
-    return (
-        <div
-            className={`timer__cube-pic timer__cube-pic--${puzzleType}`}
-            style={{
-                width,
-                height,
-                minHeight: height,
-            }}
-        >
-            <div className='timer__cube-pic-row'>
-                <div className='timer__cube-face'></div>
-                <div className='timer__cube-face'>{cubeState[0].map(getSticker)}</div>
-                <div className='timer__cube-face'></div>
-                <div className='timer__cube-face'></div>
-            </div>
-            <div className='timer__cube-pic-row'>
-                <div className='timer__cube-face'>{cubeState[1].map(getSticker)}</div>
-                <div className='timer__cube-face'>{cubeState[2].map(getSticker)}</div>
-                <div className='timer__cube-face'>{cubeState[3].map(getSticker)}</div>
-                <div className='timer__cube-face'>{cubeState[4].map(getSticker)}</div>
-            </div>
-            <div className='timer__cube-pic-row'>
-                <div className='timer__cube-face'></div>
-                <div className='timer__cube-face'>{cubeState[5].map(getSticker)}</div>
-                <div className='timer__cube-face'></div>
-                <div className='timer__cube-face'></div>
-            </div>
-        </div>
-    );
+    switch (isVisible) {
+        case 0:
+            return (
+                <button className='timer__button' onClick={() => setIsVisible(2)}>
+                    Show Cube
+                </button>
+            );
+        case 1:
+            return puzzleType !== '3x3x3' ? (
+                fullCube()
+            ) : (
+                <div className='clickable' onClick={() => setIsVisible(0)}>
+                    <SingleFaceVisualizationComponent faceState={singleFaceState()} puzzleType='3x3x3' />
+                </div>
+            );
+        default:
+            return fullCube();
+    }
 }
 
 export type FaceState = Color[][];

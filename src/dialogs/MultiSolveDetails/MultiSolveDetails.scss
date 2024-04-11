@@ -19,17 +19,10 @@
 }
 
 @media (max-width: $small-screen-width) {
-    .timer__multi-solve-details {
-        font-size: $size-l;
-        width: 80%;
-        left: 10%;
-        padding: 1vw;
-    }
-
     .timer__multi-solve-details-times {
         font-size: $size-m;
-        margin: $size-xs 0;
+        margin: $size-xs;
         text-align: left;
-        width: 100%;
+        width: auto;
     }
 }

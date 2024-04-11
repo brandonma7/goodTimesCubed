@@ -86,7 +86,7 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
                         />
                     )}
                     <button
-                        className='timer__button timer__close-solve-details'
+                        className='timer__button timer__dialog-closer'
                         onClick={() => {
                             setSolveDetailsIndex(-1);
                         }}
