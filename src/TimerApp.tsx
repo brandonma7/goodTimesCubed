@@ -81,7 +81,7 @@ export default function AppRoot() {
     P0
 
     P1
-        Comp mode (ao5 groups)
+        Comp mode table best and worst ()s
 
     P2
         Goal mode for CFOP splits
