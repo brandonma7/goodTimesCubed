@@ -68,6 +68,15 @@ const TimerComponent = memo(function TimerComponentInternal({
     const [compModeTimes, setCompModeTimes] = useState<CompSolve[]>([]);
     const [currentCompModePenalty, setCurrentCompModePenalty] = useState(0);
 
+    const compModeBestValue = Math.min(...compModeTimes.map((_, index) => getCompTimeWithPenalties(index)));
+    const compModeWorstValue = Math.max(...compModeTimes.map((_, index) => getCompTimeWithPenalties(index)));
+    const comModeBestIndex = compModeTimes.findIndex(
+        (_, index) => getCompTimeWithPenalties(index) === compModeBestValue,
+    );
+    const comModeWorstIndex = compModeTimes.findIndex(
+        (_, index) => getCompTimeWithPenalties(index) === compModeWorstValue,
+    );
+
     const isTimerReady = useRef(false);
     const spaceKeyIsDown = useRef(false);
     const timerIsRunning = useRef(false);
@@ -226,6 +235,10 @@ const TimerComponent = memo(function TimerComponentInternal({
         timerTimeoutRef.current = setTimeout(step, interval);
     }
 
+    function getCompTimeWithPenalties(index: number) {
+        return compModeTimes[index].time + compModeTimes[index].penalty * 100;
+    }
+
     // Arbitrary font sizes for shortest move count and longest that I thought looked good
     const fontSizeFor2x2 = 32;
     const fontSizeFor7x7 = 16;
@@ -373,10 +386,13 @@ const TimerComponent = memo(function TimerComponentInternal({
                                                 <>
                                                     <td>{index + 1}</td>
                                                     <td>
-                                                        {getFormattedTime(
-                                                            compModeTimes[index].time +
-                                                                compModeTimes[index].penalty * 100,
-                                                        )}
+                                                        {(index === comModeBestIndex || index === comModeWorstIndex) &&
+                                                            compModeTimes.length > 2 &&
+                                                            '('}
+                                                        {getFormattedTime(getCompTimeWithPenalties(index))}
+                                                        {(index === comModeBestIndex || index === comModeWorstIndex) &&
+                                                            compModeTimes.length > 2 &&
+                                                            ')'}
                                                     </td>
                                                     <td>
                                                         <span
@@ -452,6 +468,15 @@ const TimerComponent = memo(function TimerComponentInternal({
                                             solve.dnf ? -1 : solve.time + solve.penalty * 100,
                                         ),
                                         1,
+                                    ]),
+                                )}
+                                , Worst Possible Ao5:{' '}
+                                {getFormattedTime(
+                                    calculateAverageRaw([
+                                        ...compModeTimes.map((solve) =>
+                                            solve.dnf ? -1 : solve.time + solve.penalty * 100,
+                                        ),
+                                        100000000,
                                     ]),
                                 )}
                             </div>
