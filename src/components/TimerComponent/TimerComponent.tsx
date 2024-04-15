@@ -1,7 +1,10 @@
 import React, { useContext, memo, useRef, useState, useEffect } from 'react';
 
 import { SolveDataAction } from '../GoodTimes';
-import CubeVisualizationComponent, { SingleFaceVisualizationComponent } from '../CubeVisualizationComponent';
+import CubeVisualizationComponent, {
+    colorScramble,
+    SingleFaceVisualizationComponent,
+} from '../CubeVisualizationComponent';
 
 import { classNames, getFormattedTime, unFormatTime } from '../../utils/genericUtils';
 import { SettingsContext } from '../../dialogs/SettingsView';
@@ -246,7 +249,6 @@ const TimerComponent = memo(function TimerComponentInternal({
     const slope = (fontSizeFor2x2 - fontSizeFor7x7) / (PuzzleTypeMoveCount['2x2x2'] - PuzzleTypeMoveCount['7x7x7']);
     const yIntercept = fontSizeFor2x2 - slope * PuzzleTypeMoveCount['2x2x2'];
     const scrambleFontSize = slope * PuzzleTypeMoveCount[puzzleType] + yIntercept;
-    const scrambleLetterColors = ['white', 'orange', 'green', 'red', 'blue', 'yellow'];
     // This is always true, but keeping it here in case I decide to control this via settings
     const showScrambleColors = true;
 
@@ -272,18 +274,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                             setCompModeStep(CompModeStep.INSPECTION);
                         }}
                     >
-                        {scramble.split(' ').map((move, index) => {
-                            // New color every three letters, wrapping after we get to the end of the color list
-                            const colorIndex = Math.trunc((index / 3) % scrambleLetterColors.length);
-                            return (
-                                <span
-                                    key={index}
-                                    className={`timer_scramble-letter ${scrambleLetterColors[colorIndex]}`}
-                                >
-                                    {move}
-                                </span>
-                            );
-                        })}
+                        {colorScramble(scramble)}
                     </div>
                 );
             case CompModeStep.INSPECTION:
@@ -539,15 +530,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                         fontSize: `${scrambleFontSize}px`,
                     }}
                 >
-                    {scramble.split(' ').map((move, index) => {
-                        // New color every three letters, wrapping after we get to the end of the color list
-                        const colorIndex = Math.trunc((index / 3) % scrambleLetterColors.length);
-                        return (
-                            <span key={index} className={`timer_scramble-letter ${scrambleLetterColors[colorIndex]}`}>
-                                {move}
-                            </span>
-                        );
-                    })}
+                    {colorScramble(scramble)}
                 </div>
             ) : (
                 <div

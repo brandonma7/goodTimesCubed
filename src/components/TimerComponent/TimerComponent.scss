@@ -32,30 +32,6 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-
-        .timer_scramble-letter {
-            margin-left: $size-xs;
-            margin-right: $size-xs;
-
-            &.white {
-                color: $cube-sticker-white-faded;
-            }
-            &.orange {
-                color: $cube-sticker-orange-faded;
-            }
-            &.green {
-                color: $cube-sticker-green-faded;
-            }
-            &.red {
-                color: $cube-sticker-red-faded;
-            }
-            &.blue {
-                color: $cube-sticker-blue-faded;
-            }
-            &.yellow {
-                color: $cube-sticker-yellow-faded;
-            }
-        }
     }
 
     .timer__splits-table {
@@ -152,32 +128,7 @@
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-
-        .timer_scramble-letter {
-            margin-left: $size-xs;
-            margin-right: $size-xs;
-
-            &.white {
-                color: $cube-sticker-white-faded;
-            }
-            &.orange {
-                color: $cube-sticker-orange-faded;
-            }
-            &.green {
-                color: $cube-sticker-green-faded;
-            }
-            &.red {
-                color: $cube-sticker-red-faded;
-            }
-            &.blue {
-                color: $cube-sticker-blue-faded;
-            }
-            &.yellow {
-                color: $cube-sticker-yellow-faded;
-            }
-        }
     }
-    
 }
 
 @media (max-width: $small-screen-width) {
@@ -190,5 +141,29 @@
     .timer__comp-mode {
         width: 80%;
         left: 10%;
+    }
+}
+
+.timer_scramble-letter {
+    margin-left: $size-xs;
+    margin-right: $size-xs;
+
+    &.white {
+        color: $cube-sticker-white-faded;
+    }
+    &.orange {
+        color: $cube-sticker-orange-faded;
+    }
+    &.green {
+        color: $cube-sticker-green-faded;
+    }
+    &.red {
+        color: $cube-sticker-red-faded;
+    }
+    &.blue {
+        color: $cube-sticker-blue-faded;
+    }
+    &.yellow {
+        color: $cube-sticker-yellow-faded;
     }
 }
