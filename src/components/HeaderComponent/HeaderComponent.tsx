@@ -9,6 +9,7 @@ import './HeaderComponent.scss';
 export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: AppMode) => void }) {
     return (
         <header className='timer__header'>
+            <div className='timer__header-title'>Good Times</div>
             <div className='timer__header-actions'>
                 <button
                     className='timer__button'
@@ -51,7 +52,6 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                     <GearIcon className='timer__icon' aria-label='Settings' />
                 </button>
             </div>
-            <div className='timer__header-title'>Good Times</div>
         </header>
     );
 }

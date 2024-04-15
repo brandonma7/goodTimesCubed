@@ -7,9 +7,8 @@
     width: 100%;
 
     .timer__header-actions {
-        position: absolute;
-        right: 1%;
         display: flex;
+        justify-content: center;
 
         .timer__button {
             font-size: $size-s;
