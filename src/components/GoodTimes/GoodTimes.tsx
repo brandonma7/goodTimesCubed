@@ -421,31 +421,39 @@ function ManualCompModeComponent({ puzzleType = '3x3x3' }: { puzzleType?: Puzzle
                     <tr>
                         <th>Solve</th>
                         <th>Time</th>
-                        <th>Scramble</th>
+                        {!isMobile && <th>Scramble</th>}
                     </tr>
                 </thead>
                 <tbody>
                     {scrambles.map((scramble, index) => {
                         return (
-                            <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>
-                                    <input
-                                        className='timer__input'
-                                        type='text'
-                                        inputMode='decimal'
-                                        value={times[index]}
-                                        onChange={(event) => {
-                                            const timesCopy = times.map((t) => t);
-                                            const intValue = parseInt(event.target.value);
-                                            const newValue = isNaN(intValue) ? 0 : intValue;
-                                            timesCopy[index] = newValue;
-                                            setTimes(timesCopy);
-                                        }}
-                                    />
-                                </td>
-                                <td>{colorScramble(scramble)}</td>
-                            </tr>
+                            <>
+                                <tr key={index}>
+                                    <td>{index + 1}</td>
+                                    <td>
+                                        <input
+                                            className='timer__input'
+                                            type='text'
+                                            inputMode='decimal'
+                                            value={times[index]}
+                                            onChange={(event) => {
+                                                const timesCopy = times.map((t) => t);
+                                                const intValue = parseInt(event.target.value);
+                                                const newValue = isNaN(intValue) ? 0 : intValue;
+                                                timesCopy[index] = newValue;
+                                                setTimes(timesCopy);
+                                            }}
+                                        />
+                                    </td>
+                                    {!isMobile && <td>{colorScramble(scramble)}</td>}
+                                </tr>
+                                {isMobile && (
+                                    <tr>
+                                        <td></td>
+                                        <td style={{ display: 'flex', flexWrap: 'wrap' }}>{colorScramble(scramble)}</td>
+                                    </tr>
+                                )}
+                            </>
                         );
                     })}
                 </tbody>
