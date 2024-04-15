@@ -176,19 +176,20 @@ export function calculateAverageRaw(times: number[]) {
     if (times.length === 1) {
         return times[0];
     }
+    const timesCopy = times.map((t) => t);
 
     // We want to trim off the bottom and top 5 percent of values, so get that number to trim here
-    const trimNum = Math.ceil(times.length * 0.05);
+    const trimNum = Math.ceil(timesCopy.length * 0.05);
 
-    const dataSlice = times
+    const dataSlice = timesCopy
         .sort(compareNumbersWithDNFs) // Sort so we can trim off the best/worst values
-        .slice(trimNum, times.length - trimNum); // trim off the best/worst values
+        .slice(trimNum, timesCopy.length - trimNum); // trim off the best/worst values
 
     if (dataSlice.filter((time) => time === -1).length) {
         return -1;
     }
 
-    const average = Math.trunc(dataSlice.reduce((prev, curr) => prev + curr, 0) / (times.length - trimNum * 2));
+    const average = Math.trunc(dataSlice.reduce((prev, curr) => prev + curr, 0) / (timesCopy.length - trimNum * 2));
 
     return average;
 }
