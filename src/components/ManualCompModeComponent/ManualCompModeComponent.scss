@@ -1,0 +1,8 @@
+@import '../../styles/global-variables';
+.manual-comp-mode {
+    .manual-comp-mode-actions {
+        display: flex;
+        justify-content: space-evenly;
+        margin-top: $size-s;
+    }
+}

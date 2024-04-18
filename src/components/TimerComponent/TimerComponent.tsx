@@ -67,7 +67,7 @@ const TimerComponent = memo(function TimerComponentInternal({
     const [currentEntry, setCurrentEntry] = useState<Solve>();
     const [isOllSelectionMode, setIsOllSelectionMode] = useState(false);
     const [isPllSelectionMode, setIsPllSelectionMode] = useState(false);
-    const [compModeStep, setCompModeStep] = useState<CompModeStep>(CompModeStep.SCRAMBLE);
+    const [compModeStep, setCompModeStep] = useState<CompModeStep>(CompModeStep.RESULTS);
     const [compModeTimes, setCompModeTimes] = useState<CompSolve[]>([]);
     const [currentCompModePenalty, setCurrentCompModePenalty] = useState(0);
 
@@ -254,29 +254,6 @@ const TimerComponent = memo(function TimerComponentInternal({
 
     if (compMode) {
         switch (compModeStep) {
-            case CompModeStep.SCRAMBLE:
-                return (
-                    <div
-                        className='timer__comp-mode timer__comp-mode-scramble'
-                        ref={timerComponentRef}
-                        tabIndex={0}
-                        onKeyDown={(event) => {
-                            if (event.code === 'Space') {
-                                event.preventDefault();
-                                elapsed.current = 0;
-                                startInspectionTimer();
-                                setCompModeStep(CompModeStep.INSPECTION);
-                            }
-                        }}
-                        onTouchStart={() => {
-                            elapsed.current = 0;
-                            startInspectionTimer();
-                            setCompModeStep(CompModeStep.INSPECTION);
-                        }}
-                    >
-                        {colorScramble(scramble)}
-                    </div>
-                );
             case CompModeStep.INSPECTION:
                 return (
                     <div
@@ -348,7 +325,9 @@ const TimerComponent = memo(function TimerComponentInternal({
                                 }
                                 setCurrentCompModePenalty(0);
                                 clearTimeout(timerTimeoutRef.current);
-                                setCompModeStep(CompModeStep.SCRAMBLE);
+                                elapsed.current = 0;
+                                startInspectionTimer();
+                                setCompModeStep(CompModeStep.INSPECTION);
                             }
                         }}
                         onTouchStart={() => {
@@ -357,9 +336,21 @@ const TimerComponent = memo(function TimerComponentInternal({
                             }
                             setCurrentCompModePenalty(0);
                             clearTimeout(timerTimeoutRef.current);
-                            setCompModeStep(CompModeStep.SCRAMBLE);
+                            elapsed.current = 0;
+                            startInspectionTimer();
+                            setCompModeStep(CompModeStep.INSPECTION);
                         }}
                     >
+                        {compModeTimes.length === 0 && (
+                            <div className='timer__comp-mode-desc'>
+                                <p>
+                                    Press the spacebar to start inspection, again to start solving, and again to stop
+                                    the solve timer.
+                                </p>
+                                <p>Going over 15 seconds in inspection will result in +2 or DNF.</p>
+                            </div>
+                        )}
+                        <div>{colorScramble(scramble)}</div>
                         <table className='timer__results'>
                             <thead>
                                 <tr>
