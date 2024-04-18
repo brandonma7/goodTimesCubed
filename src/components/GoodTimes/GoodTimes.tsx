@@ -459,7 +459,10 @@ function ManualCompModeComponent({ puzzleType = '3x3x3' }: { puzzleType?: Puzzle
                 </tbody>
             </table>
             {validTimes.length === 3 && (
-                <div>Counting time must be: {timeToBeat === null ? 'no' : getFormattedTime(timeToBeat)}</div>
+                <div>
+                    Beat target with:{' '}
+                    {timeToBeat === null ? 'no' : findTimeToBeatTargetAverage([...times, 999999], targetAverage)}
+                </div>
             )}
             {validTimes.length === 4 && (
                 <>
