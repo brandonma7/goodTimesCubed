@@ -79,9 +79,12 @@ export default function AppRoot() {
     TODO
 
     P0
+        Pro-active training suggestions
+        Comp dates and goals
+        BLD tools (memo training, letter pair flash cards, split between memo and exec)
+        Notifications
 
     P1
-        Comp mode table best and worst ()s
 
     P2
         Goal mode for CFOP splits

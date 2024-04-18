@@ -22,6 +22,7 @@ type SolveDetailsProps = {
     sessionType: SessionType;
     solveDispatcher: React.Dispatch<SolveDataAction>;
     onAction: () => void;
+    close: () => void;
 };
 
 export default function SolveDetails({
@@ -31,6 +32,7 @@ export default function SolveDetails({
     sessionType,
     solveDispatcher,
     onAction,
+    close,
 }: SolveDetailsProps): JSX.Element {
     const { isMobile } = useContext(MetaDataContext);
 
@@ -63,13 +65,13 @@ export default function SolveDetails({
 
     return (
         <>
-            <div className='timer__dialog-overlay'></div>
+            <div className='timer__dialog-overlay' onClick={close}></div>
             <div className='timer__dialog timer__solve-details'>
                 <div className='timer__solve-details-inner'>
                     <div>Solve #{solveIndex + 1}</div>
                     <input
                         type='text'
-                        className='timer__solve-details-time'
+                        className='timer__input timer__solve-details-time'
                         value={solveTimeEntry}
                         onChange={(event) => {
                             setSolveTimeEntry(event.target.value);

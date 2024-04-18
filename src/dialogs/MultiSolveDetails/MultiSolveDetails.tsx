@@ -10,9 +10,10 @@ export type MultiSolveDetailsProps = {
     size: number;
     isMean: boolean;
     solves: SolveData;
+    close: () => void;
 };
 
-export default function MultiSolveDetails({ index, size = 3, isMean, solves }: MultiSolveDetailsProps) {
+export default function MultiSolveDetails({ index, size = 3, isMean, solves, close }: MultiSolveDetailsProps) {
     if (solves[index] == null) {
         return <></>;
     }
@@ -48,20 +49,23 @@ export default function MultiSolveDetails({ index, size = 3, isMean, solves }: M
     });
 
     return (
-        <div className='timer__dialog timer__multi-solve-details' tabIndex={0}>
-            <div>
-                {time} - {title}
+        <>
+            <div className='timer__dialog-overlay' onClick={close}></div>
+            <div className='timer__dialog timer__multi-solve-details' tabIndex={0}>
+                <div>
+                    {time} - {title}
+                </div>
+                <table className='timer__multi-solve-details-times'>
+                    <thead>
+                        <tr>
+                            <th>Solve</th>
+                            <th>Time</th>
+                            <th>Scramble</th>
+                        </tr>
+                    </thead>
+                    <tbody>{rows}</tbody>
+                </table>
             </div>
-            <table className='timer__multi-solve-details-times'>
-                <thead>
-                    <tr>
-                        <th>Solve</th>
-                        <th>Time</th>
-                        <th>Scramble</th>
-                    </tr>
-                </thead>
-                <tbody>{rows}</tbody>
-            </table>
-        </div>
+        </>
     );
 }

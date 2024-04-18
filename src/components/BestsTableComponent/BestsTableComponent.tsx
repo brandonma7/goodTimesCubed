@@ -218,6 +218,7 @@ export default function BestsTableComponent({
                             sessionType={sessionData.sessionType}
                             solveDispatcher={solveDispatcher}
                             onAction={onAction}
+                            close={() => setSolveDetailsIndex(-1, 1)}
                         />
                     ) : (
                         <MultiSolveDetails
@@ -225,6 +226,7 @@ export default function BestsTableComponent({
                             index={solveDetailsIndex}
                             size={solveDetailsSize}
                             isMean={isMean}
+                            close={() => setSolveDetailsIndex(-1, 1)}
                         />
                     )}
 

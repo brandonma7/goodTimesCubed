@@ -76,6 +76,7 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
                             sessionType={sessionType}
                             solveDispatcher={solveDispatcher}
                             onAction={onAction}
+                            close={() => setSolveDetailsIndex(-1)}
                         />
                     ) : (
                         <MultiSolveDetails
@@ -83,6 +84,7 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
                             index={solveDetailsIndex}
                             size={solveDetailsSize}
                             isMean={isMean}
+                            close={() => setSolveDetailsIndex(-1)}
                         />
                     )}
                     <button

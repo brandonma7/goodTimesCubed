@@ -64,7 +64,7 @@ export default function SessionDetails({
 
     return (
         <>
-            <div className='timer__dialog-overlay'></div>
+            <div className='timer__dialog-overlay' onClick={close}></div>
             <div className='timer__dialog timer__session-details'>
                 <input
                     className='timer__input'
