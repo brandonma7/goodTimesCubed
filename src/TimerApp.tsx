@@ -79,12 +79,18 @@ export default function AppRoot() {
     TODO
 
     P0
-        Pro-active training suggestions
-        Comp dates and goals
+        Store previously viewed page in local storage (or query params?)
         BLD tools (memo training, letter pair flash cards, split between memo and exec)
-        Notifications
+        Algs for:
+            2x2
+            skewb
+            bld
+            oh
 
     P1
+        Pro-active training suggestions
+        Comp dates and goals
+        Notifications
 
     P2
         Goal mode for CFOP splits
@@ -98,7 +104,7 @@ export default function AppRoot() {
 
         More puzzles visualizations
             [ ] Pyraminx
-            [ ] Skewb
+            [ ] Skewb (should really do this one for alg library)
             [ ] Square-1
             [ ] Megaminx
             [ ] Clock

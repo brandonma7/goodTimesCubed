@@ -55,7 +55,7 @@ export default function SolveDetails({
 
     const { time, scramble, date, isDNF, isPlusTwo, analysisData } = solve;
 
-    const { isOllSkip, isPllSkip, ollCase, pllCase } = analysisData ?? {};
+    const { isOllSkip, isPllSkip, oll, pll } = analysisData ?? {};
 
     const dateObject = new Date(date);
     const formattedTime = `${dateObject.getHours()}:${dateObject.getMinutes()}.${dateObject.getSeconds()}`;
@@ -198,7 +198,7 @@ export default function SolveDetails({
                             PLL Skip?
                         </button>
                         <button
-                            className={ollCase ? 'timer__button timer__button--active' : 'timer__button'}
+                            className={oll ? 'timer__button timer__button--active' : 'timer__button'}
                             onClick={() => {
                                 if (time > 0) {
                                     setIsPllSelectionMode(false);
@@ -208,10 +208,10 @@ export default function SolveDetails({
                                 }
                             }}
                         >
-                            {ollCase ?? 'OLL'}
+                            {oll ?? 'OLL'}
                         </button>
                         <button
-                            className={pllCase ? 'timer__button timer__button--active' : 'timer__button'}
+                            className={pll ? 'timer__button timer__button--active' : 'timer__button'}
                             onClick={() => {
                                 if (time > 0) {
                                     setIsOllSelectionMode(false);
@@ -221,7 +221,7 @@ export default function SolveDetails({
                                 }
                             }}
                         >
-                            {pllCase ?? 'PLL'}
+                            {pll ?? 'PLL'}
                         </button>
                     </div>
 

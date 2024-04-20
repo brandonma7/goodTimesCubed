@@ -167,7 +167,7 @@ const solveDataReducer = (state: SolveData, action: SolveDataAction): SolveData 
                     if (!solve.analysisData) {
                         solve.analysisData = {};
                     }
-                    solve.analysisData.pllCase = action.data.value;
+                    solve.analysisData.pll = action.data.value;
                 }
                 return solve;
             });
@@ -177,7 +177,7 @@ const solveDataReducer = (state: SolveData, action: SolveDataAction): SolveData 
                     if (!solve.analysisData) {
                         solve.analysisData = {};
                     }
-                    solve.analysisData.ollCase = action.data.value;
+                    solve.analysisData.oll = action.data.value;
                 }
                 return solve;
             });

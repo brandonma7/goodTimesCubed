@@ -1,31 +1,86 @@
 import React, { useState } from 'react';
 import { PuzzleType } from '../../utils/cubingUtils';
-import { AlgSets } from '../CasePickerComponent';
-import { ollCases } from '../CasePickerComponent/OllCases';
-import { pllCases } from '../CasePickerComponent/PllCases';
+import { AlgSets, CaseGroup } from '../CasePickerComponent';
+import { ollCases } from '../../utils/cases/3x3x3/oll';
+import { pllCases } from '../../utils/cases/3x3x3/pll';
+import { ortegaCases } from '../../utils/cases/2x2x2/ortega';
 import { SingleFaceVisualizationComponent } from '../CubeVisualizationComponent';
 
 import './AlgLibraryComponent.scss';
+import { ohCases } from '../../utils/cases/3x3x3/oh';
+import { classNames } from '../../utils/genericUtils';
+
+type AlgEntryData = {
+    type: AlgSets;
+    hideCasePic?: boolean;
+    hideAuf?: boolean;
+};
 
 type AlgLibraryEntry = {
     puzzleType: PuzzleType;
-    algSets: AlgSets[];
+    algSets: AlgEntryData[];
 };
 
 const AlgLibrary: AlgLibraryEntry[] = [
     {
         puzzleType: '3x3x3',
-        algSets: ['oll', 'pll'],
+        algSets: [
+            {
+                type: 'oll',
+                hideAuf: true,
+            },
+            {
+                type: 'pll',
+            },
+            {
+                type: 'oh',
+            },
+        ],
+    },
+    {
+        puzzleType: '2x2x2',
+        algSets: [
+            {
+                type: 'ortega',
+                hideCasePic: true,
+            },
+            {
+                type: 'coll',
+            },
+            {
+                type: 'eg1',
+            },
+            {
+                type: 'eg2',
+            },
+        ],
+    },
+    {
+        puzzleType: '4x4x4',
+        algSets: [
+            {
+                type: 'parity',
+                hideAuf: true,
+            },
+        ],
     },
 ];
 
-const algSetMap = {
+const algSetMap: {
+    [k in AlgSets]: CaseGroup;
+} = {
     oll: ollCases,
     pll: pllCases,
+    oh: ohCases,
+    ortega: ortegaCases,
+    coll: [],
+    eg1: [],
+    eg2: [],
+    parity: [],
 };
 
 export default function AlgLibraryComponent() {
-    const [selectedAlgSet, setSelectedAlgSet] = useState<AlgSets | null>(null);
+    const [selectedAlgSet, setSelectedAlgSet] = useState<AlgEntryData | null>(null);
     const [selectedPuzzle, setSelectedPuzzle] = useState<PuzzleType | null>(null);
 
     const algSiblings =
@@ -49,7 +104,7 @@ export default function AlgLibraryComponent() {
                                             setSelectedPuzzle(entry.puzzleType);
                                         }}
                                     >
-                                        {algSet}
+                                        {algSet.type}
                                     </button>
                                 );
                             })}
@@ -74,17 +129,20 @@ export default function AlgLibraryComponent() {
                     return (
                         <button
                             key={algSetIndex}
-                            className='timer__button'
+                            className={classNames(
+                                'timer__button',
+                                sibling.type === selectedAlgSet.type ? 'timer__button--active' : '',
+                            )}
                             onClick={() => {
                                 setSelectedAlgSet(sibling);
                             }}
                         >
-                            {sibling}
+                            {sibling.type}
                         </button>
                     );
                 })}
             </div>
-            {algSetMap[selectedAlgSet].map((caseGroup, index) => {
+            {algSetMap[selectedAlgSet.type].map((caseGroup, index) => {
                 return (
                     <div key={index}>
                         <h3>{caseGroup.name}</h3>
@@ -92,8 +150,9 @@ export default function AlgLibraryComponent() {
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    <th>Case</th>
+                                    {!selectedAlgSet.hideCasePic && <th>Case</th>}
                                     <th>Algorithm</th>
+                                    {!selectedAlgSet.hideAuf && <th>AUF</th>}
                                     <th>Notes</th>
                                 </tr>
                             </thead>
@@ -102,19 +161,29 @@ export default function AlgLibraryComponent() {
                                     return (
                                         <tr key={caseIndex}>
                                             <td className='alg-library__case-name'>{algCase.name}</td>
-                                            <td className='alg-library__case-pic'>
-                                                {
-                                                    <SingleFaceVisualizationComponent
-                                                        faceState={algCase.state}
-                                                        puzzleType={selectedPuzzle}
-                                                    />
-                                                }
-                                            </td>
+
+                                            {!selectedAlgSet.hideCasePic && (
+                                                <td className='alg-library__case-pic'>
+                                                    {
+                                                        <SingleFaceVisualizationComponent
+                                                            faceState={algCase.state}
+                                                            puzzleType={selectedPuzzle}
+                                                        />
+                                                    }
+                                                </td>
+                                            )}
                                             <td className='alg-library__case-alg'>
                                                 {algCase?.algs?.map((alg, index) => {
                                                     return <div key={index}>{alg}</div>;
                                                 }) ?? 'no algs lol'}
                                             </td>
+                                            {!selectedAlgSet.hideAuf && (
+                                                <td className='alg-library__case-alg'>
+                                                    {algCase?.auf?.map((auf, index) => {
+                                                        return <div key={index}>{auf}</div>;
+                                                    }) ?? 'no auf lol'}
+                                                </td>
+                                            )}
                                             <td className='alg-library__case-alg'>
                                                 {algCase?.algNotes?.map((note, index) => {
                                                     return <div key={index}>{note}</div>;

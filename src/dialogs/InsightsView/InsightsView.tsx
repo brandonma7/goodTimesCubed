@@ -12,14 +12,15 @@ import {
     YAxis,
 } from 'recharts';
 import { ValueType, NameType } from 'recharts/types/component/DefaultTooltipContent';
-import { getOllById } from '../../components/CasePickerComponent/OllCases';
-import { getPllById } from '../../components/CasePickerComponent/PllCases';
+import { getOllById } from '../../utils/cases/3x3x3/oll';
+import { getPllById } from '../../utils/cases/3x3x3/pll';
 import { BestsData, getBestOfType, SolveData } from '../../components/GoodTimes';
 import { calculateAverage, calculateMean, DataType, Solve } from '../../utils/cubingUtils';
 import { mean, sum, getFormattedTime, valueAtPercentile } from '../../utils/genericUtils';
 import { SettingsContext } from '../SettingsView';
 
 import './InsightsView.scss';
+import { AlgSets } from '../../components/CasePickerComponent';
 
 type InsightsViewProps = {
     solves?: SolveData;
@@ -57,7 +58,7 @@ export default function InsightsView({ solves = [], bests, isMobile = false }: I
                             <InsightsTable
                                 solves={solves}
                                 getCase={getOllById}
-                                caseKey={'ollCase'}
+                                caseKey={'oll'}
                                 totalCases={57}
                                 isMobile={isMobile}
                             />
@@ -67,7 +68,7 @@ export default function InsightsView({ solves = [], bests, isMobile = false }: I
                             <InsightsTable
                                 solves={solves}
                                 getCase={getPllById}
-                                caseKey={'pllCase'}
+                                caseKey={'pll'}
                                 totalCases={21}
                                 isMobile={isMobile}
                             />
@@ -150,7 +151,7 @@ function InsightsTable({
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getCase: (id: string) => any;
-    caseKey: 'ollCase' | 'pllCase';
+    caseKey: AlgSets;
     totalCases: number;
     isMobile?: boolean;
 }): JSX.Element {

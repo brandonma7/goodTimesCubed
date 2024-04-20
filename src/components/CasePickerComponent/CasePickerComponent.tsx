@@ -4,10 +4,11 @@ import { FaceState, SingleFaceVisualizationComponent } from '../CubeVisualizatio
 import { SolveDataAction } from '../GoodTimes';
 
 import './CasePickerComponent.scss';
-import { pllCases } from './PllCases';
-import { ollCases } from './OllCases';
+import { pllCases } from '../../utils/cases/3x3x3/pll';
+import { ollCases } from '../../utils/cases/3x3x3/oll';
+import { ortegaCases } from '../../utils/cases/2x2x2/ortega';
 
-export type AlgSets = 'oll' | 'pll';
+export type AlgSets = 'oll' | 'pll' | 'oh' | 'ortega' | 'coll' | 'eg1' | 'eg2' | 'parity';
 
 type CasePickerComponentProps = {
     solve: Solve;
@@ -27,27 +28,52 @@ export type CaseGroup = {
 export type Case = {
     id: string;
     name: string;
-    state: FaceState;
+    state?: FaceState;
     algs?: string[];
     algNotes?: string[];
+    auf?: string[];
 };
 
 const algSetDataMap: {
     [k in AlgSets]: {
         caseGroup: CaseGroup;
-        setAction: 'SET_PLL_CASE' | 'SET_OLL_CASE';
-        id: 'pllCase' | 'ollCase';
+        setAction?: 'SET_PLL_CASE' | 'SET_OLL_CASE';
+        id: AlgSets;
     };
 } = {
     pll: {
         caseGroup: pllCases,
         setAction: 'SET_PLL_CASE',
-        id: 'pllCase',
+        id: 'pll',
     },
     oll: {
         caseGroup: ollCases,
         setAction: 'SET_OLL_CASE',
-        id: 'ollCase',
+        id: 'oll',
+    },
+    oh: {
+        caseGroup: [],
+        id: 'oh',
+    },
+    ortega: {
+        caseGroup: ortegaCases,
+        id: 'ortega',
+    },
+    coll: {
+        caseGroup: [],
+        id: 'coll',
+    },
+    eg1: {
+        caseGroup: [],
+        id: 'eg1',
+    },
+    eg2: {
+        caseGroup: [],
+        id: 'eg2',
+    },
+    parity: {
+        caseGroup: [],
+        id: 'parity',
     },
 };
 
@@ -103,7 +129,8 @@ export default function CasePickerComponent({
                             onClick={() => {
                                 const value = currentCaseId === c.id ? undefined : c.id;
                                 dispatchSolveData({
-                                    type: algSetData.setAction,
+                                    // TODO: remove null coalescence when have all actions
+                                    type: algSetData?.setAction ?? 'SET_PLL_CASE',
                                     data: {
                                         index: solveIndex,
                                         value,

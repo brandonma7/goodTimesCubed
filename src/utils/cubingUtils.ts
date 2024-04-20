@@ -26,8 +26,14 @@ export type Solve = {
     analysisData: {
         isOllSkip?: boolean;
         isPllSkip?: boolean;
-        ollCase?: string;
-        pllCase?: string;
+        oll?: string;
+        pll?: string;
+        oh?: string;
+        ortega?: string;
+        coll?: string;
+        eg1?: string;
+        eg2?: string;
+        parity?: string;
     };
 };
 

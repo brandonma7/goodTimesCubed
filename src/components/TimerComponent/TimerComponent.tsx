@@ -19,8 +19,8 @@ import {
 } from '../../utils/cubingUtils';
 import { MetaDataContext } from '../../TimerApp';
 import CasePickerComponent from '../CasePickerComponent';
-import { getPllById } from '../CasePickerComponent/PllCases';
-import { getOllById } from '../CasePickerComponent/OllCases';
+import { getPllById } from '../../utils/cases/3x3x3/pll';
+import { getOllById } from '../../utils/cases/3x3x3/oll';
 
 enum CompModeStep {
     SCRAMBLE,
@@ -716,15 +716,15 @@ const TimerComponent = memo(function TimerComponentInternal({
                             <>
                                 <button
                                     className={`timer__button${
-                                        mostRecentSolve?.analysisData?.ollCase ? ' timer__button--big' : ''
+                                        mostRecentSolve?.analysisData?.oll ? ' timer__button--big' : ''
                                     }`}
                                     onClick={() => {
                                         setIsOllSelectionMode(!isOllSelectionMode);
                                     }}
                                 >
-                                    {mostRecentSolve?.analysisData?.ollCase ? (
+                                    {mostRecentSolve?.analysisData?.oll ? (
                                         <SingleFaceVisualizationComponent
-                                            faceState={getOllById(mostRecentSolve.analysisData.ollCase)?.state}
+                                            faceState={getOllById(mostRecentSolve.analysisData.oll)?.state}
                                             puzzleType='3x3x3'
                                         />
                                     ) : (
@@ -733,15 +733,15 @@ const TimerComponent = memo(function TimerComponentInternal({
                                 </button>
                                 <button
                                     className={`timer__button${
-                                        mostRecentSolve?.analysisData?.pllCase ? ' timer__button--big' : ''
+                                        mostRecentSolve?.analysisData?.pll ? ' timer__button--big' : ''
                                     }`}
                                     onClick={() => {
                                         setIsPllSelectionMode(!isPllSelectionMode);
                                     }}
                                 >
-                                    {mostRecentSolve?.analysisData?.pllCase ? (
+                                    {mostRecentSolve?.analysisData?.pll ? (
                                         <SingleFaceVisualizationComponent
-                                            faceState={getPllById(mostRecentSolve.analysisData.pllCase)?.state}
+                                            faceState={getPllById(mostRecentSolve.analysisData.pll)?.state}
                                             puzzleType='3x3x3'
                                         />
                                     ) : (

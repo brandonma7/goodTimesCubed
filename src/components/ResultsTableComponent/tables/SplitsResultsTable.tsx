@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { DataType } from '../../../utils/cubingUtils';
 import { getFormattedTime, classNames, getFormattedTimeBySolve } from '../../../utils/genericUtils';
-import { getOllById } from '../../CasePickerComponent/OllCases';
-import { getPllById } from '../../CasePickerComponent/PllCases';
+import { getOllById } from '../../../utils/cases/3x3x3/oll';
+import { getPllById } from '../../../utils/cases/3x3x3/pll';
 import { NormalResultsTableProps } from './NormalResultsTable';
 
 type SplitsTableProps = Omit<NormalResultsTableProps, 'settings'> & {
@@ -120,12 +120,8 @@ export function SplitsResultsTable({ results, splitNames = [], setSolveDetailsIn
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td>
-                                {getOllById(solves[invertedBestSplitIndexes[2]]?.analysisData?.ollCase)?.name ?? '--'}
-                            </td>
-                            <td>
-                                {getPllById(solves[invertedBestSplitIndexes[3]]?.analysisData?.pllCase)?.name ?? '--'}
-                            </td>
+                            <td>{getOllById(solves[invertedBestSplitIndexes[2]]?.analysisData?.oll)?.name ?? '--'}</td>
+                            <td>{getPllById(solves[invertedBestSplitIndexes[3]]?.analysisData?.pll)?.name ?? '--'}</td>
                         </tr>
                     )}
                 </tbody>
