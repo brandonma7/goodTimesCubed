@@ -1,0 +1,18 @@
+@import '../../styles/global-variables';
+
+.alg-library {
+    margin: 0 auto;
+
+    .alg-library__case-name {
+        width: 100px;
+    }
+    .alg-library__case-pic {
+        width: 200px;
+        padding: $size-s 0;
+    }
+    .alg-library__case-alg {
+        padding: 0 $size-s;
+        text-align: left;
+        width: 300px;
+    }
+}

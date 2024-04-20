@@ -7,7 +7,7 @@ import './CasePickerComponent.scss';
 import { pllCases } from './PllCases';
 import { ollCases } from './OllCases';
 
-type AlgSets = 'oll' | 'pll';
+export type AlgSets = 'oll' | 'pll';
 
 type CasePickerComponentProps = {
     solve: Solve;
@@ -28,6 +28,8 @@ export type Case = {
     id: string;
     name: string;
     state: FaceState;
+    algs?: string[];
+    algNotes?: string[];
 };
 
 const algSetDataMap: {

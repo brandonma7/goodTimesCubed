@@ -21,6 +21,7 @@ import SettingsView, { SettingsContext } from '../../dialogs/SettingsView';
 import { useContainerDimensions } from '../../utils/useContainerDimensions';
 import InsightsView from '../../dialogs/InsightsView';
 import { ManualCompModeComponent } from '../ManualCompModeComponent/ManualCompModeComponent';
+import AlgLibraryComponent from '../AlgLibraryComponent';
 
 const SMALL_SCREEN_SIZE_WIDTH = 768;
 
@@ -331,6 +332,8 @@ export default function GoodTimes() {
                     />
                 ) : appMode === AppMode.MATH ? (
                     <ManualCompModeComponent puzzleType={sessionData.type} />
+                ) : appMode === AppMode.ALG ? (
+                    <AlgLibraryComponent />
                 ) : (
                     <>
                         <section className={`timer__left-bar${timerIsRunning ? ' timer__left-bar--running' : ''}`}>
