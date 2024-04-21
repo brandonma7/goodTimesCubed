@@ -47,8 +47,8 @@ export function ManualCompModeComponent({ puzzleType = '3x3x3' }: { puzzleType?:
                 <tbody>
                     {scrambles.map((scramble, index) => {
                         return (
-                            <>
-                                <tr key={index}>
+                            <React.Fragment key={index}>
+                                <tr>
                                     <td>{index + 1}</td>
                                     <td>
                                         <input
@@ -73,7 +73,7 @@ export function ManualCompModeComponent({ puzzleType = '3x3x3' }: { puzzleType?:
                                         <td style={{ display: 'flex', flexWrap: 'wrap' }}>{colorScramble(scramble)}</td>
                                     </tr>
                                 )}
-                            </>
+                            </React.Fragment>
                         );
                     })}
                 </tbody>

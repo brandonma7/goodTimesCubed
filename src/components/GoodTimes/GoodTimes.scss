@@ -115,6 +115,9 @@
     }
 
     @media (max-width: $small-screen-width) {
+        .timer__main {
+            flex-direction: column;
+        }
         .timer__main--reverse {
             flex-direction: column-reverse;
         }

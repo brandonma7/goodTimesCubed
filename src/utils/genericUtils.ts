@@ -107,7 +107,20 @@ export function getSessionDataFromLocalStorage(sessionId: string): SessionData {
             numSplits: 1,
         };
     }
-    return dataFromLocalStorage[sessionId];
+    const data = dataFromLocalStorage[sessionId];
+    data.data = data.data.map((solve) => {
+        return {
+            ...solve,
+            analysisData: {
+                ...solve?.analysisData,
+                // @ts-expect-error Changed the data type for these, so need to override old data to make it backward compatible
+                pll: solve?.analysisData?.pll ?? solve?.analysisData?.pllCase,
+                // @ts-expect-error Changed the data type for these, so need to override old data to make it backward compatible
+                oll: solve?.analysisData?.oll ?? solve?.analysisData?.ollCase,
+            },
+        };
+    });
+    return data;
 }
 
 export function getSessionListFromLocalStorage(): string[] {
