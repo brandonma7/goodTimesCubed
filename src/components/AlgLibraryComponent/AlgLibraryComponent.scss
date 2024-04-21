@@ -3,6 +3,10 @@
 .alg-library {
     margin: 0 auto;
 
+    .alg-library-type-button {
+        margin: 0 $size-xs;
+    }
+
     .alg-library__case-name {
         width: 100px;
     }
@@ -14,5 +18,15 @@
         padding: 0 $size-s;
         text-align: left;
         width: 300px;
+    }
+    .alg-library__case-auf {
+        padding: 0 $size-s;
+        text-align: left;
+        width: 200px;
+    }
+    .alg-library__case-notes {
+        padding: 0 $size-s;
+        text-align: left;
+        width: 200px;
     }
 }

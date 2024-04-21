@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { PuzzleType } from '../../utils/cubingUtils';
-import { AlgSets, CaseGroup } from '../CasePickerComponent';
+import { AlgSetNamesMap, AlgSets, CaseGroup } from '../CasePickerComponent';
 import { ollCases } from '../../utils/cases/3x3x3/oll';
 import { pllCases } from '../../utils/cases/3x3x3/pll';
 import { ortegaCases } from '../../utils/cases/2x2x2/ortega';
@@ -87,24 +87,24 @@ export default function AlgLibraryComponent() {
         selectedPuzzle != null ? AlgLibrary.find((entry) => entry.puzzleType === selectedPuzzle)?.algSets : null;
 
     return selectedAlgSet === null || selectedPuzzle === null ? (
-        <div className='basic-page-container'>
-            <h2>Algorithm Library</h2>
+        <div className='alg-library basic-page-container'>
+            <h1>Algorithm Library</h1>
             {AlgLibrary.map((entry, index) => {
                 return (
                     <div key={index}>
-                        <h3>{entry.puzzleType}</h3>
+                        <h2>{entry.puzzleType}</h2>
                         <div>
                             {entry.algSets.map((algSet, algSetIndex) => {
                                 return (
                                     <button
                                         key={algSetIndex}
-                                        className='timer__button'
+                                        className='timer__button alg-library-type-button'
                                         onClick={() => {
                                             setSelectedAlgSet(algSet);
                                             setSelectedPuzzle(entry.puzzleType);
                                         }}
                                     >
-                                        {algSet.type}
+                                        {AlgSetNamesMap[algSet.type]}
                                     </button>
                                 );
                             })}
@@ -117,7 +117,7 @@ export default function AlgLibraryComponent() {
         <div className='alg-library'>
             <div>
                 <button
-                    className='timer__button'
+                    className='timer__button alg-library-type-button'
                     onClick={() => {
                         setSelectedAlgSet(null);
                         setSelectedPuzzle(null);
@@ -130,14 +130,14 @@ export default function AlgLibraryComponent() {
                         <button
                             key={algSetIndex}
                             className={classNames(
-                                'timer__button',
+                                'timer__button alg-library-type-button',
                                 sibling.type === selectedAlgSet.type ? 'timer__button--active' : '',
                             )}
                             onClick={() => {
                                 setSelectedAlgSet(sibling);
                             }}
                         >
-                            {sibling.type}
+                            {AlgSetNamesMap[sibling.type]}
                         </button>
                     );
                 })}
@@ -145,7 +145,7 @@ export default function AlgLibraryComponent() {
             {algSetMap[selectedAlgSet.type].map((caseGroup, index) => {
                 return (
                     <div key={index}>
-                        <h3>{caseGroup.name}</h3>
+                        <h2>{caseGroup.name}</h2>
                         <table className='basic-table'>
                             <thead>
                                 <tr>
@@ -178,13 +178,13 @@ export default function AlgLibraryComponent() {
                                                 }) ?? 'no algs lol'}
                                             </td>
                                             {!selectedAlgSet.hideAuf && (
-                                                <td className='alg-library__case-alg'>
+                                                <td className='alg-library__case-auf'>
                                                     {algCase?.auf?.map((auf, index) => {
                                                         return <div key={index}>{auf}</div>;
                                                     }) ?? 'no auf lol'}
                                                 </td>
                                             )}
-                                            <td className='alg-library__case-alg'>
+                                            <td className='alg-library__case-notes'>
                                                 {algCase?.algNotes?.map((note, index) => {
                                                     return <div key={index}>{note}</div>;
                                                 }) ?? ''}

@@ -10,6 +10,19 @@ import { ortegaCases } from '../../utils/cases/2x2x2/ortega';
 
 export type AlgSets = 'oll' | 'pll' | 'oh' | 'ortega' | 'coll' | 'eg1' | 'eg2' | 'parity';
 
+export const AlgSetNamesMap: {
+    [k in AlgSets]: string;
+} = {
+    oll: 'OLL',
+    pll: 'PLL',
+    oh: 'OH',
+    ortega: 'Ortega',
+    coll: 'COLL',
+    eg1: 'EG1',
+    eg2: 'EG2',
+    parity: 'Parity',
+};
+
 type CasePickerComponentProps = {
     solve: Solve;
     algSet: AlgSets;
