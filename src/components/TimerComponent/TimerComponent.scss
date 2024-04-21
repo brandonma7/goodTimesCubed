@@ -25,15 +25,6 @@
         }
     }
 
-    .timer__scramble {
-        font-size: 100%;
-        margin-bottom: 1vw;
-        width: 80%;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
     .timer__splits-table {
         margin: 0 auto;
         width: 60%;
@@ -95,14 +86,26 @@
     }
 
     @media (max-width: $small-screen-width) {
-        .timer__scramble {
-            font-size: $size-l;
-            margin: $size-m;
-            width: 90%;
-        }
         .timer__input-actions {
             width: 412px;
         }
+    }
+}
+
+.timer__scramble {
+    font-size: 100%;
+    width: 80%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: $size-m auto;
+}
+
+@media (max-width: $small-screen-width) {
+    .timer__scramble {
+        font-size: $size-l;
+        margin: $size-m;
+        width: 90%;
     }
 }
 
@@ -149,7 +152,7 @@
     }
 }
 
-.timer_scramble-letter {
+.timer__scramble-letter {
     margin-left: $size-xs;
     margin-right: $size-xs;
 

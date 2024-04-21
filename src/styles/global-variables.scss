@@ -104,20 +104,6 @@ $cube-sticker-yellow-faded: #ffffbe;
     z-index: 15;
 }
 
-@media (max-width: $small-screen-width) {
-
-    .timer__dialog {
-        width: 100%;
-        padding: $size-xs $size-xxxl;
-        left: -$size-xxxl;
-    }
-
-    .timer__dialog-closer {
-        left: 5%;
-        top: 13%;
-    }
-}
-
 @mixin common-table-styles {
     background: $main-background-color;
     border: $thin-border-size $table-border-color;
@@ -147,5 +133,26 @@ $cube-sticker-yellow-faded: #ffffbe;
     &:hover {
         background-color: $button-background-color-hover;
         border-color: $button-border-color-hover;
+    }
+}
+
+@media (max-width: $small-screen-width) {
+    .timer__dialog {
+        width: 100%;
+        padding: $size-xs $size-xxxl;
+        left: -$size-xxxl;
+    }
+
+    .timer__dialog-closer {
+        left: 5%;
+        top: 13%;
+    }
+
+    .basic-page-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0px auto;
     }
 }

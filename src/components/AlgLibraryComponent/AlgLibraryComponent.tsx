@@ -79,7 +79,7 @@ const algSetMap: {
     parity: [],
 };
 
-export default function AlgLibraryComponent() {
+export default function AlgLibraryComponent({ isMobile }: { isMobile: boolean }) {
     const [selectedAlgSet, setSelectedAlgSet] = useState<AlgEntryData | null>(null);
     const [selectedPuzzle, setSelectedPuzzle] = useState<PuzzleType | null>(null);
 
@@ -148,17 +148,33 @@ export default function AlgLibraryComponent() {
                         <h2>{caseGroup.name}</h2>
                         <table className='basic-table'>
                             <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    {!selectedAlgSet.hideCasePic && <th>Case</th>}
-                                    <th>Algorithm</th>
-                                    {!selectedAlgSet.hideAuf && <th>AUF</th>}
-                                    <th>Notes</th>
-                                </tr>
+                                {!isMobile ? (
+                                    <tr>
+                                        <th>Name</th>
+                                        {!selectedAlgSet.hideCasePic && <th>Case</th>}
+                                        <th>Algorithm</th>
+                                        {!selectedAlgSet.hideAuf && <th>AUF</th>}
+                                        <th>Notes</th>
+                                    </tr>
+                                ) : (
+                                    <>
+                                        <tr>
+                                            <th>Name</th>
+                                            {!selectedAlgSet.hideCasePic && <th>Case</th>}
+                                        </tr>
+                                        <tr>
+                                            <th colSpan={2}>Algorithm</th>
+                                        </tr>
+                                        <tr>{!selectedAlgSet.hideAuf && <th colSpan={2}>AUF</th>}</tr>
+                                        <tr>
+                                            <th colSpan={2}>Notes</th>
+                                        </tr>
+                                    </>
+                                )}
                             </thead>
                             <tbody>
                                 {caseGroup.cases.map((algCase, caseIndex) => {
-                                    return (
+                                    return !isMobile ? (
                                         <tr key={caseIndex}>
                                             <td className='alg-library__case-name'>{algCase.name}</td>
 
@@ -174,22 +190,86 @@ export default function AlgLibraryComponent() {
                                             )}
                                             <td className='alg-library__case-alg'>
                                                 {algCase?.algs?.map((alg, index) => {
-                                                    return <div key={index}>{alg}</div>;
+                                                    return (
+                                                        <div key={index}>
+                                                            {index + 1}. {alg}
+                                                        </div>
+                                                    );
                                                 }) ?? 'no algs lol'}
                                             </td>
                                             {!selectedAlgSet.hideAuf && (
                                                 <td className='alg-library__case-auf'>
                                                     {algCase?.auf?.map((auf, index) => {
-                                                        return <div key={index}>{auf}</div>;
+                                                        return (
+                                                            <div key={index}>
+                                                                {index + 1}. {auf}
+                                                            </div>
+                                                        );
                                                     }) ?? 'no auf lol'}
                                                 </td>
                                             )}
                                             <td className='alg-library__case-notes'>
                                                 {algCase?.algNotes?.map((note, index) => {
-                                                    return <div key={index}>{note}</div>;
+                                                    return (
+                                                        <div key={index}>
+                                                            {index + 1}. {note}
+                                                        </div>
+                                                    );
                                                 }) ?? ''}
                                             </td>
                                         </tr>
+                                    ) : (
+                                        <>
+                                            <tr key={caseIndex}>
+                                                <td className='alg-library__case-name'>{algCase.name}</td>
+
+                                                {!selectedAlgSet.hideCasePic && (
+                                                    <td className='alg-library__case-pic'>
+                                                        {
+                                                            <SingleFaceVisualizationComponent
+                                                                faceState={algCase.state}
+                                                                puzzleType={selectedPuzzle}
+                                                            />
+                                                        }
+                                                    </td>
+                                                )}
+                                            </tr>
+                                            <tr>
+                                                <td className='alg-library__case-alg' colSpan={2}>
+                                                    {algCase?.algs?.map((alg, index) => {
+                                                        return (
+                                                            <div key={index}>
+                                                                {index + 1}. {alg}
+                                                            </div>
+                                                        );
+                                                    }) ?? 'no algs lol'}
+                                                </td>
+                                            </tr>
+                                            {!selectedAlgSet.hideAuf && (
+                                                <tr>
+                                                    <td className='alg-library__case-auf' colSpan={2}>
+                                                        {algCase?.auf?.map((auf, index) => {
+                                                            return (
+                                                                <div key={index}>
+                                                                    {index + 1}. {auf}
+                                                                </div>
+                                                            );
+                                                        }) ?? 'no auf lol'}
+                                                    </td>
+                                                </tr>
+                                            )}
+                                            <tr>
+                                                <td className='alg-library__case-notes' colSpan={2}>
+                                                    {algCase?.algNotes?.map((note, index) => {
+                                                        return (
+                                                            <div key={index}>
+                                                                {index + 1}. {note}
+                                                            </div>
+                                                        );
+                                                    }) ?? ''}
+                                                </td>
+                                            </tr>
+                                        </>
                                     );
                                 })}
                             </tbody>

@@ -4,7 +4,7 @@
     margin: 0 auto;
 
     .alg-library-type-button {
-        margin: 0 $size-xs;
+        margin: $size-xs;
     }
 
     .alg-library__case-name {
@@ -15,17 +15,17 @@
         padding: $size-s 0;
     }
     .alg-library__case-alg {
-        padding: 0 $size-s;
+        padding: $size-s;
         text-align: left;
         width: 300px;
     }
     .alg-library__case-auf {
-        padding: 0 $size-s;
+        padding: $size-s;
         text-align: left;
         width: 200px;
     }
     .alg-library__case-notes {
-        padding: 0 $size-s;
+        padding: $size-s;
         text-align: left;
         width: 200px;
     }

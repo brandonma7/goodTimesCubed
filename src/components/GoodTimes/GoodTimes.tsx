@@ -14,6 +14,7 @@ import {
     getSessionListFromLocalStorage,
     saveSessionDataToLocalStorage,
     getSessionDataFromLocalStorage,
+    classNames,
 } from '../../utils/genericUtils';
 import useStickyState from '../../utils/useStickyState';
 import SessionManagementComponent from '../SessionManagementComponent';
@@ -320,7 +321,7 @@ export default function GoodTimes() {
             }}
         >
             <HeaderComponent setAppMode={appModeSetter} />
-            <div className='timer__main'>
+            <div className={classNames('timer__main', appMode === AppMode.TIMER ? 'timer__main--reverse' : '')}>
                 {appMode === AppMode.COMP ? (
                     <TimerComponent
                         dispatchSolveData={dispatchSolveData}
@@ -333,7 +334,7 @@ export default function GoodTimes() {
                 ) : appMode === AppMode.MATH ? (
                     <ManualCompModeComponent puzzleType={sessionData.type} />
                 ) : appMode === AppMode.ALG ? (
-                    <AlgLibraryComponent />
+                    <AlgLibraryComponent isMobile={isMobile} />
                 ) : (
                     <>
                         <section className={`timer__left-bar${timerIsRunning ? ' timer__left-bar--running' : ''}`}>
@@ -386,7 +387,7 @@ export default function GoodTimes() {
                 )}
             </div>
             <AlertsComponent />
-            Width: {width}
+            {/*Width: {width}*/}
         </div>
     );
 }

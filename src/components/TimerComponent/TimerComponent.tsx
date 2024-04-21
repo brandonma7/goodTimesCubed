@@ -344,13 +344,13 @@ const TimerComponent = memo(function TimerComponentInternal({
                         {compModeTimes.length === 0 && (
                             <div className='timer__comp-mode-desc'>
                                 <p>
-                                    Press the spacebar to start inspection, again to start solving, and again to stop
-                                    the solve timer.
+                                    {isMobile ? 'Tap the screen' : 'Press the spacebar'} to start inspection, again to
+                                    start solving, and again to stop the solve timer.
                                 </p>
                                 <p>Going over 15 seconds in inspection will result in +2 or DNF.</p>
                             </div>
                         )}
-                        <div>{colorScramble(scramble)}</div>
+                        <div className='timer__scramble'>{colorScramble(scramble)}</div>
                         <table className='timer__results'>
                             <thead>
                                 <tr>

@@ -20,7 +20,7 @@ export function colorScramble(scramble: string) {
         // New color every three letters, wrapping after we get to the end of the color list
         const colorIndex = Math.trunc((index / 3) % scrambleLetterColors.length);
         return (
-            <span key={index} className={`timer_scramble-letter ${scrambleLetterColors[colorIndex]}`}>
+            <span key={index} className={`timer__scramble-letter ${scrambleLetterColors[colorIndex]}`}>
                 {move}
             </span>
         );
