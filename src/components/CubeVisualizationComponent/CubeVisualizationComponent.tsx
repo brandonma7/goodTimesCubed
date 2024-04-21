@@ -127,7 +127,10 @@ type SingleFaceVisualizationComponentProps = {
     puzzleType: PuzzleType;
 };
 
-export function SingleFaceVisualizationComponent({ faceState, puzzleType }: SingleFaceVisualizationComponentProps) {
+export function SingleFaceVisualizationComponent({
+    faceState,
+    puzzleType,
+}: SingleFaceVisualizationComponentProps): JSX.Element {
     // Annoyingly verbose way of checking this to satisfy TS IndexesToSkip check below
     if (
         puzzleType === 'skewb' ||
@@ -172,6 +175,25 @@ export function SingleFaceVisualizationComponent({ faceState, puzzleType }: Sing
                 <div className='timer__cube-face--only column row'></div>
                 <div className='timer__cube-face--only row'>{faceState[4].map(getSticker)}</div>
                 <div className='timer__cube-face--only column row'></div>
+            </div>
+        </div>
+    );
+}
+
+export function TwoSideVisualizationComponent({ faceState }: SingleFaceVisualizationComponentProps): JSX.Element {
+    // Annoyingly verbose way of checking this to satisfy TS IndexesToSkip check below
+    if (!faceState) {
+        return <></>;
+    }
+    const getSticker = (color: number, index: number) => {
+        const colorClass = `timer__cube-sticker--${numToColor[color]}`;
+        return <div key={index} className={`timer__two-side-sticker ${colorClass}`} />;
+    };
+    return (
+        <div className='timer__two-side'>
+            <div className='timer__two-side-row'>
+                <div className='timer__two-side-face'>{faceState[0].map(getSticker)}</div>
+                <div className='timer__two-side-face'>{faceState[1].map(getSticker)}</div>
             </div>
         </div>
     );

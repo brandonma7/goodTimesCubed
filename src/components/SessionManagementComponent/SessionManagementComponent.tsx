@@ -20,7 +20,14 @@ type SessionManagementComponentProps = {
     suppressBestAlerts: () => void;
 };
 
-export type SessionType = 'normal' | 'splits' | 'cfopTrainer' | 'yauTrainer' | 'ollTrainer' | 'pllTrainer';
+export type SessionType =
+    | 'normal'
+    | 'splits'
+    | 'cfopTrainer'
+    | 'yauTrainer'
+    | 'ollTrainer'
+    | 'pllTrainer'
+    | 'bldTrainer';
 export type SessionData = {
     id: string;
     name: string;
@@ -46,12 +53,16 @@ export const SessionTypeMap: { [K in SessionType]: SessionTypeMapType } = {
         name: 'Splits',
     },
     cfopTrainer: {
-        name: 'CFOP Trainer',
+        name: 'CFOP Splits',
         splitNames: ['Cross', 'F2L', 'OLL', 'PLL'],
     },
     yauTrainer: {
-        name: 'Yau Trainer',
+        name: 'Yau Splits',
         splitNames: ['F2F', 'F3E', 'Faces', 'Edges', 'F2L', 'OLL', 'PLL'],
+    },
+    bldTrainer: {
+        name: 'BLD Splits',
+        splitNames: ['Memo', 'Exec'],
     },
     ollTrainer: {
         name: 'OLL Trainer',

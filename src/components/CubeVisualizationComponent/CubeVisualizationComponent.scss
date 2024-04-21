@@ -61,6 +61,31 @@
     justify-content: space-around;
 }
 
+.timer__two-side-row,
+.timer__two-side-face,
+.timer__two-side-sticker {
+    height: 25px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.timer__two-side-row {
+    width: 150px;
+
+    .timer__two-side-face {
+        width: 75px;
+        border: thin solid black;
+        box-sizing: border-box;
+
+        .timer__two-side-sticker {
+            width: 25px;
+            border: thin solid black;
+            box-sizing: border-box;
+        }
+    }
+}
+
 .timer__cube-sticker {
     /* torn whether I want this... border-radius: 6px; */
 

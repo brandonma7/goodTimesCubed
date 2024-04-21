@@ -185,6 +185,16 @@ export const valueAtPercentile = (percentile: number, sortedList: number[]): num
 };
 // End math
 
+export function uniquifyList<T>(list: T[]): T[] {
+    const result: T[] = [];
+    list.forEach((item) => {
+        if (!result.includes(item)) {
+            result.push(item);
+        }
+    });
+    return result;
+}
+
 export function isAncestorOf(child: Element, parentClass: string): boolean {
     if (child.className.includes && child.className.includes(parentClass)) {
         return true;

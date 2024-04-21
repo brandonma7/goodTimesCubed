@@ -80,12 +80,11 @@ export default function AppRoot() {
 
     P0
         Store previously viewed page in local storage (or query params?)
-        BLD tools (memo training, letter pair flash cards, split between memo and exec)
+        BLD tools (memo training, letter pair flash cards)
         Algs for:
             2x2
             skewb
             bld
-            oh
 
     P1
         Pro-active training suggestions
@@ -98,6 +97,9 @@ export default function AppRoot() {
         OLL Trainer
         PLL Trainer
         PLL two side recognition trainer (with difficulty levels!)
+            Level 1: Show options for group w/ description
+            Level 2: Show options for group w/o description
+            Level 3: Show all options
 
     P3
         External timer connection (bluetooth or wired)

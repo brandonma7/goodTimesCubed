@@ -4,11 +4,16 @@ import { AlgSetNamesMap, AlgSets, CaseGroup } from '../CasePickerComponent';
 import { ollCases } from '../../utils/cases/3x3x3/oll';
 import { pllCases } from '../../utils/cases/3x3x3/pll';
 import { ortegaCases } from '../../utils/cases/2x2x2/ortega';
-import { SingleFaceVisualizationComponent } from '../CubeVisualizationComponent';
+import {
+    FaceState,
+    SingleFaceVisualizationComponent,
+    TwoSideVisualizationComponent,
+} from '../CubeVisualizationComponent';
 
 import './AlgLibraryComponent.scss';
 import { ohCases } from '../../utils/cases/3x3x3/oh';
-import { classNames } from '../../utils/genericUtils';
+import { classNames, uniquifyList } from '../../utils/genericUtils';
+import { PllTwoSideId, pllTwoSideIdList, pllTwoSides } from '../../utils/cases/3x3x3/pllTwoSide';
 
 type AlgEntryData = {
     type: AlgSets;
@@ -79,7 +84,7 @@ const algSetMap: {
     parity: [],
 };
 
-export default function AlgLibraryComponent({ isMobile }: { isMobile: boolean }) {
+export default function AlgLibraryComponent({ isMobile }: { isMobile: boolean }): JSX.Element {
     const [selectedAlgSet, setSelectedAlgSet] = useState<AlgEntryData | null>(null);
     const [selectedPuzzle, setSelectedPuzzle] = useState<PuzzleType | null>(null);
 
@@ -279,4 +284,131 @@ export default function AlgLibraryComponent({ isMobile }: { isMobile: boolean })
             })}
         </div>
     );
+}
+
+export function TwoSideLibraryComponent(): JSX.Element {
+    const [level, setLevel] = useState(0);
+    const [group, setGroup] = useState<PllTwoSideId>('all');
+    const [question, setQuestion] = useState(generateRandomCaseWithinGroup(group));
+
+    const [correct, setCorrect] = useState<boolean | null>(null);
+
+    return level === 0 ? (
+        <div className='two-side-library'>
+            <button className='timer__button' onClick={() => setLevel(1)}>
+                Play
+            </button>
+            {pllTwoSides.map((group, index) => {
+                return (
+                    <div key={index} className='two-side-library-group'>
+                        <h3 className='two-side-library-group-header'>
+                            {group.name} <TwoSideVisualizationComponent faceState={group.state} puzzleType={'3x3x3'} />
+                        </h3>
+
+                        <div className='two-side-library-entries'>
+                            {group.patterns.map((pattern, index) => {
+                                return (
+                                    <div key={index} className='two-side-library-entry'>
+                                        <TwoSideVisualizationComponent faceState={pattern.state} puzzleType={'3x3x3'} />
+                                        {pattern.description} = {pattern.name}
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                );
+            })}
+        </div>
+    ) : (
+        <div>
+            <div>
+                <button className='timer__button' onClick={() => setLevel(0)}>
+                    Stop
+                </button>
+                <select
+                    className='timer__select'
+                    onChange={(event) => {
+                        const newId = event.target.value as PllTwoSideId;
+                        setGroup(newId);
+                    }}
+                    value={group}
+                >
+                    {pllTwoSideIdList.map((id, index) => {
+                        return (
+                            <option key={index} value={id}>
+                                {id}
+                            </option>
+                        );
+                    })}
+                </select>
+                <select
+                    className='timer__select'
+                    onChange={(event) => {
+                        const newId = event.target.value;
+                        setLevel(parseInt(newId));
+                    }}
+                    value={level}
+                >
+                    {[1, 2, 3].map((id, index) => {
+                        return (
+                            <option key={index} value={id}>
+                                {id}
+                            </option>
+                        );
+                    })}
+                </select>
+            </div>
+            <div>
+                <>
+                    <TwoSideVisualizationComponent faceState={question.pattern} puzzleType='3x3x3' />
+                    {level === 1 && <p>{question.description}</p>}
+                    <div>
+                        {uniquifyList(question.choices)
+                            .sort()
+                            .map((choice, index) => {
+                                return (
+                                    <button
+                                        key={index}
+                                        className='timer__button'
+                                        onClick={() => {
+                                            setCorrect(choice === question.patternName);
+                                            setQuestion(generateRandomCaseWithinGroup(group, question.index));
+                                        }}
+                                    >
+                                        {choice}
+                                    </button>
+                                );
+                            })}
+                    </div>
+                    {correct ? 'Right!' : 'No!'}
+                </>
+            </div>
+        </div>
+    );
+}
+
+function generateRandomCaseWithinGroup(
+    group: PllTwoSideId,
+    prevIndex?: number,
+): {
+    index: number;
+    pattern: FaceState;
+    patternName: string;
+    description: string;
+    choices: string[];
+} {
+    const groupList =
+        pllTwoSides.find((pts) => pts.id === group)?.patterns ?? pllTwoSides.flatMap((pts) => pts.patterns);
+
+    let index = Math.trunc(Math.random() * groupList.length);
+    index = index === prevIndex ? (index + 1) % groupList.length : index;
+    const entry = groupList[index];
+
+    return {
+        index,
+        pattern: entry.state,
+        patternName: entry.name,
+        description: entry.description,
+        choices: groupList.map((p) => p.name),
+    };
 }

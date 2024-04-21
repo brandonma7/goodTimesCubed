@@ -46,6 +46,14 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                 <button
                     className='timer__button'
                     onClick={() => {
+                        setAppMode(AppMode.P2S);
+                    }}
+                >
+                    P2S
+                </button>
+                <button
+                    className='timer__button'
+                    onClick={() => {
                         setAppMode(AppMode.INSIGHTS);
                     }}
                 >

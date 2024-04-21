@@ -46,6 +46,7 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
                 );
             case 'cfopTrainer':
             case 'yauTrainer':
+            case 'bldTrainer':
                 return (
                     <SplitsResultsTable
                         results={results}
