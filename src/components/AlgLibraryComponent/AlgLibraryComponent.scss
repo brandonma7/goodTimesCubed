@@ -30,33 +30,65 @@
         width: 200px;
     }
 }
-
 .two-side-library {
-    display: flex;
-    flex-wrap: wrap;
     width: 1000px;
-    justify-content: space-between;
-    margin: 0 auto;
+    margin: $size-s auto 0;
 
-    .two-side-library-group {
-        width: 456px;
-        border: $primary-border-size $button-border-color;
-        padding: 0 $size-xs;
-        margin: $size-s;
+    .two-side-library-list {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
 
-        .two-side-library-group-header {
-            display: flex;
-            justify-content: space-evenly;
-        }
-    
-        .two-side-library-entry {
-            display: flex;
-            margin-bottom: $size-s;
-            align-items: center;
-    
-            .timer__two-side {
-                margin-right: $size-s;
+        .two-side-library-group {
+            width: 456px;
+            border: $primary-border-size $button-border-color;
+            padding: 0 $size-xs;
+            margin: $size-s;
+
+            .two-side-library-group-header {
+                display: flex;
+                justify-content: space-evenly;
             }
+        
+            .two-side-library-entry {
+                display: flex;
+                margin-bottom: $size-s;
+                align-items: center;
+        
+                .timer__two-side {
+                    margin-right: $size-s;
+                }
+            }
+        }
+    }
+}
+
+.two-side-library-trainer {
+    margin: $size-m auto 0;
+    width: 412px;
+
+    .two-side-library-trainer__main {
+        margin-top: $size-l;
+    }
+
+    .two-side-library-trainer__controls {
+        display: flex;
+    }
+
+    .two-side-library-trainer__pattern {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: $size-m;
+    }
+
+    .two-side-library-trainer__choices {
+        display: flex;
+        flex-wrap: wrap;
+
+        .timer__button {
+            width: 95px;
+            margin: $size-xxs;
         }
     }
 }

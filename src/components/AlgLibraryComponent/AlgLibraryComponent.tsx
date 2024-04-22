@@ -292,36 +292,45 @@ export function TwoSideLibraryComponent(): JSX.Element {
     const [question, setQuestion] = useState(generateRandomCaseWithinGroup(group));
 
     const [correct, setCorrect] = useState<boolean | null>(null);
+    const levelNames = ['off', 'easy', 'medium', 'hard'];
 
     return level === 0 ? (
         <div className='two-side-library'>
             <button className='timer__button' onClick={() => setLevel(1)}>
-                Play
+                Train
             </button>
-            {pllTwoSides.map((group, index) => {
-                return (
-                    <div key={index} className='two-side-library-group'>
-                        <h3 className='two-side-library-group-header'>
-                            {group.name} <TwoSideVisualizationComponent faceState={group.state} puzzleType={'3x3x3'} />
-                        </h3>
+            <div className='two-side-library-list'>
+                {pllTwoSides.map((group, index) => {
+                    return (
+                        <div key={index} className='two-side-library-group'>
+                            <h3 className='two-side-library-group-header'>
+                                {group.name}{' '}
+                                <TwoSideVisualizationComponent faceState={group.state} puzzleType={'3x3x3'} />
+                            </h3>
 
-                        <div className='two-side-library-entries'>
-                            {group.patterns.map((pattern, index) => {
-                                return (
-                                    <div key={index} className='two-side-library-entry'>
-                                        <TwoSideVisualizationComponent faceState={pattern.state} puzzleType={'3x3x3'} />
-                                        {pattern.description} = {pattern.name}
-                                    </div>
-                                );
-                            })}
+                            <div className='two-side-library-entries'>
+                                {group.patterns
+                                    .filter((pattern) => !pattern.hidden)
+                                    .map((pattern, index) => {
+                                        return (
+                                            <div key={index} className='two-side-library-entry'>
+                                                <TwoSideVisualizationComponent
+                                                    faceState={pattern.state}
+                                                    puzzleType={'3x3x3'}
+                                                />
+                                                {pattern.description} = {pattern.name}
+                                            </div>
+                                        );
+                                    })}
+                            </div>
                         </div>
-                    </div>
-                );
-            })}
+                    );
+                })}
+            </div>
         </div>
     ) : (
-        <div>
-            <div>
+        <div className='two-side-library-trainer'>
+            <div className='two-side-library-trainer__controls'>
                 <button className='timer__button' onClick={() => setLevel(0)}>
                     Stop
                 </button>
@@ -330,6 +339,7 @@ export function TwoSideLibraryComponent(): JSX.Element {
                     onChange={(event) => {
                         const newId = event.target.value as PllTwoSideId;
                         setGroup(newId);
+                        setQuestion(generateRandomCaseWithinGroup(newId, question.index));
                     }}
                     value={group}
                 >
@@ -346,43 +356,44 @@ export function TwoSideLibraryComponent(): JSX.Element {
                     onChange={(event) => {
                         const newId = event.target.value;
                         setLevel(parseInt(newId));
+                        setQuestion(generateRandomCaseWithinGroup(group, question.index));
                     }}
                     value={level}
                 >
                     {[1, 2, 3].map((id, index) => {
                         return (
                             <option key={index} value={id}>
-                                {id}
+                                {levelNames[id]}
                             </option>
                         );
                     })}
                 </select>
             </div>
-            <div>
-                <>
+            <div className='two-side-library-trainer__main'>
+                <div className='two-side-library-trainer__pattern'>
                     <TwoSideVisualizationComponent faceState={question.pattern} puzzleType='3x3x3' />
-                    {level === 1 && <p>{question.description}</p>}
-                    <div>
-                        {uniquifyList(question.choices)
-                            .sort()
-                            .map((choice, index) => {
-                                return (
-                                    <button
-                                        key={index}
-                                        className='timer__button'
-                                        onClick={() => {
-                                            setCorrect(choice === question.patternName);
-                                            setQuestion(generateRandomCaseWithinGroup(group, question.index));
-                                        }}
-                                    >
-                                        {choice}
-                                    </button>
-                                );
-                            })}
-                    </div>
-                    {correct ? 'Right!' : 'No!'}
-                </>
+                    {level === 1 && <p style={{ marginLeft: 12 }}>{question.description}</p>}
+                </div>
+                <div className='two-side-library-trainer__choices'>
+                    {uniquifyList(question.choices)
+                        .sort()
+                        .map((choice, index) => {
+                            return (
+                                <button
+                                    key={index}
+                                    className='timer__button'
+                                    onClick={() => {
+                                        setCorrect(choice === question.patternName);
+                                        setQuestion(generateRandomCaseWithinGroup(group, question.index));
+                                    }}
+                                >
+                                    {choice}
+                                </button>
+                            );
+                        })}
+                </div>
             </div>
+            {correct ? 'Right!' : correct != null ? 'No!' : ''}
         </div>
     );
 }
