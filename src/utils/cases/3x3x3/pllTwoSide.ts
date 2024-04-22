@@ -1,17 +1,17 @@
 import { Color } from '../../../classes/Cube';
-import { FaceState } from '../../../components/CubeVisualizationComponent';
+import { FaceState, scrambleLetterColors } from '../../../components/CubeVisualizationComponent';
 
 export type PllTwoSidesType = {
     id: PllTwoSideId;
     name: string;
-    state: FaceState;
+    state: number[][];
     patterns: PllTwoSidesPatternType[];
 };
 
 type PllTwoSidesPatternType = {
     name: string;
     description: string;
-    state: FaceState;
+    state: number[][];
     hidden?: boolean;
 };
 export const pllTwoSideIdList = [
@@ -28,33 +28,41 @@ export const pllTwoSideIdList = [
 ] as const;
 
 export type PllTwoSideId = (typeof pllTwoSideIdList)[number];
-// type PllTwoSideId =
-//     | 'threeBar'
-//     | 'dblHeadlights'
-//     | 'lightsTwoBar'
-//     | 'loneLights'
-//     | 'dblTwoBar'
-//     | 'outerTwoBar'
-//     | 'innerTwoBar'
-//     | 'bookends'
-//     | 'noBookends'
-//     | 'all';
+
+const topColorMapping: {
+    [k in (typeof scrambleLetterColors)[number]]: Color[];
+} = {
+    yellow: [Color.GREEN, Color.ORANGE, Color.BLUE, Color.RED],
+    white: [Color.GREEN, Color.RED, Color.BLUE, Color.ORANGE],
+    red: [Color.YELLOW, Color.BLUE, Color.WHITE, Color.GREEN],
+    orange: [Color.YELLOW, Color.GREEN, Color.WHITE, Color.BLUE],
+    green: [Color.RED, Color.WHITE, Color.ORANGE, Color.YELLOW],
+    blue: [Color.RED, Color.YELLOW, Color.ORANGE, Color.WHITE],
+};
+
+export function getStateColors(pattern: number[][], topColor: string, offset: number): FaceState {
+    const colorCodes = topColorMapping[topColor];
+    const colors = pattern.map((side) =>
+        side.map((sticker) => (sticker === -1 ? Color.GRAY : colorCodes[(sticker + offset) % colorCodes.length])),
+    );
+    return colors;
+}
 
 export const pllTwoSides: PllTwoSidesType[] = [
     {
         id: 'threeBar',
         name: '3-Bar',
         state: [
-            [Color.GREEN, Color.GREEN, Color.GREEN],
-            [Color.GRAY, Color.GRAY, Color.GRAY],
+            [0, 0, 0],
+            [-1, -1, -1],
         ],
         patterns: [
             {
                 name: 'Ua',
                 description: 'Headlights with adj center',
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.BLUE, Color.ORANGE],
+                    [0, 0, 0],
+                    [1, 2, 1],
                 ],
             },
             {
@@ -62,16 +70,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Headlights with opp center',
                 hidden: true,
                 state: [
-                    [Color.RED, Color.ORANGE, Color.RED],
-                    [Color.GREEN, Color.GREEN, Color.GREEN],
+                    [3, 1, 3],
+                    [0, 0, 0],
                 ],
             },
             {
                 name: 'Ub',
                 description: 'Headlights with opp center',
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.RED, Color.ORANGE],
+                    [0, 0, 0],
+                    [1, 3, 1],
                 ],
             },
             {
@@ -79,16 +87,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Headlights with adj center',
                 hidden: true,
                 state: [
-                    [Color.RED, Color.BLUE, Color.RED],
-                    [Color.GREEN, Color.GREEN, Color.GREEN],
+                    [3, 2, 3],
+                    [0, 0, 0],
                 ],
             },
             {
                 name: 'Ja',
                 description: '2-bar attached',
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.ORANGE, Color.BLUE],
+                    [0, 0, 0],
+                    [1, 1, 2],
                 ],
             },
             {
@@ -96,16 +104,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: '2-bar attached',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.BLUE, Color.RED],
-                    [Color.GREEN, Color.GREEN, Color.GREEN],
+                    [2, 2, 3],
+                    [0, 0, 0],
                 ],
             },
             {
                 name: 'Jb',
                 description: '2-bar unattached',
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.BLUE, Color.BLUE],
+                    [0, 0, 0],
+                    [1, 2, 2],
                 ],
             },
             {
@@ -113,16 +121,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: '2-bar unattached',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.RED, Color.RED],
-                    [Color.GREEN, Color.GREEN, Color.GREEN],
+                    [2, 3, 3],
+                    [0, 0, 0],
                 ],
             },
             {
                 name: 'F',
                 description: '4 colors',
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.RED, Color.BLUE],
+                    [0, 0, 0],
+                    [1, 3, 2],
                 ],
             },
             {
@@ -130,8 +138,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: '4 colors',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.ORANGE, Color.RED],
-                    [Color.GREEN, Color.GREEN, Color.GREEN],
+                    [2, 1, 3],
+                    [0, 0, 0],
                 ],
             },
         ],
@@ -140,40 +148,40 @@ export const pllTwoSides: PllTwoSidesType[] = [
         id: 'dblHeadlights',
         name: 'Double Headlights',
         state: [
-            [Color.GREEN, Color.GRAY, Color.GREEN],
-            [Color.ORANGE, Color.GRAY, Color.ORANGE],
+            [0, -1, 0],
+            [1, -1, 1],
         ],
         patterns: [
             {
                 name: 'Z',
                 description: '2 color checkerboard',
                 state: [
-                    [Color.GREEN, Color.ORANGE, Color.GREEN],
-                    [Color.ORANGE, Color.GREEN, Color.ORANGE],
+                    [0, 1, 0],
+                    [1, 0, 1],
                 ],
             },
             {
                 name: 'Z',
                 description: '4 colors, edges adj to corners',
                 state: [
-                    [Color.GREEN, Color.RED, Color.GREEN],
-                    [Color.ORANGE, Color.BLUE, Color.ORANGE],
+                    [0, 3, 0],
+                    [1, 2, 1],
                 ],
             },
             {
                 name: 'H',
                 description: 'Edges opp to corners',
                 state: [
-                    [Color.GREEN, Color.BLUE, Color.GREEN],
-                    [Color.ORANGE, Color.RED, Color.ORANGE],
+                    [0, 2, 0],
+                    [1, 3, 1],
                 ],
             },
             {
                 name: 'Ua',
                 description: '2:1 pattern, 3 colors, adj center',
                 state: [
-                    [Color.GREEN, Color.ORANGE, Color.GREEN],
-                    [Color.ORANGE, Color.BLUE, Color.ORANGE],
+                    [0, 1, 0],
+                    [1, 2, 1],
                 ],
             },
             {
@@ -181,16 +189,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: '2:1 pattern, 3 colors, opp center',
                 hidden: true,
                 state: [
-                    [Color.RED, Color.GREEN, Color.RED],
-                    [Color.GREEN, Color.BLUE, Color.GREEN],
+                    [3, 0, 3],
+                    [0, 2, 0],
                 ],
             },
             {
                 name: 'Ub',
                 description: '2:1 pattern, 3 colors, opp center',
                 state: [
-                    [Color.GREEN, Color.BLUE, Color.GREEN],
-                    [Color.ORANGE, Color.GREEN, Color.ORANGE],
+                    [0, 2, 0],
+                    [1, 0, 1],
                 ],
             },
             {
@@ -198,8 +206,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: '2:1 pattern, 3 colors, adj center',
                 hidden: true,
                 state: [
-                    [Color.RED, Color.BLUE, Color.RED],
-                    [Color.GREEN, Color.RED, Color.GREEN],
+                    [3, 2, 3],
+                    [0, 3, 0],
                 ],
             },
         ],
@@ -208,16 +216,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
         id: 'lightsTwoBar',
         name: 'Lights and 2-Bar',
         state: [
-            [Color.GREEN, Color.GRAY, Color.GREEN],
-            [Color.ORANGE, Color.ORANGE, Color.GRAY],
+            [0, -1, 0],
+            [1, 1, -1],
         ],
         patterns: [
             {
                 name: 'T',
                 description: 'Inner bar, opp center in headlights',
                 state: [
-                    [Color.GREEN, Color.BLUE, Color.GREEN],
-                    [Color.ORANGE, Color.ORANGE, Color.BLUE],
+                    [0, 2, 0],
+                    [1, 1, 2],
                 ],
             },
             {
@@ -225,8 +233,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Inner bar, opp center in headlights',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.RED, Color.RED],
-                    [Color.GREEN, Color.BLUE, Color.GREEN],
+                    [2, 3, 3],
+                    [0, 2, 0],
                 ],
             },
             {
@@ -234,24 +242,24 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Inner bar, adj center in headlights',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.RED, Color.RED],
-                    [Color.GREEN, Color.ORANGE, Color.GREEN],
+                    [2, 3, 3],
+                    [0, 1, 0],
                 ],
             },
             {
                 name: 'Rb',
                 description: 'Inner bar, adj center in headlights',
                 state: [
-                    [Color.GREEN, Color.RED, Color.GREEN],
-                    [Color.ORANGE, Color.ORANGE, Color.BLUE],
+                    [0, 3, 0],
+                    [1, 1, 2],
                 ],
             },
             {
                 name: 'Aa',
                 description: 'Outer bar, 4 checkerboard',
                 state: [
-                    [Color.GREEN, Color.ORANGE, Color.GREEN],
-                    [Color.ORANGE, Color.BLUE, Color.BLUE],
+                    [0, 1, 0],
+                    [1, 2, 2],
                 ],
             },
             {
@@ -259,16 +267,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Outer bar, 4 checkerboard',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.BLUE, Color.RED],
-                    [Color.GREEN, Color.RED, Color.GREEN],
+                    [2, 2, 3],
+                    [0, 3, 0],
                 ],
             },
             {
                 name: 'Ga',
                 description: 'Outer bar, 3 colors',
                 state: [
-                    [Color.GREEN, Color.RED, Color.GREEN],
-                    [Color.ORANGE, Color.BLUE, Color.BLUE],
+                    [0, 3, 0],
+                    [1, 2, 2],
                 ],
             },
             {
@@ -276,8 +284,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Outer bar, 3 colors',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.BLUE, Color.RED],
-                    [Color.GREEN, Color.ORANGE, Color.GREEN],
+                    [2, 2, 3],
+                    [0, 1, 0],
                 ],
             },
         ],
@@ -286,16 +294,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
         id: 'loneLights',
         name: 'Lone Lights',
         state: [
-            [Color.GREEN, Color.GRAY, Color.GREEN],
-            [Color.GRAY, Color.GRAY, Color.GRAY],
+            [0, -1, 0],
+            [-1, -1, -1],
         ],
         patterns: [
             {
                 name: 'Ra',
                 description: '5 Checkboard',
                 state: [
-                    [Color.GREEN, Color.ORANGE, Color.GREEN],
-                    [Color.ORANGE, Color.GREEN, Color.BLUE],
+                    [0, 1, 0],
+                    [1, 0, 2],
                 ],
             },
             {
@@ -303,8 +311,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: '5 Checkboard',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.GREEN, Color.RED],
-                    [Color.GREEN, Color.RED, Color.GREEN],
+                    [2, 0, 3],
+                    [0, 3, 0],
                 ],
             },
             {
@@ -312,24 +320,24 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: '4 Checkboard',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.ORANGE, Color.RED],
-                    [Color.GREEN, Color.RED, Color.GREEN],
+                    [2, 1, 3],
+                    [0, 3, 0],
                 ],
             },
             {
                 name: 'Gc',
                 description: '4 Checkboard',
                 state: [
-                    [Color.GREEN, Color.ORANGE, Color.GREEN],
-                    [Color.ORANGE, Color.RED, Color.BLUE],
+                    [0, 1, 0],
+                    [1, 3, 2],
                 ],
             },
             {
                 name: 'Gb',
                 description: 'Opp center in headlights',
                 state: [
-                    [Color.GREEN, Color.BLUE, Color.GREEN],
-                    [Color.ORANGE, Color.RED, Color.BLUE],
+                    [0, 2, 0],
+                    [1, 3, 2],
                 ],
             },
             {
@@ -337,8 +345,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Opp center in headlights',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.GREEN, Color.RED],
-                    [Color.GREEN, Color.BLUE, Color.GREEN],
+                    [2, 0, 3],
+                    [0, 2, 0],
                 ],
             },
             {
@@ -346,8 +354,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Opp center in headlights',
                 hidden: true,
                 state: [
-                    [Color.GREEN, Color.BLUE, Color.GREEN],
-                    [Color.ORANGE, Color.GREEN, Color.BLUE],
+                    [0, 2, 0],
+                    [1, 0, 2],
                 ],
             },
             {
@@ -355,8 +363,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Opp center in headlights',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.ORANGE, Color.RED],
-                    [Color.GREEN, Color.BLUE, Color.GREEN],
+                    [2, 1, 3],
+                    [0, 2, 0],
                 ],
             },
             {
@@ -364,16 +372,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Adj center in headlights',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.GREEN, Color.RED],
-                    [Color.GREEN, Color.ORANGE, Color.GREEN],
+                    [2, 0, 3],
+                    [0, 1, 0],
                 ],
             },
             {
                 name: 'Ab',
                 description: 'Adj center in headlights',
                 state: [
-                    [Color.GREEN, Color.RED, Color.GREEN],
-                    [Color.ORANGE, Color.GREEN, Color.BLUE],
+                    [0, 3, 0],
+                    [1, 0, 2],
                 ],
             },
         ],
@@ -382,16 +390,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
         id: 'dblTwoBar',
         name: 'Double 2-Bar',
         state: [
-            [Color.GREEN, Color.GREEN, Color.GRAY],
-            [Color.GRAY, Color.ORANGE, Color.ORANGE],
+            [0, 0, -1],
+            [-1, 1, 1],
         ],
         patterns: [
             {
                 name: 'Y',
                 description: 'Both outer',
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.BLUE],
-                    [Color.RED, Color.ORANGE, Color.ORANGE],
+                    [0, 0, 2],
+                    [3, 1, 1],
                 ],
             },
             {
@@ -399,32 +407,32 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Both inner and bookends',
                 hidden: true,
                 state: [
-                    [Color.RED, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.ORANGE, Color.RED],
+                    [3, 0, 0],
+                    [1, 1, 3],
                 ],
             },
             {
                 name: 'Ab',
                 description: 'Both inner and bookends',
                 state: [
-                    [Color.BLUE, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.ORANGE, Color.BLUE],
+                    [2, 0, 0],
+                    [1, 1, 2],
                 ],
             },
             {
                 name: 'V',
                 description: 'Both inner and no bookends',
                 state: [
-                    [Color.BLUE, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.ORANGE, Color.RED],
+                    [2, 0, 0],
+                    [1, 1, 3],
                 ],
             },
             {
                 name: 'Ja',
                 description: 'Same side and bookends',
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.BLUE],
-                    [Color.RED, Color.RED, Color.GREEN],
+                    [0, 0, 2],
+                    [3, 3, 0],
                 ],
             },
             {
@@ -432,8 +440,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Same side and bookends',
                 hidden: true,
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.ORANGE],
-                    [Color.BLUE, Color.BLUE, Color.GREEN],
+                    [0, 0, 1],
+                    [2, 2, 0],
                 ],
             },
             {
@@ -441,8 +449,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Same side and bookends',
                 hidden: true,
                 state: [
-                    [Color.RED, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.RED, Color.RED],
+                    [3, 0, 0],
+                    [1, 3, 3],
                 ],
             },
             {
@@ -450,16 +458,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Same side and bookends',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.BLUE, Color.BLUE],
+                    [2, 0, 0],
+                    [1, 2, 2],
                 ],
             },
             {
                 name: 'Na',
                 description: 'Same side and no bookends',
                 state: [
-                    [Color.BLUE, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.RED, Color.RED],
+                    [2, 0, 0],
+                    [1, 3, 3],
                 ],
             },
             {
@@ -467,8 +475,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Same side and no bookends',
                 hidden: true,
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.BLUE],
-                    [Color.RED, Color.RED, Color.ORANGE],
+                    [0, 0, 2],
+                    [3, 3, 1],
                 ],
             },
         ],
@@ -477,16 +485,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
         id: 'outerTwoBar',
         name: 'Outer 2-Bar',
         state: [
-            [Color.GREEN, Color.GREEN, Color.GRAY],
-            [Color.GRAY, Color.GRAY, Color.GRAY],
+            [0, 0, -1],
+            [-1, -1, -1],
         ],
         patterns: [
             {
                 name: 'V',
                 description: 'No bookends',
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.BLUE],
-                    [Color.RED, Color.BLUE, Color.ORANGE],
+                    [0, 0, 2],
+                    [3, 2, 1],
                 ],
             },
             {
@@ -494,8 +502,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'No bookends',
                 hidden: true,
                 state: [
-                    [Color.RED, Color.BLUE, Color.ORANGE],
-                    [Color.BLUE, Color.GREEN, Color.GREEN],
+                    [3, 2, 1],
+                    [2, 0, 0],
                 ],
             },
             {
@@ -503,16 +511,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Adj appears twice',
                 hidden: true,
                 state: [
-                    [Color.GREEN, Color.RED, Color.BLUE],
-                    [Color.RED, Color.GREEN, Color.GREEN],
+                    [0, 3, 2],
+                    [3, 0, 0],
                 ],
             },
             {
                 name: 'Rb',
                 description: 'Adj appears twice',
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.ORANGE],
-                    [Color.BLUE, Color.ORANGE, Color.GREEN],
+                    [0, 0, 1],
+                    [2, 1, 0],
                 ],
             },
             {
@@ -520,24 +528,24 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Opp appears twice',
                 hidden: true,
                 state: [
-                    [Color.GREEN, Color.BLUE, Color.ORANGE],
-                    [Color.BLUE, Color.GREEN, Color.GREEN],
+                    [0, 2, 1],
+                    [2, 0, 0],
                 ],
             },
             {
                 name: 'Gd',
                 description: 'Opp appears twice',
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.BLUE],
-                    [Color.RED, Color.BLUE, Color.GREEN],
+                    [0, 0, 2],
+                    [3, 2, 0],
                 ],
             },
             {
                 name: 'T',
                 description: 'Adj by bar and 4 colors',
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.ORANGE],
-                    [Color.BLUE, Color.RED, Color.GREEN],
+                    [0, 0, 1],
+                    [2, 3, 0],
                 ],
             },
             {
@@ -545,16 +553,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Adj by bar and 4 colors',
                 hidden: true,
                 state: [
-                    [Color.GREEN, Color.ORANGE, Color.BLUE],
-                    [Color.RED, Color.GREEN, Color.GREEN],
+                    [0, 1, 2],
+                    [3, 0, 0],
                 ],
             },
             {
                 name: 'Aa',
                 description: 'Opp by bar and 4 colors',
                 state: [
-                    [Color.GREEN, Color.GREEN, Color.BLUE],
-                    [Color.RED, Color.ORANGE, Color.GREEN],
+                    [0, 0, 2],
+                    [3, 1, 0],
                 ],
             },
             {
@@ -562,8 +570,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Opp by bar and 4 colors',
                 hidden: true,
                 state: [
-                    [Color.GREEN, Color.RED, Color.ORANGE],
-                    [Color.BLUE, Color.GREEN, Color.GREEN],
+                    [0, 3, 1],
+                    [2, 0, 0],
                 ],
             },
         ],
@@ -572,16 +580,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
         id: 'innerTwoBar',
         name: 'Inner 2-Bar',
         state: [
-            [Color.GRAY, Color.GREEN, Color.GREEN],
-            [Color.GRAY, Color.GRAY, Color.GRAY],
+            [-1, 0, 0],
+            [-1, -1, -1],
         ],
         patterns: [
             {
                 name: 'Ga',
                 description: 'Bookends adj color',
                 state: [
-                    [Color.RED, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.BLUE, Color.RED],
+                    [3, 0, 0],
+                    [1, 2, 3],
                 ],
             },
             {
@@ -589,16 +597,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Bookends adj color',
                 hidden: true,
                 state: [
-                    [Color.ORANGE, Color.BLUE, Color.RED],
-                    [Color.GREEN, Color.GREEN, Color.ORANGE],
+                    [1, 2, 3],
+                    [0, 0, 1],
                 ],
             },
             {
                 name: 'Gb',
                 description: 'Bookends opp color',
                 state: [
-                    [Color.BLUE, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.RED, Color.BLUE],
+                    [2, 0, 0],
+                    [1, 3, 2],
                 ],
             },
             {
@@ -606,16 +614,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Bookends opp color',
                 hidden: true,
                 state: [
-                    [Color.BLUE, Color.ORANGE, Color.RED],
-                    [Color.GREEN, Color.GREEN, Color.BLUE],
+                    [2, 1, 3],
+                    [0, 0, 2],
                 ],
             },
             {
                 name: 'Y',
                 description: 'No bookends',
                 state: [
-                    [Color.BLUE, Color.GREEN, Color.GREEN],
-                    [Color.ORANGE, Color.BLUE, Color.RED],
+                    [2, 0, 0],
+                    [1, 2, 3],
                 ],
             },
             {
@@ -623,8 +631,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'No bookends',
                 hidden: true,
                 state: [
-                    [Color.ORANGE, Color.BLUE, Color.RED],
-                    [Color.GREEN, Color.GREEN, Color.BLUE],
+                    [1, 2, 3],
+                    [0, 0, 2],
                 ],
             },
         ],
@@ -633,16 +641,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
         id: 'bookends',
         name: 'Bookends No Bar',
         state: [
-            [Color.GREEN, Color.GRAY, Color.GRAY],
-            [Color.GRAY, Color.GRAY, Color.GREEN],
+            [0, -1, -1],
+            [-1, -1, 0],
         ],
         patterns: [
             {
                 name: 'F',
                 description: 'Enclosed 4 checker',
                 state: [
-                    [Color.GREEN, Color.RED, Color.BLUE],
-                    [Color.RED, Color.BLUE, Color.GREEN],
+                    [0, 3, 2],
+                    [3, 2, 0],
                 ],
             },
             {
@@ -650,8 +658,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Enclosed 4 checker',
                 hidden: true,
                 state: [
-                    [Color.GREEN, Color.BLUE, Color.ORANGE],
-                    [Color.BLUE, Color.ORANGE, Color.GREEN],
+                    [0, 2, 1],
+                    [2, 1, 0],
                 ],
             },
             {
@@ -659,16 +667,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Adj appears twice',
                 hidden: true,
                 state: [
-                    [Color.GREEN, Color.RED, Color.ORANGE],
-                    [Color.BLUE, Color.ORANGE, Color.GREEN],
+                    [0, 3, 1],
+                    [2, 1, 0],
                 ],
             },
             {
                 name: 'Rb',
                 description: 'Adj appears twice',
                 state: [
-                    [Color.GREEN, Color.RED, Color.BLUE],
-                    [Color.RED, Color.ORANGE, Color.GREEN],
+                    [0, 3, 2],
+                    [3, 1, 0],
                 ],
             },
             {
@@ -676,16 +684,16 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: 'Opp appears twice',
                 hidden: true,
                 state: [
-                    [Color.GREEN, Color.ORANGE, Color.BLUE],
-                    [Color.RED, Color.BLUE, Color.GREEN],
+                    [0, 1, 2],
+                    [3, 2, 0],
                 ],
             },
             {
                 name: 'Gc',
                 description: 'Opp appears twice',
                 state: [
-                    [Color.GREEN, Color.BLUE, Color.ORANGE],
-                    [Color.BLUE, Color.RED, Color.GREEN],
+                    [0, 2, 1],
+                    [2, 3, 0],
                 ],
             },
         ],
@@ -694,32 +702,32 @@ export const pllTwoSides: PllTwoSidesType[] = [
         id: 'noBookends',
         name: 'No Bookends',
         state: [
-            [Color.GREEN, Color.GRAY, Color.GRAY],
-            [Color.GRAY, Color.GRAY, Color.ORANGE],
+            [0, -1, -1],
+            [-1, -1, 1],
         ],
         patterns: [
             {
                 name: 'V',
                 description: 'Inner 4 checker',
                 state: [
-                    [Color.GREEN, Color.RED, Color.BLUE],
-                    [Color.RED, Color.BLUE, Color.ORANGE],
+                    [0, 3, 2],
+                    [3, 2, 1],
                 ],
             },
             {
                 name: 'Y',
                 description: 'Outer 4 checker',
                 state: [
-                    [Color.GREEN, Color.ORANGE, Color.BLUE],
-                    [Color.RED, Color.GREEN, Color.ORANGE],
+                    [0, 1, 2],
+                    [3, 0, 1],
                 ],
             },
             {
                 name: 'E',
                 description: '5 checker w/ opp middle',
                 state: [
-                    [Color.GREEN, Color.RED, Color.BLUE],
-                    [Color.RED, Color.GREEN, Color.ORANGE],
+                    [0, 3, 2],
+                    [3, 0, 1],
                 ],
             },
             {
@@ -727,8 +735,8 @@ export const pllTwoSides: PllTwoSidesType[] = [
                 description: '5 checker w/ opp middle',
                 hidden: true,
                 state: [
-                    [Color.GREEN, Color.ORANGE, Color.BLUE],
-                    [Color.RED, Color.BLUE, Color.ORANGE],
+                    [0, 1, 2],
+                    [3, 2, 1],
                 ],
             },
         ],

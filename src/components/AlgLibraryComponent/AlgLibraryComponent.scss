@@ -34,6 +34,15 @@
     width: 1000px;
     margin: $size-s auto 0;
 
+    .two-side-library__actions {
+        display: flex;
+        justify-content: center;
+
+        .timer__select {
+            width: 100px;
+        }
+    }
+
     .two-side-library-list {
         display: flex;
         flex-wrap: wrap;
@@ -89,6 +98,19 @@
         .timer__button {
             width: 95px;
             margin: $size-xxs;
+        }
+    }
+}
+
+.choices-component {
+    .choices-component__group {
+        display: flex;
+        margin-bottom: $size-s;
+
+        .timer__button {
+            margin: 0 $size-xs;
+            flex: 1 1 100px;
+            height: 50px;
         }
     }
 }
