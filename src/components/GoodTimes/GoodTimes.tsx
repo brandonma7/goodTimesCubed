@@ -22,7 +22,8 @@ import SettingsView, { SettingsContext } from '../../dialogs/SettingsView';
 import { useContainerDimensions } from '../../utils/useContainerDimensions';
 import InsightsView from '../../dialogs/InsightsView';
 import { ManualCompModeComponent } from '../ManualCompModeComponent/ManualCompModeComponent';
-import AlgLibraryComponent, { TwoSideLibraryComponent } from '../AlgLibraryComponent';
+import AlgLibraryComponent from '../AlgLibraryComponent';
+import TwoSideLibraryComponent from '../TwoSideLibraryComponent';
 
 const SMALL_SCREEN_SIZE_WIDTH = 768;
 
@@ -33,7 +34,7 @@ export enum AppMode {
     SETTINGS,
     MATH,
     ALG,
-    P2S,
+    TRAIN,
 }
 
 export type SolveData = Solve[];
@@ -336,11 +337,13 @@ export default function GoodTimes() {
                     <ManualCompModeComponent puzzleType={sessionData.type} />
                 ) : appMode === AppMode.ALG ? (
                     <AlgLibraryComponent isMobile={isMobile} />
-                ) : appMode === AppMode.P2S ? (
+                ) : appMode === AppMode.TRAIN ? (
                     <TwoSideLibraryComponent />
                 ) : (
                     <>
-                        <section className={`timer__left-bar${timerIsRunning ? ' timer__left-bar--running' : ''}`}>
+                        <section
+                            className={classNames('timer__left-bar', timerIsRunning ? 'timer__left-bar--running' : '')}
+                        >
                             <SessionManagementComponent
                                 sessionData={sessionData}
                                 noSolves={solveData.length === 0}

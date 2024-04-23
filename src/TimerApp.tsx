@@ -84,7 +84,6 @@ export default function AppRoot() {
         Algs for:
             2x2
             skewb
-            bld
 
     P1
         Pro-active training suggestions
@@ -96,10 +95,6 @@ export default function AppRoot() {
 
         OLL Trainer
         PLL Trainer
-        PLL two side recognition trainer (with difficulty levels!)
-            Level 1: Show options for group w/ description
-            Level 2: Show options for group w/o description
-            Level 3: Show all options
 
     P3
         External timer connection (bluetooth or wired)

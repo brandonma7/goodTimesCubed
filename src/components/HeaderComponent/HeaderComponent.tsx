@@ -1,7 +1,12 @@
 import React from 'react';
 
+import { ReactComponent as BookIcon } from '../../icons/book.svg';
 import { ReactComponent as GearIcon } from '../../icons/gear.svg';
 import { ReactComponent as GraphIcon } from '../../icons/graph.svg';
+import { ReactComponent as PencilIcon } from '../../icons/pencil.svg';
+import { ReactComponent as PodiumIcon } from '../../icons/podium.svg';
+import { ReactComponent as TimerIcon } from '../../icons/timer.svg';
+import { ReactComponent as WeightIcon } from '../../icons/weight.svg';
 import { AppMode } from '../GoodTimes';
 
 import './HeaderComponent.scss';
@@ -17,7 +22,7 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                         setAppMode(AppMode.TIMER);
                     }}
                 >
-                    Timer
+                    <TimerIcon className='timer__icon' aria-label='Timer' />
                 </button>
                 <button
                     className='timer__button'
@@ -25,7 +30,7 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                         setAppMode(AppMode.COMP);
                     }}
                 >
-                    Comp
+                    <PodiumIcon className='timer__icon' aria-label='Comp Mode' />
                 </button>
                 <button
                     className='timer__button'
@@ -33,7 +38,7 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                         setAppMode(AppMode.MATH);
                     }}
                 >
-                    Math
+                    <PencilIcon className='timer__icon' aria-label='Manual Comp Mode' />
                 </button>
                 <button
                     className='timer__button'
@@ -41,15 +46,15 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                         setAppMode(AppMode.ALG);
                     }}
                 >
-                    Algs
+                    <BookIcon className='timer__icon' aria-label='Algorithm Library' />
                 </button>
                 <button
                     className='timer__button'
                     onClick={() => {
-                        setAppMode(AppMode.P2S);
+                        setAppMode(AppMode.TRAIN);
                     }}
                 >
-                    P2S
+                    <WeightIcon className='timer__icon' aria-label='Training' />
                 </button>
                 <button
                     className='timer__button'
