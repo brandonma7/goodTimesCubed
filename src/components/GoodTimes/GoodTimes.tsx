@@ -23,7 +23,7 @@ import { useContainerDimensions } from '../../utils/useContainerDimensions';
 import InsightsView from '../../dialogs/InsightsView';
 import { ManualCompModeComponent } from '../ManualCompModeComponent/ManualCompModeComponent';
 import AlgLibraryComponent from '../AlgLibraryComponent';
-import TwoSideLibraryComponent from '../TwoSideLibraryComponent';
+import TrainingComponent from '../TrainingComponent';
 
 const SMALL_SCREEN_SIZE_WIDTH = 768;
 
@@ -338,7 +338,7 @@ export default function GoodTimes() {
                 ) : appMode === AppMode.ALG ? (
                     <AlgLibraryComponent isMobile={isMobile} />
                 ) : appMode === AppMode.TRAIN ? (
-                    <TwoSideLibraryComponent />
+                    <TrainingComponent />
                 ) : (
                     <>
                         <section
