@@ -2,14 +2,17 @@ import React, { useState } from 'react';
 
 import Cube, { Color } from '../../classes/Cube';
 import { IndexesToSkip, PuzzleType } from '../../utils/cubingUtils';
+import { classNames } from '../../utils/genericUtils';
 
 import './CubeVisualizationComponent.scss';
 
 type CubeVisualizationComponentProps = {
-    scramble: string;
+    scramble?: string;
+    state?: FaceState;
     puzzleType: PuzzleType;
     width?: number;
     height?: number;
+    clickable?: boolean;
 };
 
 const numToColor = ['white', 'orange', 'green', 'red', 'blue', 'yellow', 'gray'];
@@ -29,9 +32,11 @@ export function colorScramble(scramble: string) {
 
 export default function CubeVisualizationComponent({
     scramble,
+    state,
     puzzleType,
     width = 400,
     height = 300,
+    clickable = true,
 }: CubeVisualizationComponentProps): JSX.Element {
     const [isVisible, setIsVisible] = useState(2);
     // Annoyingly verbose way of checking this to satisfy TS IndexesToSkip check below
@@ -44,8 +49,10 @@ export default function CubeVisualizationComponent({
     ) {
         return <></>;
     }
-    const cube = new Cube(scramble, puzzleType);
-    const cubeState = cube.getState();
+    const cubeState = scramble != null ? new Cube(scramble, puzzleType).getState() : state;
+    if (cubeState == null) {
+        return <></>;
+    }
 
     const order = parseInt(puzzleType[0]);
     const isEven = order % 2 === 0;
@@ -61,13 +68,21 @@ export default function CubeVisualizationComponent({
     const fullCube = () => {
         return (
             <div
-                className={`timer__cube-pic clickable timer__cube-pic--${puzzleType}`}
+                className={classNames(
+                    'timer__cube-pic',
+                    `timer__cube-pic--${puzzleType}`,
+                    clickable ? 'clickable' : '',
+                )}
                 style={{
                     width,
                     height,
                     minHeight: height,
                 }}
-                onClick={() => setIsVisible(puzzleType !== '3x3x3' ? 0 : 1)}
+                onClick={() => {
+                    if (clickable) {
+                        setIsVisible(puzzleType !== '3x3x3' ? 0 : 1);
+                    }
+                }}
             >
                 <div className='timer__cube-pic-row'>
                     <div className='timer__cube-face'></div>

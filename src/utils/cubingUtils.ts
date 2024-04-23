@@ -29,6 +29,7 @@ export type Solve = {
         oll?: string;
         pll?: string;
         oh?: string;
+        bldm2?: string;
         ortega?: string;
         coll?: string;
         eg1?: string;

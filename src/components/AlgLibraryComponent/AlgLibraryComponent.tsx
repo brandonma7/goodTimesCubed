@@ -4,7 +4,7 @@ import { AlgSetNamesMap, AlgSets, CaseGroup } from '../CasePickerComponent';
 import { ollCases } from '../../utils/cases/3x3x3/oll';
 import { pllCases } from '../../utils/cases/3x3x3/pll';
 import { ortegaCases } from '../../utils/cases/2x2x2/ortega';
-import {
+import CubeVisualizationComponent, {
     FaceState,
     scrambleLetterColors,
     SingleFaceVisualizationComponent,
@@ -15,10 +15,12 @@ import './AlgLibraryComponent.scss';
 import { ohCases } from '../../utils/cases/3x3x3/oh';
 import { classNames, uniquifyList } from '../../utils/genericUtils';
 import { getStateColors, PllTwoSideId, pllTwoSideIdList, pllTwoSides } from '../../utils/cases/3x3x3/pllTwoSide';
+import { bldM2Cases } from '../../utils/cases/3x3x3/bldm2';
 
 type AlgEntryData = {
     type: AlgSets;
     hideCasePic?: boolean;
+    showFullPic?: boolean;
     hideAuf?: boolean;
 };
 
@@ -40,6 +42,11 @@ const AlgLibrary: AlgLibraryEntry[] = [
             },
             {
                 type: 'oh',
+            },
+            {
+                type: 'bldm2',
+                hideAuf: true,
+                showFullPic: true,
             },
         ],
     },
@@ -79,6 +86,7 @@ const algSetMap: {
     pll: pllCases,
     oh: ohCases,
     ortega: ortegaCases,
+    bldm2: bldM2Cases,
     coll: [],
     eg1: [],
     eg2: [],
@@ -186,12 +194,22 @@ export default function AlgLibraryComponent({ isMobile }: { isMobile: boolean })
 
                                             {!selectedAlgSet.hideCasePic && (
                                                 <td className='alg-library__case-pic'>
-                                                    {
+                                                    {selectedAlgSet.showFullPic ? (
+                                                        <>
+                                                            <CubeVisualizationComponent
+                                                                puzzleType={selectedPuzzle}
+                                                                state={algCase.state}
+                                                                width={160}
+                                                                height={120}
+                                                                clickable={false}
+                                                            />
+                                                        </>
+                                                    ) : (
                                                         <SingleFaceVisualizationComponent
                                                             faceState={algCase.state}
                                                             puzzleType={selectedPuzzle}
                                                         />
-                                                    }
+                                                    )}
                                                 </td>
                                             )}
                                             <td className='alg-library__case-alg'>

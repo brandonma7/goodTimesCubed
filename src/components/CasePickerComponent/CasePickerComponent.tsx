@@ -7,8 +7,10 @@ import './CasePickerComponent.scss';
 import { pllCases } from '../../utils/cases/3x3x3/pll';
 import { ollCases } from '../../utils/cases/3x3x3/oll';
 import { ortegaCases } from '../../utils/cases/2x2x2/ortega';
+import { ohCases } from '../../utils/cases/3x3x3/oh';
+import { bldM2Cases } from '../../utils/cases/3x3x3/bldm2';
 
-export type AlgSets = 'oll' | 'pll' | 'oh' | 'ortega' | 'coll' | 'eg1' | 'eg2' | 'parity';
+export type AlgSets = 'oll' | 'pll' | 'oh' | 'bldm2' | 'ortega' | 'coll' | 'eg1' | 'eg2' | 'parity';
 
 export const AlgSetNamesMap: {
     [k in AlgSets]: string;
@@ -16,6 +18,7 @@ export const AlgSetNamesMap: {
     oll: 'OLL',
     pll: 'PLL',
     oh: 'OH',
+    bldm2: 'BLD M2',
     ortega: 'Ortega',
     coll: 'COLL',
     eg1: 'EG1',
@@ -65,12 +68,16 @@ const algSetDataMap: {
         id: 'oll',
     },
     oh: {
-        caseGroup: [],
+        caseGroup: ohCases,
         id: 'oh',
     },
     ortega: {
         caseGroup: ortegaCases,
         id: 'ortega',
+    },
+    bldm2: {
+        caseGroup: bldM2Cases,
+        id: 'bldm2',
     },
     coll: {
         caseGroup: [],
