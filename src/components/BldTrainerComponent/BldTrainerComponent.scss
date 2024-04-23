@@ -1,1 +1,15 @@
 @import '../../styles/global-variables';
+
+.timer__bld-trainer-component {
+    .basic-table {
+        width: unset;
+    }
+
+    .bld-pair-column {
+        width: 50px;
+    }
+
+    .bld-pair--null {
+        background-color: $table-border-color;
+    }
+}
