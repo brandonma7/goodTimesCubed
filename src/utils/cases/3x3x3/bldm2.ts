@@ -1,17 +1,5 @@
-import { Color } from '../../../classes/Cube';
+import { Color, solidGrayFace, solidOrangeFace, solidRedFace, solidYellowFace } from '../../../classes/Cube';
 import { CaseGroup } from '../../../components/CasePickerComponent/CasePickerComponent';
-
-const solidGrayFace = [
-    Color.GRAY,
-    Color.GRAY,
-    Color.GRAY,
-    Color.GRAY,
-    Color.GRAY,
-    Color.GRAY,
-    Color.GRAY,
-    Color.GRAY,
-    Color.GRAY,
-];
 
 function generateFaceState(face: number, sticker: number, color: Color) {
     const state = [];
@@ -66,12 +54,6 @@ export const bldM2Cases: CaseGroup = [
                 algs: ["(U R' U') (B' R2 B) M2 (B' R2 B) (U R U')"],
                 algNotes: ['(Set up T) (set up P) M2 (undo P setup) (undo T setup)'],
                 state: generateFaceState(4, 1, Color.BLUE),
-            },
-            {
-                id: 'edgeFlip',
-                name: 'Edge Flip',
-                algs: ["(M' U' M' U' M' U2) (M U' M U' M U2)"],
-                algNotes: ['Set up edges to be in A/Q and C/I positions'],
             },
         ],
     },
@@ -175,6 +157,55 @@ export const bldM2Cases: CaseGroup = [
                 name: 'X',
                 algs: ["(U' L2 U) M2' (U' L2 U)"],
                 state: generateFaceState(5, 3, Color.YELLOW),
+            },
+        ],
+    },
+    {
+        name: 'Misc',
+        cases: [
+            {
+                id: 'edgeFlip',
+                name: 'Edge Flip',
+                algs: ["(M' U' M' U' M' U2) (M U' M U' M U2)"],
+                algNotes: ['Set up edges to be in A/Q and C/I positions'],
+                state: [
+                    [
+                        Color.WHITE,
+                        Color.BLUE,
+                        Color.WHITE,
+                        Color.WHITE,
+                        Color.WHITE,
+                        Color.WHITE,
+                        Color.WHITE,
+                        Color.GREEN,
+                        Color.WHITE,
+                    ],
+                    solidOrangeFace,
+                    [
+                        Color.GREEN,
+                        Color.WHITE,
+                        Color.GREEN,
+                        Color.GREEN,
+                        Color.GREEN,
+                        Color.GREEN,
+                        Color.GREEN,
+                        Color.GREEN,
+                        Color.GREEN,
+                    ],
+                    solidRedFace,
+                    [
+                        Color.BLUE,
+                        Color.WHITE,
+                        Color.BLUE,
+                        Color.BLUE,
+                        Color.BLUE,
+                        Color.BLUE,
+                        Color.BLUE,
+                        Color.BLUE,
+                        Color.BLUE,
+                    ],
+                    solidYellowFace,
+                ],
             },
         ],
     },

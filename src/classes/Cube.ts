@@ -27,7 +27,13 @@ const ColorToFaceIndexMap = {
     [Color.YELLOW]: 5,
     [Color.GRAY]: 6,
 };
+export const solidWhiteFace = new Array(9).fill(Color.WHITE);
+export const solidOrangeFace = new Array(9).fill(Color.ORANGE);
+export const solidGreenFace = new Array(9).fill(Color.GREEN);
+export const solidRedFace = new Array(9).fill(Color.RED);
+export const solidBlueFace = new Array(9).fill(Color.BLUE);
 export const solidYellowFace = new Array(9).fill(Color.YELLOW);
+export const solidGrayFace = new Array(9).fill(Color.GRAY);
 
 export default class Cube {
     private cubeState: CubeState;
