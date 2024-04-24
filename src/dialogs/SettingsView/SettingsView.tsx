@@ -33,7 +33,7 @@ const defaultSolveSettings = [
     },
 ];
 
-type GoalSettings = {
+export type GoalSettings = {
     puzzleType: PuzzleType;
     singleGoal: number;
     averageGoal: number;

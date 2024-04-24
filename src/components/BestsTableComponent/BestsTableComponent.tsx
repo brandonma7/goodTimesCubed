@@ -117,10 +117,12 @@ export default function BestsTableComponent({
     solveDispatcher,
     onAction,
 }: BestsTableComponentProps) {
-    const { solveSettings: settings } = useContext(SettingsContext);
+    const { solveSettings: settings, goalSettings } = useContext(SettingsContext);
     const [solveDetailsIndex, setSolveDetails] = useState(-1);
     const [solveDetailsSize, setSolveSize] = useState(1);
     const [isMean, setIsMean] = useState(false);
+
+    const goals = goalSettings.find((goal) => goal.puzzleType === sessionData.type);
 
     const setSolveDetailsIndex = (value: number, size: number) => {
         setSolveDetails(value === solveDetailsIndex && size === solveDetailsSize ? -1 : value);
@@ -136,18 +138,24 @@ export default function BestsTableComponent({
         const nameCellText = `${DataTypeToTextMap[type]}${size > 1 ? size : ''}`;
         let currentCellText = '';
         let bestCellText = '';
+        let goalCellText = '';
 
         if (type === DataType.AVERAGE) {
             currentCellText = getFormattedTime(calculateAverage(solves, solves.length - 1, size));
             const bestTime = getBestOfType(bests, type, size)?.time ?? -1;
             bestCellText = getFormattedTime(bestTime);
+            goalCellText =
+                goals?.averageGoal != null || goals?.averageGoal !== 0 ? getFormattedTime(goals?.averageGoal) : '-';
         } else if (type === DataType.MEAN) {
             currentCellText = getFormattedTime(calculateMean(solves, solves.length - 1, size));
             const bestTime = getBestOfType(bests, type, size)?.time ?? -1;
             bestCellText = getFormattedTime(bestTime);
+            goalCellText = goals?.meanGoal != null || goals?.meanGoal !== 0 ? getFormattedTime(goals?.meanGoal) : '-';
         } else {
             currentCellText = getFormattedTimeBySolve(solves.at(-1));
             bestCellText = getFormattedTime(bests[DataType.SINGLE]?.time);
+            goalCellText =
+                goals?.singleGoal != null || goals?.singleGoal !== 0 ? getFormattedTime(goals?.singleGoal) : '-';
         }
 
         return (
@@ -182,6 +190,7 @@ export default function BestsTableComponent({
                 >
                     {bestCellText}
                 </td>
+                <td>{goalCellText}</td>
             </tr>
         );
     });
@@ -194,6 +203,7 @@ export default function BestsTableComponent({
                         <th></th>
                         <th>CURRENT</th>
                         <th>BEST</th>
+                        <th>GOAL</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -202,6 +212,7 @@ export default function BestsTableComponent({
                     ) : (
                         <tr>
                             <td>TIME</td>
+                            <td>-</td>
                             <td>-</td>
                             <td>-</td>
                         </tr>

@@ -20,13 +20,14 @@ export type ResultsTableComponentProps = {
 };
 
 export default function ResultsTableComponent(results: ResultsTableComponentProps): JSX.Element {
-    const { solveSettings } = useContext(SettingsContext);
+    const { solveSettings, goalSettings } = useContext(SettingsContext);
     const { solves, sessionData, sessionId, solveDispatcher, onAction } = results;
     const { sessionType, numSplits, type: puzzleType } = sessionData;
     const [solveDetailsIndex, setSolveDetails] = useState(-1);
 
     const [solveDetailsSize, setSolveSize] = useState(1);
     const [isMean, setIsMean] = useState(false);
+    const goals = goalSettings.find((goal) => goal.puzzleType === sessionData.type);
 
     const setSolveDetailsIndex = (value: number, size = 1, isMean = false) => {
         setSolveDetails(value === solveDetailsIndex && size === solveDetailsSize ? -1 : value);
@@ -59,6 +60,7 @@ export default function ResultsTableComponent(results: ResultsTableComponentProp
                     <NormalResultsTable
                         results={results}
                         settings={solveSettings}
+                        goals={goals}
                         setSolveDetailsIndex={setSolveDetailsIndex}
                     />
                 );
