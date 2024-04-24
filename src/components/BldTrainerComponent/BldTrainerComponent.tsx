@@ -14,31 +14,48 @@ export default function BldTrainerComponent() {
     );
 }
 
-function getRandomLetterPair(): {
+function getRandomLetterPair(
+    firstLetterIndex?: number,
+    secondLetterIndex?: number,
+): {
     pair: string;
     word: string;
 } {
-    const randomFirstLetter = Math.trunc(Math.random() * letterPairTableMapping.length);
-    let randomSecondLetter = Math.trunc(Math.random() * letterPairTableMapping.length);
-    randomSecondLetter =
-        randomFirstLetter === randomSecondLetter
-            ? (randomSecondLetter + 1) % letterPairTableMapping.length
-            : randomSecondLetter;
-    const letterPair = `${letterPairTableMapping[randomFirstLetter].letter}${letterPairTableMapping[randomFirstLetter].pairs[randomSecondLetter].letter}`;
+    const firstIndex =
+        firstLetterIndex === -1 || firstLetterIndex == null
+            ? Math.trunc(Math.random() * letterPairMappingForTrainer.length)
+            : firstLetterIndex;
+    const secondIndex =
+        secondLetterIndex ?? Math.trunc(Math.random() * letterPairMappingForTrainer[firstIndex].pairs.length);
+
+    const firstLetter = letterPairMappingForTrainer[firstIndex].letter;
+    const secondLetterPair = letterPairMappingForTrainer[firstIndex].pairs[secondIndex];
+    const letterPair = `${firstLetter}${secondLetterPair.letter}`;
 
     return {
         pair: letterPair,
-        word: letterPairTableMapping[randomFirstLetter].pairs[randomSecondLetter].word,
+        word: secondLetterPair.word,
     };
 }
 
 function LetterPairTrainer() {
-    const [letterPair, setLetterPair] = useState(getRandomLetterPair());
+    const [firstLetterIndex, setFirstLetterIndex] = useState(-1);
+    const [letterPair, setLetterPair] = useState({
+        pair: 'AB',
+        word: letterPairMappingForTrainer[0].pairs[0].word,
+    });
     const [showWord, setShowWord] = useState(false);
+    const [goInOrder, setGoInOrder] = useState(false);
+    const [orderIndex, setOrderIndex] = useState(0);
 
     function progressTrainer() {
         if (showWord) {
-            setLetterPair(getRandomLetterPair());
+            if (goInOrder) {
+                setOrderIndex((orderIndex + 1) % letterPairMappingForTrainer[firstLetterIndex].pairs.length);
+                setLetterPair(getRandomLetterPair(firstLetterIndex, orderIndex));
+            } else {
+                setLetterPair(getRandomLetterPair(firstLetterIndex));
+            }
             setShowWord(false);
         } else {
             setShowWord(true);
@@ -46,20 +63,50 @@ function LetterPairTrainer() {
     }
 
     return (
-        <div
-            onKeyDown={(event) => {
-                if (event.key === 'Space') {
-                    progressTrainer();
-                }
-            }}
-        >
-            <p className='trainer-pair'>{showWord ? letterPair.word : letterPair.pair}</p>
-            <div>
-                <button className='timer__button' onClick={progressTrainer}>
-                    {showWord ? 'Next' : 'Check'}
+        <>
+            <select
+                className='timer__select'
+                value={firstLetterIndex}
+                onChange={(event) => {
+                    const newIndex = parseInt(event.target.value);
+                    if (firstLetterIndex !== newIndex) {
+                        setFirstLetterIndex(newIndex);
+                    }
+                    if (newIndex === -1) {
+                        setGoInOrder(false);
+                    }
+                }}
+            >
+                <option value={-1}>All</option>
+                {letterPairTableMapping.map((letterPair, index) => {
+                    return (
+                        <option key={index} value={index}>
+                            {letterPair.letter}
+                        </option>
+                    );
+                })}
+            </select>
+            {firstLetterIndex !== -1 && (
+                <button className='timer__button' onClick={() => setGoInOrder(!goInOrder)}>
+                    {goInOrder ? 'Sequential Mode' : 'Random Mode'}
                 </button>
+            )}
+
+            <div
+                onKeyDown={(event) => {
+                    if (event.key === 'Space') {
+                        progressTrainer();
+                    }
+                }}
+            >
+                <p className='trainer-pair'>{showWord ? letterPair.word : letterPair.pair}</p>
+                <div>
+                    <button className='timer__button' onClick={progressTrainer}>
+                        {showWord ? 'Next' : 'Check'}
+                    </button>
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 
@@ -101,21 +148,31 @@ function LetterPairTable() {
     );
 }
 
-const letterPairTableMapping = [
+type LetterPair = {
+    letter: string;
+    pairs: LetterWord[];
+};
+
+type LetterWord = {
+    letter: string;
+    word: string;
+};
+
+const letterPairTableMapping: LetterPair[] = [
     {
         letter: 'A',
         pairs: [
             { letter: 'A', word: '-' },
             { letter: 'B', word: 'Abs' },
             { letter: 'C', word: 'Ace' },
-            { letter: 'D', word: 'Add' },
+            { letter: 'D', word: 'Ad' },
             { letter: 'E', word: 'Aero' },
             { letter: 'F', word: 'As Fuck' },
             { letter: 'G', word: 'Age' },
             { letter: 'H', word: 'Ahh' },
-            { letter: 'I', word: 'Aid' },
+            { letter: 'I', word: 'Artificial Intelligence' },
             { letter: 'J', word: 'Apple Jacks' },
-            { letter: 'K', word: 'Ask' },
+            { letter: 'K', word: 'Ache' },
             { letter: 'L', word: 'Ale' },
             { letter: 'M', word: 'Amp' },
             { letter: 'N', word: 'Ant' },
@@ -124,10 +181,10 @@ const letterPairTableMapping = [
             { letter: 'Q', word: 'Acquire' },
             { letter: 'R', word: 'Art' },
             { letter: 'S', word: 'Ass' },
-            { letter: 'T', word: 'At' },
+            { letter: 'T', word: 'AT-AT' },
             { letter: 'U', word: 'August' },
             { letter: 'V', word: 'A/V' },
-            { letter: 'W', word: 'Aww' },
+            { letter: 'W', word: 'AW root beer' },
             { letter: 'X', word: 'Ax' },
         ],
     },
@@ -152,7 +209,7 @@ const letterPairTableMapping = [
             { letter: 'P', word: 'Boop' },
             { letter: 'Q', word: 'Baroque' },
             { letter: 'R', word: 'Bro' },
-            { letter: 'S', word: 'Boss' },
+            { letter: 'S', word: 'Bullshit' },
             { letter: 'T', word: 'Bat' },
             { letter: 'U', word: 'Butt' },
             { letter: 'V', word: 'Brave' },
@@ -167,7 +224,7 @@ const letterPairTableMapping = [
             { letter: 'B', word: 'Cab' },
             { letter: 'C', word: '-' },
             { letter: 'D', word: 'CD' },
-            { letter: 'E', word: 'Icy' },
+            { letter: 'E', word: "Collector's Edition" },
             { letter: 'F', word: 'Coffin' },
             { letter: 'G', word: 'Cog' },
             { letter: 'H', word: 'Chop' },
@@ -221,7 +278,7 @@ const letterPairTableMapping = [
     {
         letter: 'E',
         pairs: [
-            { letter: 'A', word: 'Ear' },
+            { letter: 'A', word: 'Madden' },
             { letter: 'B', word: 'EB Games' },
             { letter: 'C', word: 'Echo' },
             { letter: 'D', word: 'Eddy' },
@@ -233,7 +290,7 @@ const letterPairTableMapping = [
             { letter: 'J', word: 'Edge' },
             { letter: 'K', word: 'Eek' },
             { letter: 'L', word: 'Element' },
-            { letter: 'M', word: 'Eminem' },
+            { letter: 'M', word: 'Ember' },
             { letter: 'N', word: 'End' },
             { letter: 'O', word: 'Eobard' },
             { letter: 'P', word: 'Episode' },
@@ -286,7 +343,7 @@ const letterPairTableMapping = [
             { letter: 'E', word: 'Gee' },
             { letter: 'F', word: 'Gift' },
             { letter: 'G', word: '-' },
-            { letter: 'H', word: 'Ghost' },
+            { letter: 'H', word: 'Guitar Hero' },
             { letter: 'I', word: 'Gi' },
             { letter: 'J', word: 'Gauge' },
             { letter: 'K', word: 'Goku' },
@@ -386,7 +443,7 @@ const letterPairTableMapping = [
             { letter: 'R', word: 'Jr.' },
             { letter: 'S', word: 'Jesse' },
             { letter: 'T', word: 'Jet' },
-            { letter: 'U', word: 'Juju' },
+            { letter: 'U', word: 'Juice' },
             { letter: 'V', word: 'Jive' },
             { letter: 'W', word: 'Jaw' },
             { letter: 'X', word: 'Jax' },
@@ -404,9 +461,9 @@ const letterPairTableMapping = [
             { letter: 'G', word: 'Keg' },
             { letter: 'H', word: 'Kindhearted' },
             { letter: 'I', word: 'Kick' },
-            { letter: 'J', word: 'Kedge' },
+            { letter: 'J', word: 'Kage' },
             { letter: 'K', word: '-' },
-            { letter: 'L', word: 'Kelle' },
+            { letter: 'L', word: 'Kale' },
             { letter: 'M', word: 'Kim' },
             { letter: 'N', word: 'Ken' },
             { letter: 'O', word: 'Knock Out' },
@@ -417,7 +474,7 @@ const letterPairTableMapping = [
             { letter: 'T', word: 'Kit' },
             { letter: 'U', word: 'Kiuper belt' },
             { letter: 'V', word: 'Kevin' },
-            { letter: 'W', word: 'Kawkaw' },
+            { letter: 'W', word: 'Kiwi' },
             { letter: 'X', word: 'Kix' },
         ],
     },
@@ -440,14 +497,14 @@ const letterPairTableMapping = [
             { letter: 'N', word: 'Lentel' },
             { letter: 'O', word: 'Low' },
             { letter: 'P', word: 'Lip' },
-            { letter: 'Q', word: 'Lake' },
+            { letter: 'Q', word: 'Lock' },
             { letter: 'R', word: 'Lair' },
             { letter: 'S', word: 'Lass' },
             { letter: 'T', word: 'Light' },
             { letter: 'U', word: 'Lulu' },
             { letter: 'V', word: 'Lava' },
             { letter: 'W', word: 'Law' },
-            { letter: 'X', word: 'Lax' },
+            { letter: 'X', word: 'Lex' },
         ],
     },
     {
@@ -578,7 +635,7 @@ const letterPairTableMapping = [
             { letter: 'G', word: 'Quagmire' },
             { letter: 'H', word: 'Quohog' },
             { letter: 'I', word: 'Qi' },
-            { letter: 'J', word: 'Quedge' },
+            { letter: 'J', word: 'CrackerJacks' },
             { letter: 'K', word: 'Quake' },
             { letter: 'L', word: 'Quail' },
             { letter: 'M', word: 'Quartermaster' },
@@ -640,9 +697,9 @@ const letterPairTableMapping = [
             { letter: 'K', word: 'Sack' },
             { letter: 'L', word: 'Slay' },
             { letter: 'M', word: 'Samoa' },
-            { letter: 'N', word: 'Snack' },
+            { letter: 'N', word: 'Sun' },
             { letter: 'O', word: 'Soap' },
-            { letter: 'P', word: 'Speed' },
+            { letter: 'P', word: 'Sap' },
             { letter: 'Q', word: 'Esquire' },
             { letter: 'R', word: 'Sir' },
             { letter: 'S', word: '-' },
@@ -701,7 +758,7 @@ const letterPairTableMapping = [
             { letter: 'N', word: 'Unite' },
             { letter: 'O', word: 'Nobuo' },
             { letter: 'P', word: 'Up' },
-            { letter: 'Q', word: 'Uck' },
+            { letter: 'Q', word: 'Unique' },
             { letter: 'R', word: 'URL website' },
             { letter: 'S', word: 'United States' },
             { letter: 'T', word: 'UTI' },
@@ -725,13 +782,13 @@ const letterPairTableMapping = [
             { letter: 'I', word: 'Vivi' },
             { letter: 'J', word: 'Vaj' },
             { letter: 'K', word: 'Viking' },
-            { letter: 'L', word: 'Veil' },
+            { letter: 'L', word: 'Vowel' },
             { letter: 'M', word: 'Vim' },
             { letter: 'N', word: 'Vent' },
             { letter: 'O', word: 'Voh' },
             { letter: 'P', word: 'Vice President' },
             { letter: 'Q', word: 'Vacuum' },
-            { letter: 'R', word: 'Verify' },
+            { letter: 'R', word: 'Virtual Reality' },
             { letter: 'S', word: 'Vest' },
             { letter: 'T', word: 'Vet' },
             { letter: 'U', word: 'Mr. Vu' },
@@ -743,7 +800,7 @@ const letterPairTableMapping = [
     {
         letter: 'W',
         pairs: [
-            { letter: 'A', word: 'Water' },
+            { letter: 'A', word: 'Washington' },
             { letter: 'B', word: 'Web' },
             { letter: 'C', word: 'Water Closet' },
             { letter: 'D', word: 'Wedding' },
@@ -762,7 +819,7 @@ const letterPairTableMapping = [
             { letter: 'Q', word: 'Watch' },
             { letter: 'R', word: 'War' },
             { letter: 'S', word: 'West' },
-            { letter: 'T', word: 'Wet' },
+            { letter: 'T', word: 'Water' },
             { letter: 'U', word: 'Wut' },
             { letter: 'V', word: 'Wave' },
             { letter: 'W', word: '-' },
@@ -783,14 +840,14 @@ const letterPairTableMapping = [
             { letter: 'I', word: 'Xi' },
             { letter: 'J', word: 'ZJ' },
             { letter: 'K', word: 'Exec' },
-            { letter: 'L', word: 'XL' },
+            { letter: 'L', word: 'Extra Large' },
             { letter: 'M', word: 'Zim' },
             { letter: 'N', word: 'Zen' },
             { letter: 'O', word: 'Hugs/kisses xoxo' },
             { letter: 'P', word: 'Experience Points' },
             { letter: 'Q', word: 'Quetzalcoatl' },
             { letter: 'R', word: 'Zorro' },
-            { letter: 'S', word: 'Zest' },
+            { letter: 'S', word: 'Extra Small' },
             { letter: 'T', word: 'Exit' },
             { letter: 'U', word: 'Zu' },
             { letter: 'V', word: '15' },
@@ -799,3 +856,11 @@ const letterPairTableMapping = [
         ],
     },
 ];
+
+// Removing the dashes to make logic in trainer easier
+const letterPairMappingForTrainer: LetterPair[] = letterPairTableMapping.map((letterPair) => {
+    return {
+        letter: letterPair.letter,
+        pairs: letterPair.pairs.filter((pair) => pair.word != '-'),
+    };
+});
