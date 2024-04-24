@@ -1,47 +1,107 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './BldTrainerComponent.scss';
 
 export default function BldTrainerComponent() {
+    const [isTraining, setIsTraining] = useState(false);
+
     return (
         <div className='timer__bld-trainer-component'>
-            <table className='basic-table'>
-                <thead>
-                    <tr>
-                        <th className='bld-pair-column'></th>
-                        {letterPairTable.map((letterPair, index) => {
-                            return (
-                                <th key={index} className='bld-pair-column'>
-                                    {letterPair.letter}
-                                </th>
-                            );
-                        })}
-                    </tr>
-                </thead>
-                <tbody>
-                    {letterPairTable.map((letterPair, index) => {
-                        return (
-                            <tr key={index}>
-                                <td>{letterPair.letter}</td>
-                                {letterPair.pairs.map((pair, index) => {
-                                    return (
-                                        <td
-                                            key={index}
-                                            className={pair.letter === letterPair.letter ? 'bld-pair--null' : ''}
-                                        >
-                                            {pair.word}
-                                        </td>
-                                    );
-                                })}
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+            <button className='timer__button' onClick={() => setIsTraining(!isTraining)}>
+                {isTraining ? 'Stop' : 'Train'}
+            </button>
+            {isTraining ? <LetterPairTrainer /> : <LetterPairTable />}
         </div>
     );
 }
 
-const letterPairTable = [
+function getRandomLetterPair(): {
+    pair: string;
+    word: string;
+} {
+    const randomFirstLetter = Math.trunc(Math.random() * letterPairTableMapping.length);
+    let randomSecondLetter = Math.trunc(Math.random() * letterPairTableMapping.length);
+    randomSecondLetter =
+        randomFirstLetter === randomSecondLetter
+            ? (randomSecondLetter + 1) % letterPairTableMapping.length
+            : randomSecondLetter;
+    const letterPair = `${letterPairTableMapping[randomFirstLetter].letter}${letterPairTableMapping[randomFirstLetter].pairs[randomSecondLetter].letter}`;
+
+    return {
+        pair: letterPair,
+        word: letterPairTableMapping[randomFirstLetter].pairs[randomSecondLetter].word,
+    };
+}
+
+function LetterPairTrainer() {
+    const [letterPair, setLetterPair] = useState(getRandomLetterPair());
+    const [showWord, setShowWord] = useState(false);
+
+    function progressTrainer() {
+        if (showWord) {
+            setLetterPair(getRandomLetterPair());
+            setShowWord(false);
+        } else {
+            setShowWord(true);
+        }
+    }
+
+    return (
+        <div
+            onKeyDown={(event) => {
+                if (event.key === 'Space') {
+                    progressTrainer();
+                }
+            }}
+        >
+            <p className='trainer-pair'>{showWord ? letterPair.word : letterPair.pair}</p>
+            <div>
+                <button className='timer__button' onClick={progressTrainer}>
+                    {showWord ? 'Next' : 'Check'}
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function LetterPairTable() {
+    return (
+        <table className='basic-table'>
+            <thead>
+                <tr>
+                    <th className='bld-pair-column'></th>
+                    {letterPairTableMapping.map((letterPair, index) => {
+                        return (
+                            <th key={index} className='bld-pair-column'>
+                                {letterPair.letter}
+                            </th>
+                        );
+                    })}
+                </tr>
+            </thead>
+            <tbody>
+                {letterPairTableMapping.map((letterPair, index) => {
+                    return (
+                        <tr key={index}>
+                            <td className='bld-pair-row'>{letterPair.letter}</td>
+                            {letterPair.pairs.map((pair, index) => {
+                                return (
+                                    <td
+                                        key={index}
+                                        className={pair.letter === letterPair.letter ? 'bld-pair--null' : ''}
+                                    >
+                                        {pair.word}
+                                    </td>
+                                );
+                            })}
+                        </tr>
+                    );
+                })}
+            </tbody>
+        </table>
+    );
+}
+
+const letterPairTableMapping = [
     {
         letter: 'A',
         pairs: [
@@ -49,7 +109,7 @@ const letterPairTable = [
             { letter: 'B', word: 'Abs' },
             { letter: 'C', word: 'Ace' },
             { letter: 'D', word: 'Add' },
-            { letter: 'E', word: '' },
+            { letter: 'E', word: 'Aero' },
             { letter: 'F', word: 'As Fuck' },
             { letter: 'G', word: 'Age' },
             { letter: 'H', word: 'Ahh' },
@@ -61,7 +121,7 @@ const letterPairTable = [
             { letter: 'N', word: 'Ant' },
             { letter: 'O', word: 'AOC' },
             { letter: 'P', word: 'Ape' },
-            { letter: 'Q', word: '' },
+            { letter: 'Q', word: 'Acquire' },
             { letter: 'R', word: 'Art' },
             { letter: 'S', word: 'Ass' },
             { letter: 'T', word: 'At' },
@@ -69,8 +129,6 @@ const letterPairTable = [
             { letter: 'V', word: 'A/V' },
             { letter: 'W', word: 'Aww' },
             { letter: 'X', word: 'Ax' },
-            { letter: 'Y', word: 'Aye' },
-            { letter: 'Z', word: 'Azo' },
         ],
     },
     {
@@ -83,25 +141,23 @@ const letterPairTable = [
             { letter: 'E', word: 'Bee' },
             { letter: 'F', word: 'Boyfriend' },
             { letter: 'G', word: 'Big' },
-            { letter: 'H', word: 'Boho' },
+            { letter: 'H', word: 'Big House' },
             { letter: 'I', word: 'Bi' },
             { letter: 'J', word: 'Blowjob' },
-            { letter: 'K', word: 'Bike' },
+            { letter: 'K', word: 'Burger King' },
             { letter: 'L', word: 'Ball' },
             { letter: 'M', word: 'Bomb' },
             { letter: 'N', word: 'Band' },
             { letter: 'O', word: 'Bo peep' },
             { letter: 'P', word: 'Boop' },
-            { letter: 'Q', word: '' },
+            { letter: 'Q', word: 'Baroque' },
             { letter: 'R', word: 'Bro' },
             { letter: 'S', word: 'Boss' },
             { letter: 'T', word: 'Bat' },
             { letter: 'U', word: 'Butt' },
             { letter: 'V', word: 'Brave' },
-            { letter: 'W', word: '' },
+            { letter: 'W', word: 'Bow wow' },
             { letter: 'X', word: 'Box' },
-            { letter: 'Y', word: 'Bay' },
-            { letter: 'Z', word: 'Bozo' },
         ],
     },
     {
@@ -110,15 +166,15 @@ const letterPairTable = [
             { letter: 'A', word: 'California' },
             { letter: 'B', word: 'Cab' },
             { letter: 'C', word: '-' },
-            { letter: 'D', word: 'Cod' },
-            { letter: 'E', word: '' },
+            { letter: 'D', word: 'CD' },
+            { letter: 'E', word: 'Icy' },
             { letter: 'F', word: 'Coffin' },
             { letter: 'G', word: 'Cog' },
             { letter: 'H', word: 'Chop' },
-            { letter: 'I', word: '' },
+            { letter: 'I', word: '101' },
             { letter: 'J', word: 'CeeJay' },
             { letter: 'K', word: 'Cock' },
-            { letter: 'L', word: 'Cold' },
+            { letter: 'L', word: 'Clay' },
             { letter: 'M', word: 'Camera' },
             { letter: 'N', word: 'Can' },
             { letter: 'O', word: 'Cone' },
@@ -131,8 +187,6 @@ const letterPairTable = [
             { letter: 'V', word: 'Cove' },
             { letter: 'W', word: 'Cow' },
             { letter: 'X', word: 'Cox' },
-            { letter: 'Y', word: 'Cray' },
-            { letter: 'Z', word: 'Crazy' },
         ],
     },
     {
@@ -140,7 +194,7 @@ const letterPairTable = [
         pairs: [
             { letter: 'A', word: 'Day' },
             { letter: 'B', word: 'Dab' },
-            { letter: 'C', word: 'DC' },
+            { letter: 'C', word: 'Dice' },
             { letter: 'D', word: '-' },
             { letter: 'E', word: 'Deedee' },
             { letter: 'F', word: 'Deaf' },
@@ -162,8 +216,6 @@ const letterPairTable = [
             { letter: 'V', word: 'Dave' },
             { letter: 'W', word: 'Dweeb' },
             { letter: 'X', word: 'Dexter' },
-            { letter: 'Y', word: 'Day' },
-            { letter: 'Z', word: 'Daisy' },
         ],
     },
     {
@@ -193,8 +245,6 @@ const letterPairTable = [
             { letter: 'V', word: 'EV car' },
             { letter: 'W', word: 'Eww' },
             { letter: 'X', word: 'Ex' },
-            { letter: 'Y', word: 'Eye' },
-            { letter: 'Z', word: 'Easy' },
         ],
     },
     {
@@ -217,21 +267,19 @@ const letterPairTable = [
             { letter: 'O', word: 'Foe' },
             { letter: 'P', word: 'Flip' },
             { letter: 'Q', word: 'Farquad' },
-            { letter: 'R', word: 'Afro' },
+            { letter: 'R', word: 'Four' },
             { letter: 'S', word: 'Fast' },
-            { letter: 'T', word: 'Fit' },
+            { letter: 'T', word: 'Foot' },
             { letter: 'U', word: 'Fun' },
             { letter: 'V', word: 'Favorite' },
-            { letter: 'W', word: 'Fawn' },
+            { letter: 'W', word: 'Few' },
             { letter: 'X', word: 'Fax' },
-            { letter: 'Y', word: 'Fly' },
-            { letter: 'Z', word: 'Frozen' },
         ],
     },
     {
         letter: 'G',
         pairs: [
-            { letter: 'A', word: 'Gate' },
+            { letter: 'A', word: 'Gay' },
             { letter: 'B', word: 'GameBoy' },
             { letter: 'C', word: 'GameCube' },
             { letter: 'D', word: 'Good' },
@@ -255,8 +303,6 @@ const letterPairTable = [
             { letter: 'V', word: 'Gravel' },
             { letter: 'W', word: 'Grow' },
             { letter: 'X', word: 'Gecko' },
-            { letter: 'Y', word: 'Gay' },
-            { letter: 'Z', word: 'Gaze' },
         ],
     },
     {
@@ -264,7 +310,7 @@ const letterPairTable = [
         pairs: [
             { letter: 'A', word: 'Haha' },
             { letter: 'B', word: 'Hobby' },
-            { letter: 'C', word: '' },
+            { letter: 'C', word: 'Hockey' },
             { letter: 'D', word: 'Hard' },
             { letter: 'E', word: 'He' },
             { letter: 'F', word: 'Hefty' },
@@ -278,7 +324,7 @@ const letterPairTable = [
             { letter: 'N', word: 'Hen' },
             { letter: 'O', word: 'Hoe' },
             { letter: 'P', word: 'Hop' },
-            { letter: 'Q', word: '' },
+            { letter: 'Q', word: 'Hoky' },
             { letter: 'R', word: 'Whore' },
             { letter: 'S', word: 'Hose' },
             { letter: 'T', word: 'Hot' },
@@ -286,8 +332,6 @@ const letterPairTable = [
             { letter: 'V', word: 'Heaven' },
             { letter: 'W', word: 'ohW' },
             { letter: 'X', word: 'Hacks' },
-            { letter: 'Y', word: 'Hay' },
-            { letter: 'Z', word: 'Haze' },
         ],
     },
     {
@@ -317,16 +361,14 @@ const letterPairTable = [
             { letter: 'V', word: 'Ivory' },
             { letter: 'W', word: 'Iwojima' },
             { letter: 'X', word: 'Nine' },
-            { letter: 'Y', word: 'Ivy' },
-            { letter: 'Z', word: 'Izzy' },
         ],
     },
     {
         letter: 'J',
         pairs: [
-            { letter: 'A', word: 'Jail' },
+            { letter: 'A', word: 'Jay' },
             { letter: 'B', word: 'Job' },
-            { letter: 'C', word: 'Jace' },
+            { letter: 'C', word: 'Jesus Christ' },
             { letter: 'D', word: 'JD' },
             { letter: 'E', word: 'Jeep' },
             { letter: 'F', word: 'Jeff' },
@@ -341,15 +383,13 @@ const letterPairTable = [
             { letter: 'O', word: 'Joe' },
             { letter: 'P', word: 'JP' },
             { letter: 'Q', word: 'Jeaque' },
-            { letter: 'R', word: 'Jar' },
+            { letter: 'R', word: 'Jr.' },
             { letter: 'S', word: 'Jesse' },
             { letter: 'T', word: 'Jet' },
             { letter: 'U', word: 'Juju' },
             { letter: 'V', word: 'Jive' },
             { letter: 'W', word: 'Jaw' },
             { letter: 'X', word: 'Jax' },
-            { letter: 'Y', word: 'Jay' },
-            { letter: 'Z', word: 'JayZee' },
         ],
     },
     {
@@ -369,7 +409,7 @@ const letterPairTable = [
             { letter: 'L', word: 'Kelle' },
             { letter: 'M', word: 'Kim' },
             { letter: 'N', word: 'Ken' },
-            { letter: 'O', word: 'Akido' },
+            { letter: 'O', word: 'Knock Out' },
             { letter: 'P', word: 'Kippy' },
             { letter: 'Q', word: 'KroKay' },
             { letter: 'R', word: 'Krow' },
@@ -379,8 +419,6 @@ const letterPairTable = [
             { letter: 'V', word: 'Kevin' },
             { letter: 'W', word: 'Kawkaw' },
             { letter: 'X', word: 'Kix' },
-            { letter: 'Y', word: 'Kay' },
-            { letter: 'Z', word: 'Katz' },
         ],
     },
     {
@@ -401,7 +439,7 @@ const letterPairTable = [
             { letter: 'M', word: 'Limb' },
             { letter: 'N', word: 'Lentel' },
             { letter: 'O', word: 'Low' },
-            { letter: 'P', word: 'Lap' },
+            { letter: 'P', word: 'Lip' },
             { letter: 'Q', word: 'Lake' },
             { letter: 'R', word: 'Lair' },
             { letter: 'S', word: 'Lass' },
@@ -410,8 +448,6 @@ const letterPairTable = [
             { letter: 'V', word: 'Lava' },
             { letter: 'W', word: 'Law' },
             { letter: 'X', word: 'Lax' },
-            { letter: 'Y', word: 'Lay' },
-            { letter: 'Z', word: 'Lazy' },
         ],
     },
     {
@@ -430,7 +466,7 @@ const letterPairTable = [
             { letter: 'K', word: 'Mike' },
             { letter: 'L', word: 'Mail' },
             { letter: 'M', word: '-' },
-            { letter: 'N', word: 'Mine' },
+            { letter: 'N', word: 'Man' },
             { letter: 'O', word: 'Moe' },
             { letter: 'P', word: 'Map' },
             { letter: 'Q', word: 'Mecha' },
@@ -441,8 +477,6 @@ const letterPairTable = [
             { letter: 'V', word: 'Mohave' },
             { letter: 'W', word: 'Maw' },
             { letter: 'X', word: 'Max' },
-            { letter: 'Y', word: 'My' },
-            { letter: 'Z', word: 'Maze' },
         ],
     },
     {
@@ -463,17 +497,15 @@ const letterPairTable = [
             { letter: 'M', word: 'Enemy' },
             { letter: 'N', word: '-' },
             { letter: 'O', word: 'No' },
-            { letter: 'P', word: 'Napster' },
+            { letter: 'P', word: 'Nap' },
             { letter: 'Q', word: 'Neck' },
             { letter: 'R', word: 'Nora' },
             { letter: 'S', word: 'Nest' },
             { letter: 'T', word: 'Net' },
             { letter: 'U', word: 'New' },
             { letter: 'V', word: 'Naive' },
-            { letter: 'W', word: 'No way' },
+            { letter: 'W', word: 'Now' },
             { letter: 'X', word: 'Next' },
-            { letter: 'Y', word: 'Neigh' },
-            { letter: 'Z', word: 'Nose' },
         ],
     },
     {
@@ -503,15 +535,13 @@ const letterPairTable = [
             { letter: 'V', word: 'Over' },
             { letter: 'W', word: 'Ow' },
             { letter: 'X', word: 'Ox' },
-            { letter: 'Y', word: 'Oyster' },
-            { letter: 'Z', word: 'Oz' },
         ],
     },
     {
         letter: 'P',
         pairs: [
             { letter: 'A', word: 'Papa' },
-            { letter: 'B', word: 'Pibb' },
+            { letter: 'B', word: 'Peanut Butter' },
             { letter: 'C', word: 'Pace' },
             { letter: 'D', word: 'Pad' },
             { letter: 'E', word: 'Pee' },
@@ -534,8 +564,6 @@ const letterPairTable = [
             { letter: 'V', word: 'Pave' },
             { letter: 'W', word: 'Paw' },
             { letter: 'X', word: 'Pax' },
-            { letter: 'Y', word: 'Pay' },
-            { letter: 'Z', word: 'Pez' },
         ],
     },
     {
@@ -552,7 +580,7 @@ const letterPairTable = [
             { letter: 'I', word: 'Qi' },
             { letter: 'J', word: 'Quedge' },
             { letter: 'K', word: 'Quake' },
-            { letter: 'L', word: 'Quill' },
+            { letter: 'L', word: 'Quail' },
             { letter: 'M', word: 'Quartermaster' },
             { letter: 'N', word: 'Quant' },
             { letter: 'O', word: 'Quo' },
@@ -565,8 +593,6 @@ const letterPairTable = [
             { letter: 'V', word: 'Quiver' },
             { letter: 'W', word: 'Quaint' },
             { letter: 'X', word: 'Quacks' },
-            { letter: 'Y', word: 'Quay' },
-            { letter: 'Z', word: 'Queztolotl' },
         ],
     },
     {
@@ -575,10 +601,10 @@ const letterPairTable = [
             { letter: 'A', word: 'Rat' },
             { letter: 'B', word: 'Rub' },
             { letter: 'C', word: 'Race' },
-            { letter: 'D', word: 'Rad' },
+            { letter: 'D', word: 'Rode' },
             { letter: 'E', word: 'Read' },
             { letter: 'F', word: 'Referee' },
-            { letter: 'G', word: 'Regular' },
+            { letter: 'G', word: 'Rag' },
             { letter: 'H', word: 'Rhombus' },
             { letter: 'I', word: 'Rice' },
             { letter: 'J', word: 'Ridge' },
@@ -586,7 +612,7 @@ const letterPairTable = [
             { letter: 'L', word: 'Rail' },
             { letter: 'M', word: 'Ram' },
             { letter: 'N', word: 'Run' },
-            { letter: 'O', word: 'Road' },
+            { letter: 'O', word: 'Row' },
             { letter: 'P', word: 'Rope' },
             { letter: 'Q', word: 'Roche' },
             { letter: 'R', word: '-' },
@@ -596,8 +622,6 @@ const letterPairTable = [
             { letter: 'V', word: 'Rave' },
             { letter: 'W', word: 'Raw' },
             { letter: 'X', word: 'Rex' },
-            { letter: 'Y', word: 'Ray' },
-            { letter: 'Z', word: 'Rizz' },
         ],
     },
     {
@@ -625,10 +649,8 @@ const letterPairTable = [
             { letter: 'T', word: 'Star' },
             { letter: 'U', word: 'Soup' },
             { letter: 'V', word: 'Save' },
-            { letter: 'W', word: 'Swing' },
+            { letter: 'W', word: 'Southwest' },
             { letter: 'X', word: 'Sax' },
-            { letter: 'Y', word: 'Say' },
-            { letter: 'Z', word: 'Sneeze' },
         ],
     },
     {
@@ -636,7 +658,7 @@ const letterPairTable = [
         pairs: [
             { letter: 'A', word: 'Tattoo' },
             { letter: 'B', word: 'Tab' },
-            { letter: 'C', word: 'Tick' },
+            { letter: 'C', word: 'Total Comp' },
             { letter: 'D', word: 'Toad' },
             { letter: 'E', word: 'Tea' },
             { letter: 'F', word: 'Taffy' },
@@ -644,13 +666,13 @@ const letterPairTable = [
             { letter: 'H', word: 'The' },
             { letter: 'I', word: 'Tie' },
             { letter: 'J', word: 'Taj Mahal' },
-            { letter: 'K', word: 'Tack' },
+            { letter: 'K', word: 'Tak' },
             { letter: 'L', word: 'Till' },
             { letter: 'M', word: 'TM' },
             { letter: 'N', word: 'Tin' },
             { letter: 'O', word: 'Toe' },
             { letter: 'P', word: 'Top' },
-            { letter: 'Q', word: 'Tak' },
+            { letter: 'Q', word: 'Toke' },
             { letter: 'R', word: 'Tar' },
             { letter: 'S', word: 'Toss' },
             { letter: 'T', word: '-' },
@@ -658,194 +680,122 @@ const letterPairTable = [
             { letter: 'V', word: 'Trevor' },
             { letter: 'W', word: 'Two' },
             { letter: 'X', word: 'Tax' },
-            { letter: 'Y', word: 'Taylor' },
-            { letter: 'Z', word: 'Taz' },
         ],
     },
     {
         letter: 'U',
         pairs: [
-            { letter: 'A', word: '' },
+            { letter: 'A', word: 'United' },
             { letter: 'B', word: 'Ubisoft' },
-            { letter: 'C', word: 'Uch' },
+            { letter: 'C', word: 'UC (cal)' },
             { letter: 'D', word: 'IUD' },
-            { letter: 'E', word: '' },
-            { letter: 'F', word: '' },
-            { letter: 'G', word: '' },
+            { letter: 'E', word: 'Uematsu' },
+            { letter: 'F', word: 'UFO' },
+            { letter: 'G', word: 'Ugh' },
             { letter: 'H', word: 'Uhh' },
             { letter: 'I', word: 'User Interface' },
-            { letter: 'J', word: '' },
+            { letter: 'J', word: 'Udge' },
             { letter: 'K', word: 'United Kingdom' },
             { letter: 'L', word: 'Unordered List' },
             { letter: 'M', word: 'Umm' },
             { letter: 'N', word: 'Unite' },
             { letter: 'O', word: 'Nobuo' },
             { letter: 'P', word: 'Up' },
-            { letter: 'Q', word: '' },
-            { letter: 'R', word: 'Your' },
+            { letter: 'Q', word: 'Uck' },
+            { letter: 'R', word: 'URL website' },
             { letter: 'S', word: 'United States' },
             { letter: 'T', word: 'UTI' },
             { letter: 'U', word: '-' },
             { letter: 'V', word: 'UV light' },
-            { letter: 'W', word: '' },
+            { letter: 'W', word: 'Uwu' },
             { letter: 'X', word: 'User Experience' },
-            { letter: 'Y', word: '' },
-            { letter: 'Z', word: 'Uzi' },
         ],
     },
     {
         letter: 'V',
         pairs: [
-            { letter: 'A', word: '' },
-            { letter: 'B', word: '' },
-            { letter: 'C', word: '' },
-            { letter: 'D', word: '' },
-            { letter: 'E', word: '' },
-            { letter: 'F', word: '' },
-            { letter: 'G', word: '' },
-            { letter: 'H', word: '' },
-            { letter: 'I', word: '' },
-            { letter: 'J', word: '' },
-            { letter: 'K', word: '' },
-            { letter: 'L', word: '' },
-            { letter: 'M', word: '' },
-            { letter: 'N', word: '' },
-            { letter: 'O', word: '' },
-            { letter: 'P', word: '' },
-            { letter: 'Q', word: '' },
-            { letter: 'R', word: '' },
-            { letter: 'S', word: '' },
-            { letter: 'T', word: '' },
-            { letter: 'U', word: '' },
+            { letter: 'A', word: 'Veteran' },
+            { letter: 'B', word: 'Vibe' },
+            { letter: 'C', word: 'Vice' },
+            { letter: 'D', word: 'Video' },
+            { letter: 'E', word: 'Vee' },
+            { letter: 'F', word: 'Vodophone' },
+            { letter: 'G', word: 'Vegeta' },
+            { letter: 'H', word: 'VHS' },
+            { letter: 'I', word: 'Vivi' },
+            { letter: 'J', word: 'Vaj' },
+            { letter: 'K', word: 'Viking' },
+            { letter: 'L', word: 'Veil' },
+            { letter: 'M', word: 'Vim' },
+            { letter: 'N', word: 'Vent' },
+            { letter: 'O', word: 'Voh' },
+            { letter: 'P', word: 'Vice President' },
+            { letter: 'Q', word: 'Vacuum' },
+            { letter: 'R', word: 'Verify' },
+            { letter: 'S', word: 'Vest' },
+            { letter: 'T', word: 'Vet' },
+            { letter: 'U', word: 'Mr. Vu' },
             { letter: 'V', word: '-' },
-            { letter: 'W', word: '' },
-            { letter: 'X', word: '' },
-            { letter: 'Y', word: '' },
-            { letter: 'Z', word: '' },
+            { letter: 'W', word: 'Volkswagon' },
+            { letter: 'X', word: 'Vex' },
         ],
     },
     {
         letter: 'W',
         pairs: [
-            { letter: 'A', word: '' },
-            { letter: 'B', word: '' },
-            { letter: 'C', word: '' },
-            { letter: 'D', word: '' },
-            { letter: 'E', word: '' },
-            { letter: 'F', word: '' },
-            { letter: 'G', word: '' },
-            { letter: 'H', word: '' },
-            { letter: 'I', word: '' },
-            { letter: 'J', word: '' },
-            { letter: 'K', word: '' },
-            { letter: 'L', word: '' },
-            { letter: 'M', word: '' },
-            { letter: 'N', word: '' },
-            { letter: 'O', word: '' },
-            { letter: 'P', word: '' },
-            { letter: 'Q', word: '' },
-            { letter: 'R', word: '' },
-            { letter: 'S', word: '' },
-            { letter: 'T', word: '' },
-            { letter: 'U', word: '' },
-            { letter: 'V', word: '' },
+            { letter: 'A', word: 'Water' },
+            { letter: 'B', word: 'Web' },
+            { letter: 'C', word: 'Water Closet' },
+            { letter: 'D', word: 'Wedding' },
+            { letter: 'E', word: 'Weewee' },
+            { letter: 'F', word: 'Whiff' },
+            { letter: 'G', word: 'Wag' },
+            { letter: 'H', word: 'White House' },
+            { letter: 'I', word: 'Wii' },
+            { letter: 'J', word: 'Wedge' },
+            { letter: 'K', word: 'Wok' },
+            { letter: 'L', word: 'Whale' },
+            { letter: 'M', word: 'Watermelon' },
+            { letter: 'N', word: 'Win' },
+            { letter: 'O', word: 'Wow' },
+            { letter: 'P', word: 'Whip' },
+            { letter: 'Q', word: 'Watch' },
+            { letter: 'R', word: 'War' },
+            { letter: 'S', word: 'West' },
+            { letter: 'T', word: 'Wet' },
+            { letter: 'U', word: 'Wut' },
+            { letter: 'V', word: 'Wave' },
             { letter: 'W', word: '-' },
-            { letter: 'X', word: '' },
-            { letter: 'Y', word: '' },
-            { letter: 'Z', word: '' },
+            { letter: 'X', word: 'Wax' },
         ],
     },
     {
         letter: 'X',
         pairs: [
-            { letter: 'A', word: '' },
-            { letter: 'B', word: '' },
-            { letter: 'C', word: '' },
-            { letter: 'D', word: '' },
-            { letter: 'E', word: '' },
-            { letter: 'F', word: '' },
-            { letter: 'G', word: '' },
-            { letter: 'H', word: '' },
-            { letter: 'I', word: '' },
-            { letter: 'J', word: '' },
-            { letter: 'K', word: '' },
-            { letter: 'L', word: '' },
-            { letter: 'M', word: '' },
-            { letter: 'N', word: '' },
-            { letter: 'O', word: '' },
-            { letter: 'P', word: '' },
-            { letter: 'Q', word: '' },
-            { letter: 'R', word: '' },
-            { letter: 'S', word: '' },
-            { letter: 'T', word: '' },
-            { letter: 'U', word: '' },
-            { letter: 'V', word: '' },
-            { letter: 'W', word: '' },
+            { letter: 'A', word: 'Exam' },
+            { letter: 'B', word: 'Ex-bf' },
+            { letter: 'C', word: 'Excite' },
+            { letter: 'D', word: 'Laughing face XD' },
+            { letter: 'E', word: 'Z' },
+            { letter: 'F', word: 'Zephyr' },
+            { letter: 'G', word: 'Zigzag' },
+            { letter: 'H', word: 'Extra hot' },
+            { letter: 'I', word: 'Xi' },
+            { letter: 'J', word: 'ZJ' },
+            { letter: 'K', word: 'Exec' },
+            { letter: 'L', word: 'XL' },
+            { letter: 'M', word: 'Zim' },
+            { letter: 'N', word: 'Zen' },
+            { letter: 'O', word: 'Hugs/kisses xoxo' },
+            { letter: 'P', word: 'Experience Points' },
+            { letter: 'Q', word: 'Quetzalcoatl' },
+            { letter: 'R', word: 'Zorro' },
+            { letter: 'S', word: 'Zest' },
+            { letter: 'T', word: 'Exit' },
+            { letter: 'U', word: 'Zu' },
+            { letter: 'V', word: '15' },
+            { letter: 'W', word: 'Woz' },
             { letter: 'X', word: '-' },
-            { letter: 'Y', word: '' },
-            { letter: 'Z', word: '' },
-        ],
-    },
-    {
-        letter: 'Y',
-        pairs: [
-            { letter: 'A', word: '' },
-            { letter: 'B', word: '' },
-            { letter: 'C', word: '' },
-            { letter: 'D', word: '' },
-            { letter: 'E', word: '' },
-            { letter: 'F', word: '' },
-            { letter: 'G', word: '' },
-            { letter: 'H', word: '' },
-            { letter: 'I', word: '' },
-            { letter: 'J', word: '' },
-            { letter: 'K', word: '' },
-            { letter: 'L', word: '' },
-            { letter: 'M', word: '' },
-            { letter: 'N', word: '' },
-            { letter: 'O', word: '' },
-            { letter: 'P', word: '' },
-            { letter: 'Q', word: '' },
-            { letter: 'R', word: '' },
-            { letter: 'S', word: '' },
-            { letter: 'T', word: '' },
-            { letter: 'U', word: '' },
-            { letter: 'V', word: '' },
-            { letter: 'W', word: '' },
-            { letter: 'X', word: '' },
-            { letter: 'Y', word: '-' },
-            { letter: 'Z', word: '' },
-        ],
-    },
-    {
-        letter: 'Z',
-        pairs: [
-            { letter: 'A', word: '' },
-            { letter: 'B', word: '' },
-            { letter: 'C', word: '' },
-            { letter: 'D', word: '' },
-            { letter: 'E', word: '' },
-            { letter: 'F', word: '' },
-            { letter: 'G', word: '' },
-            { letter: 'H', word: '' },
-            { letter: 'I', word: '' },
-            { letter: 'J', word: '' },
-            { letter: 'K', word: '' },
-            { letter: 'L', word: '' },
-            { letter: 'M', word: '' },
-            { letter: 'N', word: '' },
-            { letter: 'O', word: '' },
-            { letter: 'P', word: '' },
-            { letter: 'Q', word: '' },
-            { letter: 'R', word: '' },
-            { letter: 'S', word: '' },
-            { letter: 'T', word: '' },
-            { letter: 'U', word: '' },
-            { letter: 'V', word: '' },
-            { letter: 'W', word: '' },
-            { letter: 'X', word: '' },
-            { letter: 'Y', word: '' },
-            { letter: 'Z', word: '-' },
         ],
     },
 ];

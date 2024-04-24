@@ -9,7 +9,15 @@
         width: 50px;
     }
 
+    .bld-pair-row {
+        height: 50px;
+    }
+
     .bld-pair--null {
         background-color: $table-border-color;
+    }
+
+    .trainer-pair {
+        font-size: $size-xl;
     }
 }
