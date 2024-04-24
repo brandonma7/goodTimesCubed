@@ -80,15 +80,17 @@ export default function AppRoot() {
 
     P0
         Store previously viewed page in local storage (or query params?)
-        BLD tools (memo training, letter pair flash cards)
+        BLD memo training
         Algs for:
             2x2
             skewb
 
     P1
         Pro-active training suggestions
-        Comp dates and goals
+        Comp dates
         Notifications
+
+        Split timer into it's own component so it can be used more flexibly
 
     P2
         Goal mode for CFOP splits

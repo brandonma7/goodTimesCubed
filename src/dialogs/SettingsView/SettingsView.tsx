@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { DataType, DataTypeToTextMap } from '../../utils/cubingUtils';
+import { DataType, DataTypeToTextMap, PuzzleType, PuzzleTypeValues } from '../../utils/cubingUtils';
 
 import './SettingsView.scss';
 
@@ -33,9 +33,17 @@ const defaultSolveSettings = [
     },
 ];
 
+type GoalSettings = {
+    puzzleType: PuzzleType;
+    singleGoal: number;
+    averageGoal: number;
+    meanGoal: number;
+};
+
 type CachedSettingsData = {
     isManualEntryMode: boolean;
     solveSettings: SolveSetting[];
+    goalSettings: GoalSettings[];
 };
 
 type SettingsContextType = {
@@ -43,26 +51,42 @@ type SettingsContextType = {
     setIsManualEntryMode: (newValue: boolean) => void;
     solveSettings: SolveSetting[];
     setSolveSettings: (newValue: SolveSetting[]) => void;
+    goalSettings: GoalSettings[];
+    setGoalSettings: (newValue: GoalSettings[]) => void;
 };
 export const SettingsContext = createContext<SettingsContextType>({
     isManualEntryMode: false,
     setIsManualEntryMode: () => null,
     solveSettings: [],
     setSolveSettings: () => null,
+    goalSettings: [],
+    setGoalSettings: () => null,
 });
 
 export function SettingsContextProvider({ children }: { children: JSX.Element }) {
-    const { isManualEntryMode: isManualEntryModeFromCache, solveSettings: solveSettingsFromCache } =
-        getSettingsFromLocalStorage();
+    const {
+        isManualEntryMode: isManualEntryModeFromCache,
+        solveSettings: solveSettingsFromCache,
+        goalSettings: goalSettingsFromCache,
+    } = getSettingsFromLocalStorage();
     const [isManualEntryMode, setIsManualEntryMode] = useState(isManualEntryModeFromCache);
     const [solveSettings, setSolveSettings] = useState(solveSettingsFromCache);
+    const [goalSettings, setGoalSettings] = useState(goalSettingsFromCache ?? []);
 
-    const settingsContextValue = { isManualEntryMode, setIsManualEntryMode, solveSettings, setSolveSettings };
+    const settingsContextValue = {
+        isManualEntryMode,
+        setIsManualEntryMode,
+        solveSettings,
+        setSolveSettings,
+        goalSettings,
+        setGoalSettings,
+    };
     return <SettingsContext.Provider value={settingsContextValue}>{children}</SettingsContext.Provider>;
 }
 
 export default function SettingsView() {
-    const { isManualEntryMode, setIsManualEntryMode, solveSettings, setSolveSettings } = useContext(SettingsContext);
+    const { isManualEntryMode, setIsManualEntryMode, solveSettings, setSolveSettings, goalSettings, setGoalSettings } =
+        useContext(SettingsContext);
 
     const [solveSettingsString, setSolveSettingsString] = useState(getSolveSettingString(solveSettings));
 
@@ -70,8 +94,9 @@ export default function SettingsView() {
         saveSettingsToLocalStorage({
             isManualEntryMode,
             solveSettings,
+            goalSettings,
         });
-    }, [isManualEntryMode, solveSettings]);
+    }, [isManualEntryMode, solveSettings, goalSettings]);
 
     return (
         <div className='timer__settings-view'>
@@ -126,6 +151,73 @@ export default function SettingsView() {
                     }}
                 />
             </div>
+            {PuzzleTypeValues.map((puzzleType, index) => {
+                const goalsForPuzzle = goalSettings.find((goal) => goal.puzzleType === puzzleType) ?? {
+                    puzzleType: puzzleType as PuzzleType,
+                    singleGoal: 0,
+                    averageGoal: 0,
+                    meanGoal: 0,
+                };
+                return (
+                    <div key={index} className='timer__settings-view-setting'>
+                        <h3>{puzzleType} Goals</h3>
+                        <label htmlFor={`${puzzleType}SingleGoal`}>
+                            Single Goal:
+                            <input
+                                type='text'
+                                className='timer__input'
+                                name={`${puzzleType}SingleGoal`}
+                                value={goalsForPuzzle?.singleGoal}
+                                onChange={(newValue) => {
+                                    setGoalSettings([
+                                        ...(goalSettings.filter((goal) => goal.puzzleType !== puzzleType) ?? []),
+                                        {
+                                            ...goalsForPuzzle,
+                                            singleGoal: parseInt(newValue.target.value),
+                                        },
+                                    ]);
+                                }}
+                            />
+                        </label>
+                        <label htmlFor={`${puzzleType}AvverageGoal`}>
+                            Ao5 Goal:
+                            <input
+                                type='text'
+                                className='timer__input'
+                                name={`${puzzleType}AvverageGoal`}
+                                value={goalsForPuzzle?.averageGoal}
+                                onChange={(newValue) => {
+                                    setGoalSettings([
+                                        ...(goalSettings.filter((goal) => goal.puzzleType !== puzzleType) ?? []),
+                                        {
+                                            ...goalsForPuzzle,
+                                            averageGoal: parseInt(newValue.target.value),
+                                        },
+                                    ]);
+                                }}
+                            />
+                        </label>
+                        <label htmlFor={`${puzzleType}MeanGoal`}>
+                            Mo3 Goal:
+                            <input
+                                type='text'
+                                className='timer__input'
+                                name={`${puzzleType}MeanGoal`}
+                                value={goalsForPuzzle?.meanGoal}
+                                onChange={(newValue) => {
+                                    setGoalSettings([
+                                        ...(goalSettings.filter((goal) => goal.puzzleType !== puzzleType) ?? []),
+                                        {
+                                            ...goalsForPuzzle,
+                                            meanGoal: parseInt(newValue.target.value),
+                                        },
+                                    ]);
+                                }}
+                            />
+                        </label>
+                    </div>
+                );
+            })}
         </div>
     );
 }

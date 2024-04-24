@@ -5,12 +5,17 @@ import { MetaDataContext } from '../../TimerApp';
 import { getFormattedTime } from '../../utils/genericUtils';
 import { colorScramble } from '../CubeVisualizationComponent';
 import './ManualCompModeComponent.scss';
+import { SettingsContext } from '../../dialogs/SettingsView';
 
 export function ManualCompModeComponent({ puzzleType = '3x3x3' }: { puzzleType?: PuzzleType }) {
     const { isMobile } = useContext(MetaDataContext);
+    const { goalSettings } = useContext(SettingsContext);
+    const goalsForPuzzle = goalSettings.filter((goal) => goal.puzzleType === puzzleType);
+    const defaultAverageGoal = goalsForPuzzle.length === 0 ? 1843 : goalsForPuzzle[0].averageGoal;
+
     const [scrambles, setScrambles] = useState(new Array(5).fill('').map(() => generateScramble(puzzleType)));
     const [times, setTimes] = useState<number[]>(new Array(5).fill(0));
-    const [targetAverage, setTargetAverage] = useState(1843);
+    const [targetAverage, setTargetAverage] = useState(defaultAverageGoal);
 
     const validTimes = times.filter((time) => time > 0);
     const timeToBeat = findTimeToBeatTargetAverage(times, targetAverage);
