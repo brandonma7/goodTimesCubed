@@ -19,15 +19,19 @@ const numToColor = ['white', 'orange', 'green', 'red', 'blue', 'yellow', 'gray']
 export const scrambleLetterColors = ['white', 'orange', 'green', 'red', 'blue', 'yellow'];
 
 export function colorScramble(scramble: string) {
-    return scramble.split(' ').map((move, index) => {
-        // New color every three letters, wrapping after we get to the end of the color list
-        const colorIndex = Math.trunc((index / 3) % scrambleLetterColors.length);
-        return (
-            <span key={index} className={`timer__scramble-letter ${scrambleLetterColors[colorIndex]}`}>
-                {move}
-            </span>
-        );
-    });
+    return (
+        <div className='colorful-scramble-container'>
+            {scramble.split(' ').map((move, index) => {
+                // New color every three letters, wrapping after we get to the end of the color list
+                const colorIndex = Math.trunc((index / 3) % scrambleLetterColors.length);
+                return (
+                    <span key={index} className={`timer__scramble-letter ${scrambleLetterColors[colorIndex]}`}>
+                        {move}
+                    </span>
+                );
+            })}
+        </div>
+    );
 }
 
 export default function CubeVisualizationComponent({

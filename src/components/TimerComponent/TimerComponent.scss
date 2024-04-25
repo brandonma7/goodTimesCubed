@@ -152,6 +152,12 @@
     }
 }
 
+.colorful-scramble-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
 .timer__scramble-letter {
     margin-left: $size-xs;
     margin-right: $size-xs;

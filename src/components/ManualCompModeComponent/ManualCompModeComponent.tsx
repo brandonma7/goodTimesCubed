@@ -1,24 +1,31 @@
 import React, { useContext, useState } from 'react';
 
-import { calculateAverageRaw, generateScramble, PuzzleType } from '../../utils/cubingUtils';
+import { calculateAverageRaw, generateScramble, PuzzleType, PuzzleTypeValues } from '../../utils/cubingUtils';
 import { MetaDataContext } from '../../TimerApp';
-import { getFormattedTime } from '../../utils/genericUtils';
+import { classNames, getFormattedTime } from '../../utils/genericUtils';
 import { colorScramble } from '../CubeVisualizationComponent';
 import './ManualCompModeComponent.scss';
 import { SettingsContext } from '../../dialogs/SettingsView';
 
-export function ManualCompModeComponent({ puzzleType = '3x3x3' }: { puzzleType?: PuzzleType }) {
+export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzzleType?: PuzzleType }) {
     const { isMobile } = useContext(MetaDataContext);
     const { goalSettings } = useContext(SettingsContext);
-    const goalsForPuzzle = goalSettings.filter((goal) => goal.puzzleType === puzzleType);
-    const defaultAverageGoal = goalsForPuzzle.length === 0 ? 1843 : goalsForPuzzle[0].averageGoal;
+    const [puzzleType, setPuzzleType] = useState(puzzle);
+    const goalsForPuzzle = goalSettings.find((goal) => goal.puzzleType === puzzleType);
+    const defaultAverageGoal = goalsForPuzzle == null ? 1843 : goalsForPuzzle.averageGoal;
 
     const [scrambles, setScrambles] = useState(new Array(5).fill('').map(() => generateScramble(puzzleType)));
     const [times, setTimes] = useState<number[]>(new Array(5).fill(0));
     const [targetAverage, setTargetAverage] = useState(defaultAverageGoal);
 
     const validTimes = times.filter((time) => time > 0);
-    const timeToBeat = findTimeToBeatTargetAverage(times, targetAverage);
+    const timeToBeat = findTimeToBeatTargetAverage(times, targetAverage - 1);
+    const guaranteeBeatTime = findTimeToBeatTargetAverage([...times, 999999], targetAverage - 1);
+    const stayInRunningTime = findTimeToBeatTargetAverage(times, targetAverage - 1);
+
+    const getNewScramble = (pt: PuzzleType) => {
+        setScrambles(new Array(5).fill('').map(() => generateScramble(pt)));
+    };
 
     return (
         <div
@@ -31,6 +38,26 @@ export function ManualCompModeComponent({ puzzleType = '3x3x3' }: { puzzleType?:
                 margin: '0 auto',
             }}
         >
+            <select
+                className='timer__select'
+                value={puzzleType}
+                onChange={(event) => {
+                    const newPuzzle = event.target.value as PuzzleType;
+                    setPuzzleType(newPuzzle);
+                    setTargetAverage(
+                        goalSettings.find((goal) => goal.puzzleType === newPuzzle)?.averageGoal ?? defaultAverageGoal,
+                    );
+                    getNewScramble(newPuzzle);
+                }}
+            >
+                {PuzzleTypeValues.map((pt, index) => {
+                    return (
+                        <option key={index} value={pt}>
+                            {pt}
+                        </option>
+                    );
+                })}
+            </select>
             <div>
                 Target Average:
                 <input
@@ -57,7 +84,7 @@ export function ManualCompModeComponent({ puzzleType = '3x3x3' }: { puzzleType?:
                                     <td>{index + 1}</td>
                                     <td>
                                         <input
-                                            className='timer__input'
+                                            className={classNames('timer__input', `time-input-${index}`)}
                                             type='text'
                                             inputMode='decimal'
                                             value={times[index]}
@@ -84,10 +111,16 @@ export function ManualCompModeComponent({ puzzleType = '3x3x3' }: { puzzleType?:
                 </tbody>
             </table>
             {validTimes.length === 3 && (
-                <div>
-                    Beat target with:{' '}
-                    {timeToBeat === null ? 'no' : findTimeToBeatTargetAverage([...times, 999999], targetAverage)}
-                </div>
+                <>
+                    <div>
+                        Guarantee beat average:{' '}
+                        {guaranteeBeatTime === null ? 'no' : getFormattedTime(guaranteeBeatTime)}
+                    </div>
+                    <div>
+                        Max to maybe beat average:{' '}
+                        {stayInRunningTime === null ? 'no' : getFormattedTime(stayInRunningTime)}
+                    </div>
+                </>
             )}
             {validTimes.length === 4 && (
                 <>
@@ -103,11 +136,18 @@ export function ManualCompModeComponent({ puzzleType = '3x3x3' }: { puzzleType?:
                     onClick={() => {
                         setScrambles(new Array(5).fill('').map(() => generateScramble(puzzleType)));
                         setTimes(new Array(5).fill(0));
+                        (document.querySelector('.time-input-0') as HTMLElement)?.focus();
                     }}
                 >
                     Reset
                 </button>
-                <button className='timer__button' onClick={() => setTimes(new Array(5).fill(0))}>
+                <button
+                    className='timer__button'
+                    onClick={() => {
+                        setTimes(new Array(5).fill(0));
+                        (document.querySelector('.time-input-0') as HTMLElement)?.focus();
+                    }}
+                >
                     Reset Times Only
                 </button>
             </div>
