@@ -10,6 +10,10 @@
         padding: 0 $size-xs;
         text-align: right;
     }
+
+    .timer__result--beats-goal {
+        color: $cube-sticker-green-faded;
+    }
 }
 
 @media (max-width: $small-screen-width) {

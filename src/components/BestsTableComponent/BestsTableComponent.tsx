@@ -3,7 +3,7 @@ import MultiSolveDetails from '../../dialogs/MultiSolveDetails';
 import { SolveSetting, SettingsContext } from '../../dialogs/SettingsView';
 import SolveDetails from '../../dialogs/SolveDetails';
 import { calculateAverage, calculateMean, DataType, DataTypeToTextMap, Solve } from '../../utils/cubingUtils';
-import { getFormattedTime, getFormattedTimeBySolve } from '../../utils/genericUtils';
+import { classNames, getFormattedTime, getFormattedTimeBySolve } from '../../utils/genericUtils';
 
 import { BestsData, SolveData, getBestOfType, SolveDataAction } from '../GoodTimes';
 import { SessionData } from '../SessionManagementComponent';
@@ -140,29 +140,33 @@ export default function BestsTableComponent({
         let bestCellText = '';
         let goalCellText = '';
 
+        let beatsGoal = false;
+        const { singleGoal = 0, averageGoal = 0, meanGoal = 0 } = goals ?? {};
+
         if (type === DataType.AVERAGE) {
             currentCellText = getFormattedTime(calculateAverage(solves, solves.length - 1, size));
             const bestTime = getBestOfType(bests, type, size)?.time ?? -1;
             bestCellText = getFormattedTime(bestTime);
-            goalCellText =
-                goals?.averageGoal != null || goals?.averageGoal !== 0 ? getFormattedTime(goals?.averageGoal) : '-';
+            goalCellText = averageGoal !== 0 ? getFormattedTime(averageGoal) : '-';
+            beatsGoal = bestTime < averageGoal;
         } else if (type === DataType.MEAN) {
             currentCellText = getFormattedTime(calculateMean(solves, solves.length - 1, size));
             const bestTime = getBestOfType(bests, type, size)?.time ?? -1;
             bestCellText = getFormattedTime(bestTime);
-            goalCellText = goals?.meanGoal != null || goals?.meanGoal !== 0 ? getFormattedTime(goals?.meanGoal) : '-';
+            goalCellText = meanGoal !== 0 ? getFormattedTime(meanGoal) : '-';
+            beatsGoal = bestTime < meanGoal;
         } else {
             currentCellText = getFormattedTimeBySolve(solves.at(-1));
             bestCellText = getFormattedTime(bests[DataType.SINGLE]?.time);
-            goalCellText =
-                goals?.singleGoal != null || goals?.singleGoal !== 0 ? getFormattedTime(goals?.singleGoal) : '-';
+            goalCellText = singleGoal !== 0 ? getFormattedTime(singleGoal) : '-';
+            beatsGoal = (bests[DataType.SINGLE]?.time ?? 0) < singleGoal;
         }
 
         return (
             <tr key={index}>
                 <td>{nameCellText}</td>
                 <td
-                    className='clickable'
+                    className={classNames('clickable', beatsGoal ? 'timer__result--beats-goal' : '')}
                     onClick={() => {
                         if (type === DataType.AVERAGE || type === DataType.MEAN) {
                             setSolveDetailsIndex(solves.length - 1, size);
@@ -175,7 +179,7 @@ export default function BestsTableComponent({
                     {currentCellText}
                 </td>
                 <td
-                    className='clickable'
+                    className={classNames('clickable', beatsGoal ? 'timer__result--beats-goal' : '')}
                     onClick={() => {
                         const index = bests[DataType.SINGLE]?.index ?? -1;
                         if (index >= 0) {
