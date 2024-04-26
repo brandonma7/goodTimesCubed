@@ -29,6 +29,9 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
         setScrambles(new Array(5).fill('').map(() => generateScramble(pt)));
     };
 
+    const rawAverage = times?.length > 0 ? calculateAverageRaw(times) : 0;
+    const worstCaseAverage = calculateAverageRaw([...validTimes, 100000000]);
+    const bestCaseAverage = calculateAverageRaw([...validTimes, 1]);
     return (
         <div
             className='manual-comp-mode'
@@ -99,7 +102,13 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
                         return (
                             <React.Fragment key={index}>
                                 <tr>
-                                    <td>{index + 1}</td>
+                                    <td
+                                        className={
+                                            times[index] > 10 && times[index] < targetSingle ? 'timer__font--green' : ''
+                                        }
+                                    >
+                                        {index + 1}
+                                    </td>
                                     <td>
                                         <input
                                             className={classNames('timer__input', `time-input-${index}`)}
@@ -115,7 +124,11 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
                                             }}
                                         />
                                     </td>
-                                    {!isMobile && <td>{colorScramble(scramble)}</td>}
+                                    {!isMobile && (
+                                        <td className={times[index] > 0 ? 'timer__element--transparent' : ''}>
+                                            {colorScramble(scramble)}
+                                        </td>
+                                    )}
                                 </tr>
                                 {isMobile && (
                                     <tr>
@@ -142,12 +155,20 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
             )}
             {validTimes.length === 4 && (
                 <>
-                    <div>Best Possible Ao5: {getFormattedTime(calculateAverageRaw([...validTimes, 1]))}</div>
-                    <div>Worst Possible Ao5: {getFormattedTime(calculateAverageRaw([...validTimes, 100000000]))}</div>
+                    <div className={bestCaseAverage > targetAverage ? 'timer__font--red' : ''}>
+                        Best Possible Ao5: {getFormattedTime(bestCaseAverage)}
+                    </div>
+                    <div className={worstCaseAverage < targetAverage ? 'timer__font--green' : ''}>
+                        Worst Possible Ao5: {getFormattedTime(worstCaseAverage)}
+                    </div>
                     <div>Time to beat target: {timeToBeat === null ? 'no' : getFormattedTime(timeToBeat)}</div>
                 </>
             )}
-            {validTimes.length === 5 && <div>Ao5: {getFormattedTime(calculateAverageRaw(times))}</div>}
+            {validTimes.length === 5 && (
+                <div className={rawAverage < targetAverage ? 'timer__font--green' : ''}>
+                    Ao5: {getFormattedTime(rawAverage)}
+                </div>
+            )}
             <div className='manual-comp-mode-actions'>
                 <button
                     className='timer__button'

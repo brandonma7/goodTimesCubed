@@ -58,7 +58,9 @@ const TimerComponent = memo(function TimerComponentInternal({
     mostRecentSolveIndex = 0,
     compMode = false,
 }: TimerComponentProps) {
-    const { isManualEntryMode, setIsManualEntryMode } = useContext(SettingsContext);
+    const { isManualEntryMode, setIsManualEntryMode, goalSettings } = useContext(SettingsContext);
+    const goals = goalSettings.find((g) => puzzleType === g.puzzleType);
+
     const { isMobile, setTimerIsRunning } = useContext(MetaDataContext);
     const [timerEntry, setTimerEntry] = useState(isManualEntryMode ? '' : '0.00');
     const [isPrepping, setIsPrepping] = useState(false);
@@ -252,6 +254,10 @@ const TimerComponent = memo(function TimerComponentInternal({
     // This is always true, but keeping it here in case I decide to control this via settings
     const showScrambleColors = true;
 
+    const rawAverage = calculateAverageRaw(
+        compModeTimes.map((solve) => (solve.dnf ? -1 : solve.time + solve.penalty * 100)),
+    );
+
     if (compMode) {
         switch (compModeStep) {
             case CompModeStep.INSPECTION:
@@ -362,16 +368,23 @@ const TimerComponent = memo(function TimerComponentInternal({
                             </thead>
                             <tbody>
                                 {[0, 1, 2, 3, 4].map((_, index) => {
+                                    const rawTime = compModeTimes[index] != null ? getCompTimeWithPenalties(index) : 0;
                                     return (
                                         <tr key={index}>
                                             {compModeTimes[index] != null ? (
                                                 <>
                                                     <td>{index + 1}</td>
-                                                    <td>
+                                                    <td
+                                                        className={
+                                                            rawTime < (goals?.singleGoal ?? 0)
+                                                                ? 'timer__font--green'
+                                                                : ''
+                                                        }
+                                                    >
                                                         {(index === comModeBestIndex || index === comModeWorstIndex) &&
                                                             compModeTimes.length > 2 &&
                                                             '('}
-                                                        {getFormattedTime(getCompTimeWithPenalties(index))}
+                                                        {getFormattedTime(rawTime)}
                                                         {(index === comModeBestIndex || index === comModeWorstIndex) &&
                                                             compModeTimes.length > 2 &&
                                                             ')'}
@@ -441,6 +454,7 @@ const TimerComponent = memo(function TimerComponentInternal({
                                 })}
                             </tbody>
                         </table>
+
                         {compModeTimes.length === 4 && (
                             <div>
                                 Best Possible Ao5:{' '}
@@ -464,17 +478,13 @@ const TimerComponent = memo(function TimerComponentInternal({
                             </div>
                         )}
                         {compModeTimes.length === 5 && (
-                            <div>
-                                Ao5:{' '}
-                                {getFormattedTime(
-                                    calculateAverageRaw(
-                                        compModeTimes.map((solve) =>
-                                            solve.dnf ? -1 : solve.time + solve.penalty * 100,
-                                        ),
-                                    ),
-                                )}
+                            <div className={rawAverage < (goals?.averageGoal ?? 0) ? 'timer__font--green' : ''}>
+                                Ao5: {getFormattedTime(rawAverage)}
                             </div>
                         )}
+
+                        {goals?.singleGoal && <div>Target single: {getFormattedTime(goals?.singleGoal)}</div>}
+                        {goals?.averageGoal && <div>Target average: {getFormattedTime(goals?.averageGoal)}</div>}
                     </div>
                 );
         }

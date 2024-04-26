@@ -104,6 +104,20 @@ $cube-sticker-yellow-faded: #ffffbe;
     z-index: 15;
 }
 
+.timer__font--green {
+    color: $green-light;
+}
+.timer__font--yellow {
+    color: $yellow-light;
+}
+.timer__font--red {
+    color: $red-light;
+}
+
+.timer__element--transparent {
+    opacity: 0.25;
+}
+
 @mixin common-table-styles {
     background: $main-background-color;
     border: $thin-border-size $table-border-color;
