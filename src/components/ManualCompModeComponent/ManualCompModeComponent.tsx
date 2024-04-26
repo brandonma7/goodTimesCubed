@@ -13,10 +13,12 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
     const [puzzleType, setPuzzleType] = useState(puzzle);
     const goalsForPuzzle = goalSettings.find((goal) => goal.puzzleType === puzzleType);
     const defaultAverageGoal = goalsForPuzzle == null ? 1843 : goalsForPuzzle.averageGoal;
+    const defaultSingleGoal = goalsForPuzzle == null ? 1569 : goalsForPuzzle.singleGoal;
 
     const [scrambles, setScrambles] = useState(new Array(5).fill('').map(() => generateScramble(puzzleType)));
     const [times, setTimes] = useState<number[]>(new Array(5).fill(0));
     const [targetAverage, setTargetAverage] = useState(defaultAverageGoal);
+    const [targetSingle, setTargetSingle] = useState(defaultSingleGoal);
 
     const validTimes = times.filter((time) => time > 0);
     const timeToBeat = findTimeToBeatTargetAverage(times, targetAverage - 1);
@@ -47,6 +49,10 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
                     setTargetAverage(
                         goalSettings.find((goal) => goal.puzzleType === newPuzzle)?.averageGoal ?? defaultAverageGoal,
                     );
+                    setPuzzleType(newPuzzle);
+                    setTargetSingle(
+                        goalSettings.find((goal) => goal.puzzleType === newPuzzle)?.singleGoal ?? defaultSingleGoal,
+                    );
                     getNewScramble(newPuzzle);
                 }}
             >
@@ -59,14 +65,26 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
                 })}
             </select>
             <div>
-                Target Average:
-                <input
-                    className='timer__input'
-                    type='text'
-                    inputMode='decimal'
-                    value={targetAverage}
-                    onChange={(event) => setTargetAverage(parseInt(event.target.value))}
-                />
+                <p>
+                    Target Single:
+                    <input
+                        className='timer__input'
+                        type='text'
+                        inputMode='decimal'
+                        value={targetSingle}
+                        onChange={(event) => setTargetSingle(parseInt(event.target.value))}
+                    />
+                </p>
+                <p>
+                    Target Average:
+                    <input
+                        className='timer__input'
+                        type='text'
+                        inputMode='decimal'
+                        value={targetAverage}
+                        onChange={(event) => setTargetAverage(parseInt(event.target.value))}
+                    />
+                </p>
             </div>
             <table className='basic-table'>
                 <thead>
