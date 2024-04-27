@@ -257,6 +257,14 @@ const TimerComponent = memo(function TimerComponentInternal({
     const rawAverage = calculateAverageRaw(
         compModeTimes.map((solve) => (solve.dnf ? -1 : solve.time + solve.penalty * 100)),
     );
+    const worstPossibleAverage = calculateAverageRaw([
+        ...compModeTimes.map((solve) => (solve.dnf ? -1 : solve.time + solve.penalty * 100)),
+        100000000,
+    ]);
+    const bestPossibleAverage = calculateAverageRaw([
+        ...compModeTimes.map((solve) => (solve.dnf ? -1 : solve.time + solve.penalty * 100)),
+        1,
+    ]);
 
     if (compMode) {
         switch (compModeStep) {
@@ -457,24 +465,21 @@ const TimerComponent = memo(function TimerComponentInternal({
 
                         {compModeTimes.length === 4 && (
                             <div>
-                                Best Possible Ao5:{' '}
-                                {getFormattedTime(
-                                    calculateAverageRaw([
-                                        ...compModeTimes.map((solve) =>
-                                            solve.dnf ? -1 : solve.time + solve.penalty * 100,
-                                        ),
-                                        1,
-                                    ]),
-                                )}
-                                , Worst Possible Ao5:{' '}
-                                {getFormattedTime(
-                                    calculateAverageRaw([
-                                        ...compModeTimes.map((solve) =>
-                                            solve.dnf ? -1 : solve.time + solve.penalty * 100,
-                                        ),
-                                        100000000,
-                                    ]),
-                                )}
+                                <span
+                                    className={
+                                        bestPossibleAverage > (goals?.averageGoal ?? 99999) ? 'timer__font--red' : ''
+                                    }
+                                >
+                                    Best Possible Ao5: {getFormattedTime(bestPossibleAverage)}
+                                </span>
+                                ,{' '}
+                                <span
+                                    className={
+                                        worstPossibleAverage < (goals?.averageGoal ?? 0) ? 'timer__font--green' : ''
+                                    }
+                                >
+                                    Worst Possible Ao5: {getFormattedTime(worstPossibleAverage)}
+                                </span>
                             </div>
                         )}
                         {compModeTimes.length === 5 && (
