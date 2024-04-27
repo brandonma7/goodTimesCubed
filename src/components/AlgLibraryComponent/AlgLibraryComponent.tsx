@@ -243,12 +243,22 @@ export default function AlgLibraryComponent({ isMobile }: { isMobile: boolean })
 
                                                 {!selectedAlgSet.hideCasePic && (
                                                     <td className='alg-library__case-pic'>
-                                                        {
+                                                        {selectedAlgSet.showFullPic ? (
+                                                            <>
+                                                                <CubeVisualizationComponent
+                                                                    puzzleType={selectedPuzzle}
+                                                                    state={algCase.state}
+                                                                    width={160}
+                                                                    height={120}
+                                                                    clickable={false}
+                                                                />
+                                                            </>
+                                                        ) : (
                                                             <SingleFaceVisualizationComponent
                                                                 faceState={algCase.state}
                                                                 puzzleType={selectedPuzzle}
                                                             />
-                                                        }
+                                                        )}
                                                     </td>
                                                 )}
                                             </tr>
