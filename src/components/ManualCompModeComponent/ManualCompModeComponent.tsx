@@ -32,6 +32,14 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
     const rawAverage = times?.length > 0 ? calculateAverageRaw(times) : 0;
     const worstCaseAverage = calculateAverageRaw([...validTimes, 100000000]);
     const bestCaseAverage = calculateAverageRaw([...validTimes, 1]);
+
+    const reset = (timesOnly = false) => {
+        if (!timesOnly) {
+            setScrambles(new Array(5).fill('').map(() => generateScramble(puzzleType)));
+        }
+        setTimes(new Array(5).fill(0));
+        (document.querySelector('.time-input-0') as HTMLElement)?.focus();
+    };
     return (
         <div
             className='manual-comp-mode'
@@ -41,6 +49,12 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
                 flexDirection: 'column',
                 justifyContent: 'center',
                 margin: '0 auto',
+            }}
+            onKeyDown={(e) => {
+                if (e.code === 'Escape') {
+                    e.persist();
+                    reset();
+                }
             }}
         >
             <select
@@ -133,7 +147,12 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
                                 {isMobile && (
                                     <tr>
                                         <td></td>
-                                        <td style={{ display: 'flex', flexWrap: 'wrap' }}>{colorScramble(scramble)}</td>
+                                        <td
+                                            className={times[index] > 0 ? 'timer__element--transparent' : ''}
+                                            style={{ display: 'flex', flexWrap: 'wrap' }}
+                                        >
+                                            {colorScramble(scramble)}
+                                        </td>
                                     </tr>
                                 )}
                             </React.Fragment>
@@ -170,23 +189,10 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
                 </div>
             )}
             <div className='manual-comp-mode-actions'>
-                <button
-                    className='timer__button'
-                    onClick={() => {
-                        setScrambles(new Array(5).fill('').map(() => generateScramble(puzzleType)));
-                        setTimes(new Array(5).fill(0));
-                        (document.querySelector('.time-input-0') as HTMLElement)?.focus();
-                    }}
-                >
+                <button className='timer__button' onClick={() => reset()}>
                     Reset
                 </button>
-                <button
-                    className='timer__button'
-                    onClick={() => {
-                        setTimes(new Array(5).fill(0));
-                        (document.querySelector('.time-input-0') as HTMLElement)?.focus();
-                    }}
-                >
+                <button className='timer__button' onClick={() => reset(true)}>
                     Reset Times Only
                 </button>
             </div>
