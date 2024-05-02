@@ -34,6 +34,15 @@ export const solidRedFace = new Array(9).fill(Color.RED);
 export const solidBlueFace = new Array(9).fill(Color.BLUE);
 export const solidYellowFace = new Array(9).fill(Color.YELLOW);
 export const solidGrayFace = new Array(9).fill(Color.GRAY);
+export const getSolidFace = (order: number, color: Color) => new Array(order * order).fill(color);
+export const getSolvedState = (order: number) => [
+    new Array(order * order).fill(Color.WHITE),
+    new Array(order * order).fill(Color.ORANGE),
+    new Array(order * order).fill(Color.GREEN),
+    new Array(order * order).fill(Color.RED),
+    new Array(order * order).fill(Color.BLUE),
+    new Array(order * order).fill(Color.YELLOW),
+];
 
 export default class Cube {
     private cubeState: CubeState;

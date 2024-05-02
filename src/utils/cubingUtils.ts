@@ -35,6 +35,7 @@ export type Solve = {
         eg1?: string;
         eg2?: string;
         parity?: string;
+        fourBld?: string;
     };
 };
 

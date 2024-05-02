@@ -10,6 +10,7 @@ import './AlgLibraryComponent.scss';
 import { ohCases } from '../../utils/cases/3x3x3/oh';
 import { classNames } from '../../utils/genericUtils';
 import { bldM2Cases } from '../../utils/cases/3x3x3/bldm2';
+import { fourBldCases } from '../../utils/cases/4x4x4/4bld';
 
 type AlgEntryData = {
     type: AlgSets;
@@ -69,6 +70,11 @@ const AlgLibrary: AlgLibraryEntry[] = [
                 type: 'parity',
                 hideAuf: true,
             },
+            {
+                type: 'fourBld',
+                showFullPic: true,
+                hideAuf: true,
+            },
         ],
     },
 ];
@@ -81,6 +87,7 @@ const algSetMap: {
     oh: ohCases,
     ortega: ortegaCases,
     bldm2: bldM2Cases,
+    fourBld: fourBldCases,
     coll: [],
     eg1: [],
     eg2: [],
@@ -193,8 +200,8 @@ export default function AlgLibraryComponent({ isMobile }: { isMobile: boolean })
                                                             <CubeVisualizationComponent
                                                                 puzzleType={selectedPuzzle}
                                                                 state={algCase.state}
-                                                                width={160}
-                                                                height={120}
+                                                                width={200}
+                                                                height={150}
                                                                 clickable={false}
                                                             />
                                                         </>
