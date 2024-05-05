@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import Cube from '../../classes/Cube';
 import { classNames } from '../../utils/genericUtils';
+import CubeVisualizationComponent from '../CubeVisualizationComponent';
 import {
     getMappingFromLocalStorage,
     getWordDupes,
@@ -85,11 +87,50 @@ export default function BldTrainerComponent() {
                             >
                                 Back
                             </button>
-                            <p>memo trainer placeholder</p>
+                            <MemoTrainer />
                         </>
                     }
                 />
             </Routes>
+        </div>
+    );
+}
+
+function MemoTrainer() {
+    const cube = new Cube('', '3x3x3');
+    const [cornerSwaps, setCornerSwaps] = useState('');
+    const [edgeSwaps, setEdgeSwaps] = useState('');
+
+    cube.doCornerSwaps(cornerSwaps);
+    cube.doEdgeSwaps(edgeSwaps);
+
+    return (
+        <div>
+            <h3>Memo Trainer</h3>
+            <div>
+                <CubeVisualizationComponent state={cube.getState()} puzzleType={'3x3x3'} clickable={false} />
+            </div>
+
+            <div>
+                <input
+                    className='timer__input'
+                    placeholder='Edge swaps'
+                    value={edgeSwaps}
+                    onChange={(event) => {
+                        setEdgeSwaps(event.target.value.toUpperCase());
+                    }}
+                />
+            </div>
+            <div>
+                <input
+                    className='timer__input'
+                    placeholder='Corner swaps'
+                    value={cornerSwaps}
+                    onChange={(event) => {
+                        setCornerSwaps(event.target.value.toUpperCase());
+                    }}
+                />
+            </div>
         </div>
     );
 }

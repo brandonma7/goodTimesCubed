@@ -93,6 +93,16 @@ export default class Cube {
         return this.cubeState;
     };
 
+    doEdgeSwaps = (swaps: string) => {
+        const moves = swaps.split('').filter((l) => l !== ' ');
+        console.log(moves);
+    };
+
+    doCornerSwaps = (swaps: string) => {
+        const moves = swaps.split('').filter((l) => l !== ' ');
+        console.log(moves);
+    };
+
     doMove = (move: string) => {
         const isWideMove = move.includes('w');
         const hasLeadingWidthValue = isWideMove && !isNaN(parseInt(move[0]));
