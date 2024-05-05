@@ -1,5 +1,6 @@
 import { PuzzleType, Solve } from './cubingUtils';
 import { CachedSessionData, SessionData } from '../components/SessionManagementComponent';
+import { isBoolean } from 'lodash';
 
 const CACHE_KEY = 'goodTimesSolvesData';
 
@@ -62,9 +63,11 @@ export function getRand(max: number) {
     return Math.floor(Math.random() * max);
 }
 
-export function classNames(...classes: string[]) {
+export function classNames(...classes: (string | boolean | null)[]) {
     return classes
-        .filter(Boolean)
+        .filter((c) => c != null)
+        .filter((c) => !isBoolean(c))
+        .map((c) => c?.toString())
         .filter((c) => c?.length)
         .join(' ');
 }

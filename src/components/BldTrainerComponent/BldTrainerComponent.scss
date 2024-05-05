@@ -16,6 +16,11 @@
     .bld-pair-row {
         height: 50px;
     }
+
+    .bld-pair--dupe {
+        background-color: #211;
+    }
+
     .bld-pair--col-hover,
     .bld-pair--row-hover {
         background-color: #222;
@@ -26,7 +31,8 @@
     }
 
     .bld-pair--null {
-        background-color: $table-border-color;
+        background-color: #111;
+        color: #111;
     }
 
     .trainer-pair {
