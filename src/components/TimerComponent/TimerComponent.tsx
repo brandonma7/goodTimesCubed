@@ -273,9 +273,9 @@ const TimerComponent = memo(function TimerComponentInternal({
                     <div
                         className={classNames(
                             'timer__comp-mode',
-                            elapsed.current < 7000 ? 'inspection--start' : '',
-                            elapsed.current >= 7000 && elapsed.current < 12000 ? 'inspection--seven' : '',
-                            elapsed.current >= 12000 ? 'inspection--twelve' : '',
+                            elapsed.current < 7000 && 'inspection--start',
+                            elapsed.current >= 7000 && elapsed.current < 12000 && 'inspection--seven',
+                            elapsed.current >= 12000 && 'inspection--twelve',
                         )}
                         ref={timerComponentRef}
                         tabIndex={0}
@@ -383,11 +383,9 @@ const TimerComponent = memo(function TimerComponentInternal({
                                                 <>
                                                     <td>{index + 1}</td>
                                                     <td
-                                                        className={
-                                                            rawTime < (goals?.singleGoal ?? 0)
-                                                                ? 'timer__font--green'
-                                                                : ''
-                                                        }
+                                                        className={classNames(
+                                                            rawTime < (goals?.singleGoal ?? 0) && 'timer__font--green',
+                                                        )}
                                                     >
                                                         {(index === comModeBestIndex || index === comModeWorstIndex) &&
                                                             compModeTimes.length > 2 &&
@@ -466,24 +464,24 @@ const TimerComponent = memo(function TimerComponentInternal({
                         {compModeTimes.length === 4 && (
                             <div>
                                 <span
-                                    className={
-                                        bestPossibleAverage > (goals?.averageGoal ?? 99999) ? 'timer__font--red' : ''
-                                    }
+                                    className={classNames(
+                                        bestPossibleAverage > (goals?.averageGoal ?? 99999) && 'timer__font--red',
+                                    )}
                                 >
                                     Best Possible Ao5: {getFormattedTime(bestPossibleAverage)}
                                 </span>
                                 ,{' '}
                                 <span
-                                    className={
-                                        worstPossibleAverage < (goals?.averageGoal ?? 0) ? 'timer__font--green' : ''
-                                    }
+                                    className={classNames(
+                                        worstPossibleAverage < (goals?.averageGoal ?? 0) && 'timer__font--green',
+                                    )}
                                 >
                                     Worst Possible Ao5: {getFormattedTime(worstPossibleAverage)}
                                 </span>
                             </div>
                         )}
                         {compModeTimes.length === 5 && (
-                            <div className={rawAverage < (goals?.averageGoal ?? 0) ? 'timer__font--green' : ''}>
+                            <div className={classNames(rawAverage < (goals?.averageGoal ?? 0) && 'timer__font--green')}>
                                 Ao5: {getFormattedTime(rawAverage)}
                             </div>
                         )}
@@ -497,7 +495,7 @@ const TimerComponent = memo(function TimerComponentInternal({
 
     return (
         <section
-            className={`timer__timer${timerIsRunning.current ? ' timer_timer--running' : ''}`}
+            className={classNames('timer__timer', timerIsRunning.current && 'timer_timer--running')}
             ref={timerComponentRef}
             tabIndex={0}
             onKeyDown={(event) => {
@@ -572,10 +570,8 @@ const TimerComponent = memo(function TimerComponentInternal({
                                             key={index}
                                             className={classNames(
                                                 'timer__current-splits',
-                                                active && index < currentSplit ? 'timer__current-splits--current' : '',
-                                                active && index === currentSplit
-                                                    ? 'timer__current-splits--previous'
-                                                    : '',
+                                                active && index < currentSplit && 'timer__current-splits--current',
+                                                active && index === currentSplit && 'timer__current-splits--previous',
                                             )}
                                             style={{
                                                 width: `${100 / numSplits}%`,
@@ -651,8 +647,8 @@ const TimerComponent = memo(function TimerComponentInternal({
                     <div
                         className={classNames(
                             'timer__counter',
-                            isPrepping ? 'timer__counter--prepping' : '',
-                            isPrepped ? 'timer__counter--prepped' : '',
+                            isPrepping && 'timer__counter--prepping',
+                            isPrepped && 'timer__counter--prepped',
                         )}
                     >
                         {timerEntry}
@@ -730,9 +726,10 @@ const TimerComponent = memo(function TimerComponentInternal({
                         {mostRecentSolve?.analysisData != null && (
                             <>
                                 <button
-                                    className={`timer__button${
-                                        mostRecentSolve?.analysisData?.oll ? ' timer__button--big' : ''
-                                    }`}
+                                    className={classNames(
+                                        'timer__button',
+                                        mostRecentSolve?.analysisData?.oll && ' timer__button--big',
+                                    )}
                                     onClick={() => {
                                         setIsOllSelectionMode(!isOllSelectionMode);
                                     }}
@@ -747,9 +744,10 @@ const TimerComponent = memo(function TimerComponentInternal({
                                     )}
                                 </button>
                                 <button
-                                    className={`timer__button${
-                                        mostRecentSolve?.analysisData?.pll ? ' timer__button--big' : ''
-                                    }`}
+                                    className={classNames(
+                                        'timer__button',
+                                        mostRecentSolve?.analysisData?.pll && ' timer__button--big',
+                                    )}
                                     onClick={() => {
                                         setIsPllSelectionMode(!isPllSelectionMode);
                                     }}

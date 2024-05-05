@@ -95,12 +95,10 @@ export function NormalResultsTable({
                                                 key={cellIndex}
                                                 className={classNames(
                                                     'clickable',
-                                                    isPenalty ? 'timer__result--penalty' : '',
+                                                    isPenalty && 'timer__result--penalty',
                                                     isBest
                                                         ? 'timer__result--best'
-                                                        : beatsGoal
-                                                        ? 'timer__result--beats-goal'
-                                                        : '',
+                                                        : beatsGoal && 'timer__result--beats-goal',
                                                 )}
                                                 onClick={() => {
                                                     if (

@@ -72,11 +72,7 @@ export default function CubeVisualizationComponent({
     const fullCube = () => {
         return (
             <div
-                className={classNames(
-                    'timer__cube-pic',
-                    `timer__cube-pic--${puzzleType}`,
-                    clickable ? 'clickable' : '',
-                )}
+                className={classNames('timer__cube-pic', `timer__cube-pic--${puzzleType}`, clickable && 'clickable')}
                 style={{
                     width,
                     height,

@@ -10,6 +10,7 @@ import { ortegaCases } from '../../utils/cases/2x2x2/ortega';
 import { ohCases } from '../../utils/cases/3x3x3/oh';
 import { bldM2Cases } from '../../utils/cases/3x3x3/bldm2';
 import { fourBldCases } from '../../utils/cases/4x4x4/4bld';
+import { classNames } from '../../utils/genericUtils';
 
 export type AlgSets = 'oll' | 'pll' | 'oh' | 'bldm2' | 'ortega' | 'coll' | 'eg1' | 'eg2' | 'parity' | 'fourBld';
 
@@ -136,7 +137,7 @@ export default function CasePickerComponent({
                     return (
                         <div
                             key={index}
-                            className={`group-tab${isSelected ? ' selected' : ''}`}
+                            className={classNames('group-tab', isSelected && 'selected')}
                             onClick={() => {
                                 setCurrentGroupIndex(index);
                             }}
@@ -150,7 +151,7 @@ export default function CasePickerComponent({
                 {currentlyViewingCaseGroup.cases.map((c, index) => {
                     return (
                         <div
-                            className={`case${currentCaseId === c.id ? ' case--selected' : ''}`}
+                            className={classNames('case', currentCaseId === c.id && 'case--selected')}
                             key={index}
                             onClick={() => {
                                 const value = currentCaseId === c.id ? undefined : c.id;

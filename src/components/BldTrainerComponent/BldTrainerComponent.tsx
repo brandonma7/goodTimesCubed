@@ -214,10 +214,7 @@ function LetterPairTable() {
                         return (
                             <th
                                 key={index}
-                                className={classNames(
-                                    'bld-pair-column',
-                                    hoverCol === index ? 'bld-pair--col-hover' : '',
-                                )}
+                                className={classNames('bld-pair-column', hoverCol === index && 'bld-pair--col-hover')}
                             >
                                 {letterPair.letter}
                             </th>

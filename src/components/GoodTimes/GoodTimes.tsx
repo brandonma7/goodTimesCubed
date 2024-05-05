@@ -323,7 +323,7 @@ export default function GoodTimes() {
             }}
         >
             <HeaderComponent setAppMode={appModeSetter} />
-            <div className={classNames('timer__main', appMode === AppMode.TIMER ? 'timer__main--reverse' : '')}>
+            <div className={classNames('timer__main', appMode === AppMode.TIMER && 'timer__main--reverse')}>
                 {appMode === AppMode.COMP ? (
                     <TimerComponent
                         dispatchSolveData={dispatchSolveData}
@@ -342,7 +342,7 @@ export default function GoodTimes() {
                 ) : (
                     <>
                         <section
-                            className={classNames('timer__left-bar', timerIsRunning ? 'timer__left-bar--running' : '')}
+                            className={classNames('timer__left-bar', timerIsRunning && 'timer__left-bar--running')}
                         >
                             <SessionManagementComponent
                                 sessionData={sessionData}

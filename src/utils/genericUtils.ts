@@ -63,7 +63,7 @@ export function getRand(max: number) {
     return Math.floor(Math.random() * max);
 }
 
-export function classNames(...classes: (string | boolean | null)[]) {
+export function classNames(...classes: (string | boolean | null | undefined)[]) {
     return classes
         .filter((c) => c != null)
         .filter((c) => !isBoolean(c))

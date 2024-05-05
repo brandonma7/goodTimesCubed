@@ -117,9 +117,9 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
                             <React.Fragment key={index}>
                                 <tr>
                                     <td
-                                        className={
-                                            times[index] > 10 && times[index] < targetSingle ? 'timer__font--green' : ''
-                                        }
+                                        className={classNames(
+                                            times[index] > 10 && times[index] < targetSingle && 'timer__font--green',
+                                        )}
                                     >
                                         {index + 1}
                                     </td>
@@ -139,7 +139,7 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
                                         />
                                     </td>
                                     {!isMobile && (
-                                        <td className={times[index] > 0 ? 'timer__element--transparent' : ''}>
+                                        <td className={classNames(times[index] > 0 && 'timer__element--transparent')}>
                                             {colorScramble(scramble)}
                                         </td>
                                     )}
@@ -148,7 +148,7 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
                                     <tr>
                                         <td></td>
                                         <td
-                                            className={times[index] > 0 ? 'timer__element--transparent' : ''}
+                                            className={classNames(times[index] > 0 && 'timer__element--transparent')}
                                             style={{ display: 'flex', flexWrap: 'wrap' }}
                                         >
                                             {colorScramble(scramble)}
@@ -174,17 +174,17 @@ export function ManualCompModeComponent({ puzzleType: puzzle = '3x3x3' }: { puzz
             )}
             {validTimes.length === 4 && (
                 <>
-                    <div className={bestCaseAverage > targetAverage ? 'timer__font--red' : ''}>
+                    <div className={classNames(bestCaseAverage > targetAverage && 'timer__font--red')}>
                         Best Possible Ao5: {getFormattedTime(bestCaseAverage)}
                     </div>
-                    <div className={worstCaseAverage < targetAverage ? 'timer__font--green' : ''}>
+                    <div className={classNames(worstCaseAverage < targetAverage && 'timer__font--green')}>
                         Worst Possible Ao5: {getFormattedTime(worstCaseAverage)}
                     </div>
                     <div>Time to beat target: {timeToBeat === null ? 'no' : getFormattedTime(timeToBeat)}</div>
                 </>
             )}
             {validTimes.length === 5 && (
-                <div className={rawAverage < targetAverage ? 'timer__font--green' : ''}>
+                <div className={classNames(rawAverage < targetAverage && 'timer__font--green')}>
                     Ao5: {getFormattedTime(rawAverage)}
                 </div>
             )}

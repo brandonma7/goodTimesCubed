@@ -166,7 +166,7 @@ export default function BestsTableComponent({
             <tr key={index}>
                 <td>{nameCellText}</td>
                 <td
-                    className={classNames('clickable', beatsGoal ? 'timer__result--beats-goal' : '')}
+                    className={classNames('clickable', beatsGoal && 'timer__result--beats-goal')}
                     onClick={() => {
                         if (type === DataType.AVERAGE || type === DataType.MEAN) {
                             setSolveDetailsIndex(solves.length - 1, size);
@@ -179,7 +179,7 @@ export default function BestsTableComponent({
                     {currentCellText}
                 </td>
                 <td
-                    className={classNames('clickable', beatsGoal ? 'timer__result--beats-goal' : '')}
+                    className={classNames('clickable', beatsGoal && 'timer__result--beats-goal')}
                     onClick={() => {
                         const index = bests[DataType.SINGLE]?.index ?? -1;
                         if (index >= 0) {

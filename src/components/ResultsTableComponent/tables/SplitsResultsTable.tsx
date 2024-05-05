@@ -151,18 +151,19 @@ export function SplitsResultsTable({ results, splitNames = [], setSolveDetailsIn
                                     {solve.splits.map((time, cellIndex, list) => {
                                         const cellText = getFormattedTime(time);
                                         const isSplitBest = bestSplitIndexes[cellIndex] === index;
-                                        const isSkip =
+                                        const isSkip: boolean =
                                             // Making the assumption that pll is the last step and oll is the second to last step
-                                            (solve.analysisData?.isOllSkip && cellIndex === list.length - 2) ||
-                                            (solve.analysisData?.isPllSkip && cellIndex === list.length - 1);
+                                            ((solve.analysisData?.isOllSkip && cellIndex === list.length - 2) ||
+                                                (solve.analysisData?.isPllSkip && cellIndex === list.length - 1)) ??
+                                            false;
 
                                         return (
                                             <td
                                                 key={cellIndex}
                                                 className={classNames(
                                                     'clickable',
-                                                    isSplitBest ? 'timer__result--best' : '',
-                                                    isSkip ? 'timer__result--skip' : '',
+                                                    isSplitBest && 'timer__result--best',
+                                                    isSkip && 'timer__result--skip',
                                                 )}
                                                 onClick={() => {
                                                     setSolveDetailsIndex(tableIndex);
@@ -176,8 +177,8 @@ export function SplitsResultsTable({ results, splitNames = [], setSolveDetailsIn
                                         key={index}
                                         className={classNames(
                                             'clickable',
-                                            isPenalty ? 'timer__result--penalty' : '',
-                                            isBest ? 'timer__result--best' : '',
+                                            isPenalty && 'timer__result--penalty',
+                                            isBest && 'timer__result--best',
                                         )}
                                         onClick={() => {
                                             setSolveDetailsIndex(tableIndex);

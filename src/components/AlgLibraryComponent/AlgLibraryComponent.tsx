@@ -146,7 +146,7 @@ export default function AlgLibraryComponent({ isMobile }: { isMobile: boolean })
                             key={algSetIndex}
                             className={classNames(
                                 'timer__button alg-library-type-button',
-                                sibling.type === selectedAlgSet.type ? 'timer__button--active' : '',
+                                sibling.type === selectedAlgSet.type && 'timer__button--active',
                             )}
                             onClick={() => {
                                 setSelectedAlgSet(sibling);
