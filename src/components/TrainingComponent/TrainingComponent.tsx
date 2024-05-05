@@ -1,33 +1,28 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import BldTrainerComponent from '../BldTrainerComponent';
 import TwoSideLibraryComponent from '../TwoSideLibraryComponent';
 import './TrainingComponent.scss';
 
-type TrainerState = 'p2s' | 'bld';
-
-function renderTrainer(trainer: TrainerState) {
-    switch (trainer) {
-        case 'p2s':
-            return <TwoSideLibraryComponent />;
-        case 'bld':
-            return <BldTrainerComponent />;
-    }
-    return <></>;
-}
-
 export default function TrainingComponent() {
-    const [trainer, setTrainer] = useState<TrainerState>('p2s');
+    const navigate = useNavigate();
     return (
         <div className='timer__trainer-component'>
             <div>
-                <button className='timer__button' onClick={() => setTrainer('p2s')}>
+                <button className='timer__button' onClick={() => navigate('p2s')}>
                     Two Side PLL
                 </button>
-                <button className='timer__button' onClick={() => setTrainer('bld')}>
+                <button className='timer__button' onClick={() => navigate('bld')}>
                     BLD
                 </button>
             </div>
-            <div>{renderTrainer(trainer)}</div>
+
+            <div>
+                <Routes>
+                    <Route path='p2s/*' element={<TwoSideLibraryComponent />} />
+                    <Route path='bld/*' element={<BldTrainerComponent />} />
+                </Routes>
+            </div>
         </div>
     );
 }

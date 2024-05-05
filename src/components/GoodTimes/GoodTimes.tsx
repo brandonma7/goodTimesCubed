@@ -337,7 +337,7 @@ export default function GoodTimes() {
                         }
                     />
                     <Route path='man-comp' element={<ManualCompModeComponent puzzleType={sessionData.type} />} />
-                    <Route path='training' element={<TrainingComponent />} />
+                    <Route path='training/*' element={<TrainingComponent />} />
                     <Route
                         path='insights'
                         element={<InsightsView solves={solveData} bests={bestsData} isMobile={isMobile} />}

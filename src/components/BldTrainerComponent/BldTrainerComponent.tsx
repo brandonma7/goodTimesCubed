@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import { classNames } from '../../utils/genericUtils';
 import {
     getMappingFromLocalStorage,
@@ -10,34 +11,85 @@ import {
 import './BldTrainerComponent.scss';
 
 export default function BldTrainerComponent() {
-    const [isTraining, setIsTraining] = useState(false);
+    const navigate = useNavigate();
     const [search, setSearch] = useState('');
 
     return (
         <div className='timer__bld-trainer-component'>
-            <button className='timer__button' onClick={() => setIsTraining(!isTraining)}>
-                {isTraining ? 'Stop' : 'Train'}
-            </button>
-            {!isTraining && (
-                <>
-                    <input
-                        className='timer__input'
-                        placeholder='Find'
-                        value={search}
-                        onChange={(event) => {
-                            setSearch(event.target.value);
-                        }}
-                    />
-                    {search.length === 2 ? (
-                        <button className='timer__button' onClick={() => setSearch('')}>
-                            {findSearchValue(search.toUpperCase())}
-                        </button>
-                    ) : (
-                        ''
-                    )}
-                </>
-            )}
-            {isTraining ? <LetterPairTrainer /> : <LetterPairTable />}
+            <Routes>
+                <Route
+                    path='/'
+                    element={
+                        <>
+                            <button
+                                className='timer__button'
+                                onClick={() => {
+                                    navigate('letter-pair-trainer');
+                                }}
+                            >
+                                Letter Pair Trainer
+                            </button>
+                            <button
+                                className='timer__button'
+                                onClick={() => {
+                                    navigate('memo-trainer');
+                                }}
+                            >
+                                Memo Trainer
+                            </button>
+
+                            <input
+                                className='timer__input'
+                                placeholder='Find'
+                                value={search}
+                                onChange={(event) => {
+                                    setSearch(event.target.value);
+                                }}
+                            />
+                            {search.length === 2 ? (
+                                <button className='timer__button' onClick={() => setSearch('')}>
+                                    {findSearchValue(search.toUpperCase())}
+                                </button>
+                            ) : (
+                                ''
+                            )}
+                            <LetterPairTable />
+                        </>
+                    }
+                />
+                <Route
+                    path='/letter-pair-trainer'
+                    element={
+                        <>
+                            <button
+                                className='timer__button'
+                                onClick={() => {
+                                    navigate('.');
+                                }}
+                            >
+                                Back
+                            </button>
+                            <LetterPairTrainer />
+                        </>
+                    }
+                />
+                <Route
+                    path='/memo-trainer'
+                    element={
+                        <>
+                            <button
+                                className='timer__button'
+                                onClick={() => {
+                                    navigate('.');
+                                }}
+                            >
+                                Back
+                            </button>
+                            <p>memo trainer placeholder</p>
+                        </>
+                    }
+                />
+            </Routes>
         </div>
     );
 }
