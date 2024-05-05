@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { ReactComponent as BookIcon } from '../../icons/book.svg';
 import { ReactComponent as GearIcon } from '../../icons/gear.svg';
@@ -7,11 +8,11 @@ import { ReactComponent as PencilIcon } from '../../icons/pencil.svg';
 import { ReactComponent as PodiumIcon } from '../../icons/podium.svg';
 import { ReactComponent as TimerIcon } from '../../icons/timer.svg';
 import { ReactComponent as WeightIcon } from '../../icons/weight.svg';
-import { AppMode } from '../GoodTimes';
 
 import './HeaderComponent.scss';
 
-export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: AppMode) => void }) {
+export default function HeaderComponent() {
+    const navigate = useNavigate();
     return (
         <header className='timer__header'>
             <div className='timer__header-title'>Good Times</div>
@@ -19,7 +20,7 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                 <button
                     className='timer__button'
                     onClick={() => {
-                        setAppMode(AppMode.TIMER);
+                        navigate('/');
                     }}
                 >
                     <TimerIcon className='timer__icon' aria-label='Timer' />
@@ -27,7 +28,7 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                 <button
                     className='timer__button'
                     onClick={() => {
-                        setAppMode(AppMode.COMP);
+                        navigate('/comp');
                     }}
                 >
                     <PodiumIcon className='timer__icon' aria-label='Comp Mode' />
@@ -35,7 +36,7 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                 <button
                     className='timer__button'
                     onClick={() => {
-                        setAppMode(AppMode.MATH);
+                        navigate('/man-comp');
                     }}
                 >
                     <PencilIcon className='timer__icon' aria-label='Manual Comp Mode' />
@@ -43,7 +44,7 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                 <button
                     className='timer__button'
                     onClick={() => {
-                        setAppMode(AppMode.ALG);
+                        navigate('/algs');
                     }}
                 >
                     <BookIcon className='timer__icon' aria-label='Algorithm Library' />
@@ -51,7 +52,7 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                 <button
                     className='timer__button'
                     onClick={() => {
-                        setAppMode(AppMode.TRAIN);
+                        navigate('/training');
                     }}
                 >
                     <WeightIcon className='timer__icon' aria-label='Training' />
@@ -59,7 +60,7 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                 <button
                     className='timer__button'
                     onClick={() => {
-                        setAppMode(AppMode.INSIGHTS);
+                        navigate('/insights');
                     }}
                 >
                     <GraphIcon className='timer__icon' aria-label='Insights' />
@@ -67,7 +68,7 @@ export default function HeaderComponent({ setAppMode }: { setAppMode: (appMode: 
                 <button
                     className='timer__button'
                     onClick={() => {
-                        setAppMode(AppMode.SETTINGS);
+                        navigate('/settings');
                     }}
                 >
                     <GearIcon className='timer__icon' aria-label='Settings' />

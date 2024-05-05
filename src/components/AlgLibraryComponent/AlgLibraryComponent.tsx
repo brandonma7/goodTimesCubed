@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { PuzzleType } from '../../utils/cubingUtils';
 import { AlgSetNamesMap, AlgSets, CaseGroup } from '../CasePickerComponent';
 import { ollCases } from '../../utils/cases/3x3x3/oll';
@@ -11,6 +11,7 @@ import { ohCases } from '../../utils/cases/3x3x3/oh';
 import { classNames } from '../../utils/genericUtils';
 import { bldM2Cases } from '../../utils/cases/3x3x3/bldm2';
 import { fourBldCases } from '../../utils/cases/4x4x4/4bld';
+import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
 
 type AlgEntryData = {
     type: AlgSets;
@@ -95,58 +96,67 @@ const algSetMap: {
 };
 
 export default function AlgLibraryComponent({ isMobile }: { isMobile: boolean }): JSX.Element {
-    const [selectedAlgSet, setSelectedAlgSet] = useState<AlgEntryData | null>(null);
-    const [selectedPuzzle, setSelectedPuzzle] = useState<PuzzleType | null>(null);
-
-    const algSiblings =
-        selectedPuzzle != null ? AlgLibrary.find((entry) => entry.puzzleType === selectedPuzzle)?.algSets : null;
-
-    return selectedAlgSet === null || selectedPuzzle === null ? (
-        <div className='alg-library basic-page-container'>
-            <h1>Algorithm Library</h1>
-            {AlgLibrary.map((entry, index) => {
-                return (
-                    <div key={index}>
-                        <h2>{entry.puzzleType}</h2>
-                        <div>
-                            {entry.algSets.map((algSet, algSetIndex) => {
-                                const isDisabled = algSetMap[algSet.type].length === 0;
-                                return (
-                                    <button
-                                        key={algSetIndex}
-                                        className={classNames(
-                                            'timer__button',
-                                            'alg-library-type-button',
-                                            isDisabled && 'timer__button--disabled',
-                                        )}
-                                        disabled={isDisabled}
-                                        onClick={() => {
-                                            setSelectedAlgSet(algSet);
-                                            setSelectedPuzzle(entry.puzzleType);
-                                        }}
-                                    >
-                                        {AlgSetNamesMap[algSet.type]}
-                                    </button>
-                                );
-                            })}
-                        </div>
+    const navigate = useNavigate();
+    return (
+        <Routes>
+            <Route
+                path='/'
+                element={
+                    <div className='alg-library basic-page-container'>
+                        <h1>Algorithm Library</h1>
+                        {AlgLibrary.map((entry, index) => {
+                            return (
+                                <div key={index}>
+                                    <h2>{entry.puzzleType}</h2>
+                                    <div>
+                                        {entry.algSets.map((algSet, algSetIndex) => {
+                                            const isDisabled = algSetMap[algSet.type].length === 0;
+                                            return (
+                                                <button
+                                                    key={algSetIndex}
+                                                    className={classNames(
+                                                        'timer__button',
+                                                        'alg-library-type-button',
+                                                        isDisabled && 'timer__button--disabled',
+                                                    )}
+                                                    disabled={isDisabled}
+                                                    onClick={() =>
+                                                        navigate(`puzzle/${entry.puzzleType}/set/${algSet.type}`)
+                                                    }
+                                                >
+                                                    {AlgSetNamesMap[algSet.type]}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
-                );
-            })}
-        </div>
+                }
+            ></Route>
+            <Route path='puzzle/:puzzle/set/:algSet' element={<AlgLibraryPageComponent isMobile={isMobile} />} />
+        </Routes>
+    );
+}
+
+function AlgLibraryPageComponent({ isMobile }: { isMobile: boolean }) {
+    const navigate = useNavigate();
+    const { puzzle, algSet } = useParams();
+
+    const selectedPuzzle = puzzle as PuzzleType;
+    const algsForPuzzle = AlgLibrary.find((entry) => entry.puzzleType === selectedPuzzle)?.algSets;
+    const selectedAlgSet = algsForPuzzle?.find((algs) => algs.type === algSet);
+
+    return selectedAlgSet == null || selectedPuzzle == null ? (
+        <></>
     ) : (
         <div className='alg-library'>
             <div>
-                <button
-                    className='timer__button alg-library-type-button'
-                    onClick={() => {
-                        setSelectedAlgSet(null);
-                        setSelectedPuzzle(null);
-                    }}
-                >
+                <button className='timer__button alg-library-type-button' onClick={() => navigate(`/algs`)}>
                     Back
                 </button>
-                {algSiblings?.map((sibling, algSetIndex) => {
+                {algsForPuzzle?.map((sibling, algSetIndex) => {
                     const isDisabled = algSetMap[sibling.type].length === 0;
                     return (
                         <button
@@ -158,7 +168,7 @@ export default function AlgLibraryComponent({ isMobile }: { isMobile: boolean })
                             )}
                             disabled={isDisabled}
                             onClick={() => {
-                                setSelectedAlgSet(sibling);
+                                navigate(`/algs/puzzle/${puzzle}/set/${sibling.type}`);
                             }}
                         >
                             {AlgSetNamesMap[sibling.type]}

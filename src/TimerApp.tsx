@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import './App.css';
 import GoodTimes from './components/GoodTimes';
@@ -62,13 +63,15 @@ export function MetaDataContextProvider({ children }: { children: JSX.Element })
 }
 
 export default function AppRoot() {
-    console.log('App');
-
     return (
         <SettingsContextProvider>
             <MetaDataContextProvider>
                 <AlertsContextProvider>
-                    <GoodTimes />
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path='*' element={<GoodTimes />} />
+                        </Routes>
+                    </BrowserRouter>
                 </AlertsContextProvider>
             </MetaDataContextProvider>
         </SettingsContextProvider>

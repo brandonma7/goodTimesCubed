@@ -2,9 +2,9 @@
 
 .timer__insights-view {
     width: 70%;
+    margin: 0 auto;
     left: 15%;
     padding: 1vw;
-    overflow-y: scroll;
 
     .timer__tooltip {
         background-color: $main-background-color;
