@@ -79,7 +79,7 @@ export default function AppRoot() {
     TODO
 
     P0
-        Store previously viewed page in local storage (or query params?)
+        Routes
         BLD memo training
         Algs for:
             2x2

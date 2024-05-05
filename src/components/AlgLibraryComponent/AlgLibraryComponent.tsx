@@ -110,10 +110,16 @@ export default function AlgLibraryComponent({ isMobile }: { isMobile: boolean })
                         <h2>{entry.puzzleType}</h2>
                         <div>
                             {entry.algSets.map((algSet, algSetIndex) => {
+                                const isDisabled = algSetMap[algSet.type].length === 0;
                                 return (
                                     <button
                                         key={algSetIndex}
-                                        className='timer__button alg-library-type-button'
+                                        className={classNames(
+                                            'timer__button',
+                                            'alg-library-type-button',
+                                            isDisabled && 'timer__button--disabled',
+                                        )}
+                                        disabled={isDisabled}
                                         onClick={() => {
                                             setSelectedAlgSet(algSet);
                                             setSelectedPuzzle(entry.puzzleType);
@@ -141,13 +147,16 @@ export default function AlgLibraryComponent({ isMobile }: { isMobile: boolean })
                     Back
                 </button>
                 {algSiblings?.map((sibling, algSetIndex) => {
+                    const isDisabled = algSetMap[sibling.type].length === 0;
                     return (
                         <button
                             key={algSetIndex}
                             className={classNames(
                                 'timer__button alg-library-type-button',
                                 sibling.type === selectedAlgSet.type && 'timer__button--active',
+                                isDisabled && 'timer__button--disabled',
                             )}
+                            disabled={isDisabled}
                             onClick={() => {
                                 setSelectedAlgSet(sibling);
                             }}

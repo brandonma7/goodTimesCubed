@@ -53,6 +53,14 @@
             border: $primary-border-size $button-border-color;
         }
 
+        &--disabled,
+        &--disabled:hover,
+        &--disabled:active {
+            background-color: $button-background-color;
+            border-color: #333;
+            color: #666;
+        }
+
         @media (min-width: $big-screen-width) {
             & {
                 font-size: $size-m;

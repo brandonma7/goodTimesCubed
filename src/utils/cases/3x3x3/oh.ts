@@ -9,7 +9,7 @@ export const ohCases: CaseGroup = [
                 id: 'jaPerm',
                 name: 'Ja Perm',
                 algs: ["R' U2' R U R' U2' L U' R U L'"],
-                algNotes: ['Like doing soon from the back, but then taking back L slot out right before'],
+                algNotes: ['Like doing Sune from the back, but then taking back-L slot out right before'],
                 auf: ['Bar remains on F'],
                 state: [
                     [Color.BLUE, Color.ORANGE, Color.ORANGE],
@@ -22,7 +22,7 @@ export const ohCases: CaseGroup = [
             {
                 id: 'naPerm',
                 name: 'Na Perm',
-                algs: ["4(r D r' U2) r D r'"],
+                algs: ["4(r' D r U2) r' D r"],
                 auf: ['Opp bar ends up on F'],
                 state: [
                     [Color.BLUE, Color.BLUE, Color.GREEN],
@@ -35,7 +35,7 @@ export const ohCases: CaseGroup = [
             {
                 id: 'nbPerm',
                 name: 'Nb Perm',
-                algs: ["4(r' D r U2) r' D r"],
+                algs: ["4(r D r' U2) r D r'"],
                 auf: ['Opp bar ends up on F'],
                 state: [
                     [Color.GREEN, Color.BLUE, Color.BLUE],
@@ -48,7 +48,7 @@ export const ohCases: CaseGroup = [
             {
                 id: 'zPerm',
                 name: 'Z Perm',
-                algs: ["R' U' R U' R U R U' R' U R U R2 U' R'"],
+                algs: ["(R' U' R) U' R U R U' R' U R U R2 U' R'"],
                 algNotes: ['Front swaps with left instead of right'],
                 auf: ['Opp of front headlights will end up on F'],
                 state: [
