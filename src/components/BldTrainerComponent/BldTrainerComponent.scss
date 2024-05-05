@@ -16,6 +16,14 @@
     .bld-pair-row {
         height: 50px;
     }
+    .bld-pair--col-hover,
+    .bld-pair--row-hover {
+        background-color: #222;
+    }
+    
+    .bld-pair--exact-hover {
+        background-color: #444;
+    }
 
     .bld-pair--null {
         background-color: $table-border-color;
