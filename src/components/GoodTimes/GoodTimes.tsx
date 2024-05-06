@@ -276,14 +276,20 @@ export default function GoodTimes() {
         newBests[DataType.AVERAGE].forEach((best) => {
             const currentBest = getBestOfType(bestsData, DataType.AVERAGE, best?.size ?? 0);
             if (best.index !== currentBest?.index && !isSuppressingBestAlerts.current) {
-                alerts.push(`new best AO${best.size}: ${getFormattedTime(best.time)}`);
+                const formattedTimeForAlert = getFormattedTime(best.time);
+                if (formattedTimeForAlert !== '-') {
+                    alerts.push(`new best AO${best.size}: ${formattedTimeForAlert}`);
+                }
             }
         });
 
         newBests[DataType.MEAN].forEach((best) => {
             const currentBest = getBestOfType(bestsData, DataType.MEAN, best?.size ?? 0);
             if (best.index !== currentBest?.index && !isSuppressingBestAlerts.current) {
-                alerts.push(`new best MO${best.size}: ${getFormattedTime(best.time)}`);
+                const formattedTimeForAlert = getFormattedTime(best.time);
+                if (formattedTimeForAlert !== '-') {
+                    alerts.push(`new best MO${best.size}: ${formattedTimeForAlert}`);
+                }
             }
         });
 
@@ -291,7 +297,10 @@ export default function GoodTimes() {
             bestsData[DataType.SINGLE]?.index !== newBests[DataType.SINGLE]?.index &&
             !isSuppressingBestAlerts.current
         ) {
-            alerts.push(`New best single: ${getFormattedTime(newBests[DataType.SINGLE]?.time)}!`);
+            const formattedTimeForAlert = getFormattedTime(newBests[DataType.SINGLE]?.time);
+            if (formattedTimeForAlert !== '-') {
+                alerts.push(`New best single: ${formattedTimeForAlert}!`);
+            }
         }
 
         if (alerts.length && solveData.length > 5) {

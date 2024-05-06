@@ -94,7 +94,7 @@ export function SplitsResultsTable({ results, splitNames = [], setSolveDetailsIn
                         <td></td>
                         {invertedBestSplitIndexes.map((bestIndex, index) => {
                             if (bestIndex >= solves.length) {
-                                return <></>;
+                                return <React.Fragment key={index}></React.Fragment>;
                             }
                             const splits = solves[bestIndex].splits ?? [];
                             return (
