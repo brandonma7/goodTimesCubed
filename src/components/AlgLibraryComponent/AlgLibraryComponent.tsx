@@ -12,6 +12,7 @@ import { classNames } from '../../utils/genericUtils';
 import { bldM2Cases } from '../../utils/cases/3x3x3/bldm2';
 import { fourBldCases } from '../../utils/cases/4x4x4/4bld';
 import { Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { bldOpCases } from '../../utils/cases/3x3x3/op';
 
 type AlgEntryData = {
     type: AlgSets;
@@ -41,6 +42,11 @@ const AlgLibrary: AlgLibraryEntry[] = [
             },
             {
                 type: 'bldm2',
+                hideAuf: true,
+                showFullPic: true,
+            },
+            {
+                type: 'bldOp',
                 hideAuf: true,
                 showFullPic: true,
             },
@@ -88,6 +94,7 @@ const algSetMap: {
     oh: ohCases,
     ortega: ortegaCases,
     bldm2: bldM2Cases,
+    bldOp: bldOpCases,
     fourBld: fourBldCases,
     coll: [],
     eg1: [],

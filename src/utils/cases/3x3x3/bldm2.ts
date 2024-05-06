@@ -1,5 +1,5 @@
-import { Color, solidGrayFace, solidOrangeFace, solidRedFace, solidYellowFace } from '../../../classes/Cube';
 import { CaseGroup } from '../../../components/CasePickerComponent/CasePickerComponent';
+import { Color, solidGrayFace, solidOrangeFace, solidRedFace, solidYellowFace } from '../../cubingUtils';
 
 function generateFaceState(face: number, sticker: number, color: Color) {
     const state = [];
@@ -9,6 +9,16 @@ function generateFaceState(face: number, sticker: number, color: Color) {
     state[face][sticker] = color;
     return state;
 }
+export function getLetterToAlgMapping() {
+    const m2AlgList = bldM2Cases.flatMap((group) => group.cases.map((c) => ({ id: c.name, alg: (c.algs ?? [''])[0] })));
+    const m2LetterToAlgMap: {
+        [key: string]: string;
+    } = {};
+    m2AlgList.forEach((alg) => {
+        m2LetterToAlgMap[alg.id] = alg.alg.replaceAll('(', '').replaceAll(')', '');
+    });
+    return m2LetterToAlgMap;
+}
 
 export const bldM2Cases: CaseGroup = [
     {
@@ -17,28 +27,28 @@ export const bldM2Cases: CaseGroup = [
             {
                 id: 'c',
                 name: 'C',
-                algs: ['M U2 M U2'],
+                algs: ["U2 M' U2 M'"],
                 algNotes: ['Use W when second in pair'],
                 state: generateFaceState(0, 7, Color.WHITE),
             },
             {
                 id: 'w',
                 name: 'W',
-                algs: ["U2 M' U2 M'"],
+                algs: ['M U2 M U2'],
                 algNotes: ['Use C when second in pair'],
                 state: generateFaceState(5, 7, Color.YELLOW),
             },
             {
                 id: 'i',
                 name: 'I',
-                algs: ["D' M' U R2 U' M' U R2 U' D' M2"],
+                algs: ["D M' U R2 U' M U R2 U' D' M2"],
                 algNotes: ['Use S when second in pair'],
                 state: generateFaceState(2, 1, Color.GREEN),
             },
             {
                 id: 's',
                 name: 'S',
-                algs: ["M2 D U R2 U' M' U R2 U' M D"],
+                algs: ["M2 D U R2 U' M' U R2 U' M D'"],
                 algNotes: ['Use I when second in pair'],
                 state: generateFaceState(4, 7, Color.BLUE),
             },
@@ -77,85 +87,85 @@ export const bldM2Cases: CaseGroup = [
             {
                 id: 'e',
                 name: 'E',
-                algs: ["(B L' B') M2' (B L B')"],
+                algs: ["(B L' B') M2 (B L B')"],
                 state: generateFaceState(1, 1, Color.ORANGE),
             },
             {
                 id: 'f',
                 name: 'F',
-                algs: ["(B L2 B') M2' (B L2 B')"],
+                algs: ["(B L2 B') M2 (B L2 B')"],
                 state: generateFaceState(1, 5, Color.ORANGE),
             },
             {
                 id: 'g',
                 name: 'G',
-                algs: ["(B L B') M2' (B L' B')"],
+                algs: ["(B L B') M2 (B L' B')"],
                 state: generateFaceState(1, 7, Color.ORANGE),
             },
             {
                 id: 'h',
                 name: 'H',
-                algs: ["(L' B L B') M2' (B L' B' L)"],
+                algs: ["(L' B L B') M2 (B L' B' L)"],
                 state: generateFaceState(1, 3, Color.ORANGE),
             },
             {
                 id: 'j',
                 name: 'J',
-                algs: ["(U R U') M2' (U R' U')"],
+                algs: ["(U R U') M2 (U R' U')"],
                 state: generateFaceState(2, 5, Color.GREEN),
             },
             {
                 id: 'l',
                 name: 'L',
-                algs: ["(U' L' U) M2' (U' L U)"],
+                algs: ["(U' L' U) M2 (U' L U)"],
                 state: generateFaceState(2, 3, Color.GREEN),
             },
             {
                 id: 'm',
                 name: 'M',
-                algs: ["(B' R B) M2' (B' R' B)"],
+                algs: ["(B' R B) M2 (B' R' B)"],
                 state: generateFaceState(3, 1, Color.RED),
             },
             {
                 id: 'n',
                 name: 'N',
-                algs: ["(R B' R' B) M2' (B' R B R')"],
+                algs: ["(R B' R' B) M2 (B' R B R')"],
                 state: generateFaceState(3, 5, Color.RED),
             },
             {
                 id: 'o',
                 name: 'O',
-                algs: ["(B' R' B) M2' (B' R B)"],
+                algs: ["(B' R' B) M2 (B' R B)"],
                 state: generateFaceState(3, 7, Color.RED),
             },
             {
                 id: 'p',
                 name: 'P',
-                algs: ["(B' R2 B) M2' (B' R2 B)"],
+                algs: ["(B' R2 B) M2 (B' R2 B)"],
                 state: generateFaceState(3, 3, Color.RED),
             },
             {
                 id: 'r',
                 name: 'R',
-                algs: ["(U' L U) M2' (U' L' U)"],
+                algs: ["(U' L U) M2 (U' L' U)"],
                 state: generateFaceState(4, 5, Color.BLUE),
             },
             {
                 id: 't',
                 name: 'T',
-                algs: ["(U R' U') M2' (U R U')"],
+                algs: ["(U R' U') M2 (U R U')"],
                 state: generateFaceState(4, 3, Color.BLUE),
             },
             {
                 id: 'v',
                 name: 'V',
-                algs: ["(U R2 U') M2' (U R2 U')"],
+                algs: ["(U R2 U') M2 (U R2 U')"],
                 state: generateFaceState(5, 5, Color.YELLOW),
             },
             {
                 id: 'x',
                 name: 'X',
-                algs: ["(U' L2 U) M2' (U' L2 U)"],
+                algs: ["(U' L2 U) M2 (U' L2 U)"],
                 state: generateFaceState(5, 3, Color.YELLOW),
             },
         ],
@@ -163,6 +173,11 @@ export const bldM2Cases: CaseGroup = [
     {
         name: 'Misc',
         cases: [
+            {
+                id: 'parity',
+                name: 'Parity',
+                algs: ["D' L2 D M2 D' L2 D"],
+            },
             {
                 id: 'edgeFlip',
                 name: 'Edge Flip',

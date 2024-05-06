@@ -11,8 +11,20 @@ import { ohCases } from '../../utils/cases/3x3x3/oh';
 import { bldM2Cases } from '../../utils/cases/3x3x3/bldm2';
 import { fourBldCases } from '../../utils/cases/4x4x4/4bld';
 import { classNames } from '../../utils/genericUtils';
+import { bldOpCases } from '../../utils/cases/3x3x3/op';
 
-export type AlgSets = 'oll' | 'pll' | 'oh' | 'bldm2' | 'ortega' | 'coll' | 'eg1' | 'eg2' | 'parity' | 'fourBld';
+export type AlgSets =
+    | 'oll'
+    | 'pll'
+    | 'oh'
+    | 'bldm2'
+    | 'bldOp'
+    | 'ortega'
+    | 'coll'
+    | 'eg1'
+    | 'eg2'
+    | 'parity'
+    | 'fourBld';
 
 export const AlgSetNamesMap: {
     [k in AlgSets]: string;
@@ -21,6 +33,7 @@ export const AlgSetNamesMap: {
     pll: 'PLL',
     oh: 'OH',
     bldm2: 'BLD M2',
+    bldOp: 'BLD OP',
     ortega: 'Ortega',
     coll: 'COLL',
     eg1: 'EG1',
@@ -81,6 +94,10 @@ const algSetDataMap: {
     bldm2: {
         caseGroup: bldM2Cases,
         id: 'bldm2',
+    },
+    bldOp: {
+        caseGroup: bldOpCases,
+        id: 'bldOp',
     },
     coll: {
         caseGroup: [],

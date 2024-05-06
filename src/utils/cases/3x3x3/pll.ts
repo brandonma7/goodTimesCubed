@@ -1,5 +1,5 @@
-import { Color, solidYellowFace } from '../../../classes/Cube';
 import { Case, CaseGroup } from '../../../components/CasePickerComponent/CasePickerComponent';
+import { Color, solidYellowFace } from '../../cubingUtils';
 
 export function getPllById(id?: string): Case | undefined {
     if (!id) {

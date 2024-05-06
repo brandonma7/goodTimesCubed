@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import Cube, { Color } from '../../classes/Cube';
-import { IndexesToSkip, PuzzleType } from '../../utils/cubingUtils';
+import Cube from '../../classes/Cube';
+import { Color, IndexesToSkip, PuzzleType } from '../../utils/cubingUtils';
 import { classNames } from '../../utils/genericUtils';
 
 import './CubeVisualizationComponent.scss';
@@ -17,6 +17,13 @@ type CubeVisualizationComponentProps = {
 
 const numToColor = ['white', 'orange', 'green', 'red', 'blue', 'yellow', 'gray'];
 export const scrambleLetterColors = ['white', 'orange', 'green', 'red', 'blue', 'yellow'];
+
+export type FaceState = Color[][];
+
+type SingleFaceVisualizationComponentProps = {
+    faceState?: FaceState;
+    puzzleType: PuzzleType;
+};
 
 export function colorScramble(scramble: string) {
     return (
@@ -134,13 +141,6 @@ export default function CubeVisualizationComponent({
             return fullCube();
     }
 }
-
-export type FaceState = Color[][];
-
-type SingleFaceVisualizationComponentProps = {
-    faceState?: FaceState;
-    puzzleType: PuzzleType;
-};
 
 export function SingleFaceVisualizationComponent({
     faceState,

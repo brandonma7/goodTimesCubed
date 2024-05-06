@@ -1,14 +1,6 @@
-import { getCubeOrder, PuzzleType } from '../utils/cubingUtils';
-
-export enum Color {
-    WHITE,
-    ORANGE,
-    GREEN,
-    RED,
-    BLUE,
-    YELLOW,
-    GRAY,
-}
+import { getLetterToAlgMapping as getM2Mapping } from '../utils/cases/3x3x3/bldm2';
+import { getLetterToAlgMapping as getOpMapping } from '../utils/cases/3x3x3/op';
+import { Color, getCubeOrder, PuzzleType } from '../utils/cubingUtils';
 
 type Face = Color[];
 type CubeState = Face[];
@@ -27,22 +19,6 @@ const ColorToFaceIndexMap = {
     [Color.YELLOW]: 5,
     [Color.GRAY]: 6,
 };
-export const solidWhiteFace = new Array(9).fill(Color.WHITE);
-export const solidOrangeFace = new Array(9).fill(Color.ORANGE);
-export const solidGreenFace = new Array(9).fill(Color.GREEN);
-export const solidRedFace = new Array(9).fill(Color.RED);
-export const solidBlueFace = new Array(9).fill(Color.BLUE);
-export const solidYellowFace = new Array(9).fill(Color.YELLOW);
-export const solidGrayFace = new Array(9).fill(Color.GRAY);
-export const getSolidFace = (order: number, color: Color) => new Array(order * order).fill(color);
-export const getSolvedState = (order: number) => [
-    new Array(order * order).fill(Color.WHITE),
-    new Array(order * order).fill(Color.ORANGE),
-    new Array(order * order).fill(Color.GREEN),
-    new Array(order * order).fill(Color.RED),
-    new Array(order * order).fill(Color.BLUE),
-    new Array(order * order).fill(Color.YELLOW),
-];
 
 export default class Cube {
     private cubeState: CubeState;
@@ -94,13 +70,36 @@ export default class Cube {
     };
 
     doEdgeSwaps = (swaps: string) => {
-        const moves = swaps.split('').filter((l) => l !== ' ');
-        console.log(moves);
+        const evenLetterSwapMap: { [key: string]: string } = {
+            I: 'S',
+            S: 'I',
+            W: 'C',
+            C: 'W',
+        };
+        const mapping = getM2Mapping();
+        const swapList = swaps.split('').filter((l) => l !== ' ');
+        swapList.forEach((swap, index) => {
+            const swapToDo =
+                swap === '-'
+                    ? 'Parity'
+                    : index % 2 === 1 && Object.hasOwn(evenLetterSwapMap, swap)
+                    ? evenLetterSwapMap[swap]
+                    : swap;
+
+            mapping[swapToDo]?.split(' ').forEach((move) => {
+                this.doMove(move);
+            });
+        });
     };
 
     doCornerSwaps = (swaps: string) => {
-        const moves = swaps.split('').filter((l) => l !== ' ');
-        console.log(moves);
+        const mapping = getOpMapping();
+        const swapList = swaps.split('').filter((l) => l !== ' ');
+        swapList.forEach((swap) => {
+            mapping[swap]?.split(' ').forEach((move) => {
+                this.doMove(move);
+            });
+        });
     };
 
     doMove = (move: string) => {
@@ -191,6 +190,19 @@ export default class Cube {
                 this.B(layerWidth);
                 this.B(layerWidth);
                 break;
+
+            case 'M':
+                this.M(layerWidth);
+                break;
+            case "M'":
+                this.M(layerWidth);
+                this.M(layerWidth);
+                this.M(layerWidth);
+                break;
+            case 'M2':
+                this.M(layerWidth);
+                this.M(layerWidth);
+                break;
         }
     };
 
@@ -221,43 +233,10 @@ export default class Cube {
                 );
             }
         }
-
-        /*this.fourCycle({ face, sticker: 0 }, { face, sticker: 6 }, { face, sticker: 8 }, { face, sticker: 2 });
-        this.fourCycle({ face, sticker: 1 }, { face, sticker: 3 }, { face, sticker: 7 }, { face, sticker: 5 });*/
     };
-
-    /*private rotateEdgePieces = (faces: number[], stickers: number[]) => {
-        for (let i = 0; i < this.order; i++) {
-            this.fourCycle(
-                { face: faces[0], sticker: stickers[i] },
-                { face: faces[1], sticker: stickers[i] },
-                { face: faces[2], sticker: stickers[i] },
-                { face: faces[3], sticker: stickers[i] },
-            );
-        }
-        this.fourCycle(
-            { face: faces[0], sticker: stickers[0] },
-            { face: faces[1], sticker: stickers[0] },
-            { face: faces[2], sticker: stickers[0] },
-            { face: faces[3], sticker: stickers[0] },
-        );
-        this.fourCycle(
-            { face: faces[0], sticker: stickers[1] },
-            { face: faces[1], sticker: stickers[1] },
-            { face: faces[2], sticker: stickers[1] },
-            { face: faces[3], sticker: stickers[1] },
-        );
-        this.fourCycle(
-            { face: faces[0], sticker: stickers[2] },
-            { face: faces[1], sticker: stickers[2] },
-            { face: faces[2], sticker: stickers[2] },
-            { face: faces[3], sticker: stickers[2] },
-        );
-    };*/
 
     private U = (layerWidth: number) => {
         this.rotateFacePiecesCW(Color.WHITE);
-        //this.rotateEdgePieces([2, 3, 4, 1], [0, 1, 2]);
         for (let layer = 0; layer < layerWidth; layer++) {
             const layerOffset = layer * this.order;
             for (let i = 0; i < this.order; i++) {
@@ -303,24 +282,6 @@ export default class Cube {
                 );
             }
         }
-
-        /*this.fourCycle(
-            { face: 0, sticker: 2 },
-            { face: 2, sticker: 2 },
-            { face: 5, sticker: 2 },
-            { face: 4, sticker: 6 },
-        );this.fourCycle(
-            { face: 0, sticker: 5 },
-            { face: 2, sticker: 5 },
-            { face: 5, sticker: 5 },
-            { face: 4, sticker: 3 },
-        );
-        this.fourCycle(
-            { face: 0, sticker: 8 },
-            { face: 2, sticker: 8 },
-            { face: 5, sticker: 8 },
-            { face: 4, sticker: 0 },
-        );*/
     };
 
     private L = (layerWidth: number) => {
@@ -338,25 +299,6 @@ export default class Cube {
                 );
             }
         }
-
-        /*this.fourCycle(
-            { face: 4, sticker: 8 },
-            { face: 5, sticker: 0 },
-            { face: 2, sticker: 0 },
-            { face: 0, sticker: 0 },
-        );
-        this.fourCycle(
-            { face: 4, sticker: 5 },
-            { face: 5, sticker: 3 },
-            { face: 2, sticker: 3 },
-            { face: 0, sticker: 3 },
-        );
-        this.fourCycle(
-            { face: 4, sticker: 2 },
-            { face: 5, sticker: 6 },
-            { face: 2, sticker: 6 },
-            { face: 0, sticker: 6 },
-        );*/
     };
 
     private F = (layerWidth: number) => {
@@ -375,25 +317,6 @@ export default class Cube {
                 );
             }
         }
-
-        /*this.fourCycle(
-            { face: 0, sticker: 6 },
-            { face: 1, sticker: 8 },
-            { face: 5, sticker: 2 },
-            { face: 3, sticker: 0 },
-        );
-        this.fourCycle(
-            { face: 0, sticker: 7 },
-            { face: 1, sticker: 5 },
-            { face: 5, sticker: 1 },
-            { face: 3, sticker: 3 },
-        );
-        this.fourCycle(
-            { face: 0, sticker: 8 },
-            { face: 1, sticker: 2 },
-            { face: 5, sticker: 0 },
-            { face: 3, sticker: 6 },
-        );*/
     };
 
     private B = (layerWidth: number) => {
@@ -412,24 +335,20 @@ export default class Cube {
                 );
             }
         }
+    };
 
-        /*this.fourCycle(
-            { face: 3, sticker: 2 },
-            { face: 5, sticker: 8 },
-            { face: 1, sticker: 6 },
-            { face: 0, sticker: 0 },
-        );
-        this.fourCycle(
-            { face: 3, sticker: 5 },
-            { face: 5, sticker: 7 },
-            { face: 1, sticker: 3 },
-            { face: 0, sticker: 1 },
-        );
-        this.fourCycle(
-            { face: 3, sticker: 8 },
-            { face: 5, sticker: 6 },
-            { face: 1, sticker: 0 },
-            { face: 0, sticker: 2 },
-        );*/
+    private M = (layerWidth: number) => {
+        const startSticker = Math.trunc(this.order / 2);
+
+        for (let layer = 0; layer < layerWidth; layer++) {
+            for (let i = 0; i < this.order; i++) {
+                this.fourCycle(
+                    { face: 4, sticker: this.order * this.order - 1 - startSticker - this.order * i - layer },
+                    { face: 5, sticker: startSticker + this.order * i - layer },
+                    { face: 2, sticker: startSticker + this.order * i - layer },
+                    { face: 0, sticker: startSticker + this.order * i - layer },
+                );
+            }
+        }
     };
 }

@@ -1,5 +1,5 @@
-import { Color } from '../../../classes/Cube';
 import { Case, CaseGroup } from '../../../components/CasePickerComponent/CasePickerComponent';
+import { Color } from '../../cubingUtils';
 
 export function getOllById(id?: string): Case | undefined {
     if (!id) {

@@ -1,5 +1,5 @@
-import { Color } from '../../../classes/Cube';
 import { FaceState, scrambleLetterColors } from '../../../components/CubeVisualizationComponent';
+import { Color } from '../../cubingUtils';
 
 export type PllTwoSidesType = {
     id: PllTwoSideId;

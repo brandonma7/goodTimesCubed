@@ -1,6 +1,6 @@
-import { Color, getSolidFace, getSolvedState } from '../../../classes/Cube';
 import { CaseGroup } from '../../../components/CasePickerComponent/CasePickerComponent';
 import { FaceState } from '../../../components/CubeVisualizationComponent';
+import { Color, getSolvedState, getSolidFace } from '../../cubingUtils';
 
 type FaceStateForGeneration = {
     face: number;

@@ -1,5 +1,5 @@
-import { Color, solidYellowFace } from '../../../classes/Cube';
 import { CaseGroup } from '../../../components/CasePickerComponent/CasePickerComponent';
+import { Color, solidYellowFace } from '../../cubingUtils';
 
 export const ohCases: CaseGroup = [
     {

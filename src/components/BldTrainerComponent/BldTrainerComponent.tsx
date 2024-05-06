@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import Cube from '../../classes/Cube';
+import { generateScramble } from '../../utils/cubingUtils';
 import { classNames } from '../../utils/genericUtils';
-import CubeVisualizationComponent from '../CubeVisualizationComponent';
+import CubeVisualizationComponent, { colorScramble } from '../CubeVisualizationComponent';
 import {
     getMappingFromLocalStorage,
     getWordDupes,
@@ -98,19 +99,27 @@ export default function BldTrainerComponent() {
 
 function MemoTrainer() {
     const cube = new Cube('', '3x3x3');
+    const [scramble, setScramble] = useState(generateScramble('3x3x3'));
     const [cornerSwaps, setCornerSwaps] = useState('');
     const [edgeSwaps, setEdgeSwaps] = useState('');
+    const [directMoves, setDirectMoves] = useState('');
 
-    cube.doCornerSwaps(cornerSwaps);
+    cube.scramble(scramble);
     cube.doEdgeSwaps(edgeSwaps);
+    cube.doCornerSwaps(cornerSwaps);
+    directMoves.split(' ').forEach((move) => cube.doMove(move));
 
     return (
         <div>
             <h3>Memo Trainer</h3>
+            <p>
+                Scramble a cube, memorize (currently just in M2/OP), type edge and corner pairs.(type - in edge swaps
+                for parity)
+            </p>
+            <p>{colorScramble(scramble)}</p>
             <div>
                 <CubeVisualizationComponent state={cube.getState()} puzzleType={'3x3x3'} clickable={false} />
             </div>
-
             <div>
                 <input
                     className='timer__input'
@@ -130,6 +139,39 @@ function MemoTrainer() {
                         setCornerSwaps(event.target.value.toUpperCase());
                     }}
                 />
+            </div>
+
+            <div>
+                <input
+                    className='timer__input'
+                    placeholder='Direct moves'
+                    value={directMoves}
+                    onChange={(event) => {
+                        setDirectMoves(event.target.value.toUpperCase());
+                    }}
+                />
+            </div>
+            <div>
+                <button
+                    className='timer__button'
+                    onClick={() => {
+                        setScramble(generateScramble('3x3x3'));
+                        setCornerSwaps('');
+                        setEdgeSwaps('');
+                    }}
+                >
+                    New Scramble
+                </button>
+                <button
+                    className='timer__button'
+                    onClick={() => {
+                        setScramble('');
+                        setCornerSwaps('');
+                        setEdgeSwaps('');
+                    }}
+                >
+                    Empty Scramble
+                </button>
             </div>
         </div>
     );
