@@ -112,11 +112,11 @@ function MemoTrainer() {
     return (
         <div>
             <h3>Memo Trainer</h3>
+            <div>{colorScramble(scramble)}</div>
             <p>
-                Scramble a cube, memorize (currently just in M2/OP), type edge and corner pairs.(type - in edge swaps
-                for parity)
+                Scramble a cube, memorize (currently just in M2/OP), type edge and corner pairs.(type &apos;-&apos; in
+                edge swaps for parity)
             </p>
-            <p>{colorScramble(scramble)}</p>
             <div>
                 <CubeVisualizationComponent state={cube.getState()} puzzleType={'3x3x3'} clickable={false} />
             </div>
