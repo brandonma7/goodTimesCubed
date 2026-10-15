@@ -1,3 +1,9 @@
+# Cubing app
+
+This is a personal project I use for training rubik's cube speed solving. Lots of tools out there, but I wanted one that had all the features I cared about in one place. Plus some other features for blind solving.
+
+<img width="1499" height="682" alt="image" src="https://github.com/user-attachments/assets/c19b63a3-236e-41fd-b2f4-94a56a1caf70" />
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
