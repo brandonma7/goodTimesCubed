@@ -2,6 +2,8 @@
 
 This is a personal project I use for training rubik's cube speed solving. Lots of tools out there, but I wanted one that had all the features I cared about in one place. Plus some other features for blind solving.
 
+Mostly just a raw Typescript/React app. Uses GitHub actions to build/deploy to azure so I can access it here https://goodtimescubed.azurewebsites.net/ (I use a free azure membership so first load takes forever [30-60 seconds] if the site hasn't been hit in a 24 hours).
+
 <img width="1499" height="682" alt="image" src="https://github.com/user-attachments/assets/c19b63a3-236e-41fd-b2f4-94a56a1caf70" />
 
 # Getting Started with Create React App
